@@ -32,7 +32,7 @@
     "arbitrage"
   ],
   "author": "Cayle Sharrock <cayle@coinbase.com>",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
