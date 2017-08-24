@@ -1,0 +1,91 @@
+repository: coinbase/gdax-tt
+
+output: web
+# this property is useful for conditional filtering of content that is separate from the PDF.
+
+topnav_title: GDAX Trading Toolkit
+# this appears on the top navigation bar next to the home button
+
+site_title: GDAX Trading Toolkit Documentation
+# this appears in the html browser tab for the site title (seen mostly by search engines, not users)
+
+company_name: Coinbase Inc.
+# this appears in the footer
+
+github_editme_path:
+# if you're using Github, provide the basepath to the branch you've created for reviews, following the sample here. if not, leave this value blank.
+
+host: 127.0.0.1
+# the preview server used. Leave as is.
+
+port: 4000
+# the port where the preview is rendered. You can leave this as is unless you have other Jekyll builds using this same port that might cause conflicts. in that case, use another port such as 4006.
+
+exclude:
+  - .idea/
+  - .gitignore
+
+# The format for include is totally counter-intuitive. Don't include the full path, just a glob string on the final filename
+include: ["apiref", "_src*html"]
+
+# these are the files and directories that jekyll will exclude from the build
+
+highlighter: rouge
+# library used for syntax highlighting
+
+markdown: kramdown
+kramdown:
+ input: GFM
+ auto_ids: true
+ hard_wrap: false
+ syntax_highlighter: rouge
+
+# filter used to process markdown. note that kramdown differs from github-flavored markdown in some subtle ways
+
+collections:
+  tooltips:
+    output: false
+# collections are declared here. this renders the content in _tooltips and processes it, but doesn't output it as actual files in the output unless you change output to true
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      comments: false
+      search: true
+      sidebar: home_sidebar
+  -
+    scope:
+      path: ""
+      type: "tooltips"
+    values:
+      layout: "page"
+      comments: false
+      search: true
+      tooltip: true
+
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: false
+      search: true
+      sidebar: home_sidebar
+
+# these are defaults used for the frontmatter for these file types
+
+sidebars:
+- gtt_sidebar
+- home_sidebar
+- other
+
+description: "A trader's toolbox for creating trading bots on cryptocurrency exchanges."
+# the description is used in the feed.xml file
+
+# needed for sitemap.xml file only
+url: https://www.gdax.com

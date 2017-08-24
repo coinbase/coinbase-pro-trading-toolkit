@@ -1,0 +1,30 @@
+## Topnav single links
+## if you want to list an external url, use external_url instead of url. the theme will apply a different link base.
+topnav:
+- title: Topnav
+  items:
+    - title: Getting Started
+      url: /gtt_about.html
+
+#Topnav dropdowns
+topnav_dropdowns:
+- title: Topnav dropdowns
+  folders:
+    - title: Documentation
+      folderitems:
+        - title: GTT Users' Guide
+          url: /gtt_about.html
+        - title: GTT API Reference documentation
+          url: /apiref
+        - title: GTT-UI Users Guide
+          url: /gtt-ui.html
+        - title: GTT-UI Users Guide
+          url: /gttui-apiref/index.html
+    - title: GDAX Resources
+      folderitems:
+        - title: GDAX Website
+          external_url: https://gdax.com
+        - title: GDAX API Documentation
+          external_url: https://docs.gdax.com/
+        - title: GTT Github repository
+          external_url: https://github.com/coinbase/gdax-tt

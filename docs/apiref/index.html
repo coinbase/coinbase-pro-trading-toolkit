@@ -1,0 +1,364 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>GDAX Trading Toolkit API Reference</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">GDAX Trading Toolkit API Reference</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> GDAX Trading Toolkit API Reference</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="lib">Lib</h1>
+				<p>This directory contains the workhorse classes for the GDAX trading toolkit. As a user of the GTT, you are unlikely to have to use these classes directly, but they make up the foundations for the higher level classes that you will use.</p>
+				<ul>
+					<li>BookBuilder - An orderbook descendant that allows an orderbook to be maintained by adding, removing or changing orders.</li>
+					<li>Orderbook - Contains interfaces for orders and orderbook-type objects</li>
+					<li>OrderbookDiff - A class for determining differences between orderbook and the trade commands required to make them equivalent</li>
+					<li>OrderbookUtils - Common calculations for orderbooks, particularly cumulative sums</li>
+					<li>types - some handly type definitions used throughout the GTT</li>
+					<li>utils - common small utility functions</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_fxprovider_.html">"src/FXService/FXProvider"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_fxratecalculator_.html">"src/FXService/FXRate<wbr>Calculator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_fxservice_.html">"src/FXService/FXService"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_calculators_simpleratecalculator_.html">"src/FXService/calculators/<wbr>Simple<wbr>Rate<wbr>Calculator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_providers_coinmarketcapprovider_.html">"src/FXService/providers/<wbr>Coin<wbr>Market<wbr>Cap<wbr>Provider"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_providers_openexchangeprovider_.html">"src/FXService/providers/<wbr>Open<wbr>Exchange<wbr>Provider"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_fxservice_providers_yahoofxprovider_.html">"src/FXService/providers/<wbr>YahooFXProvider"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_consoles_gdaxconsole_.html">"src/consoles/gdax<wbr>Console"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_exchangeratefilter_.html">"src/core/<wbr>Exchange<wbr>Rate<wbr>Filter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_hftfilter_.html">"src/core/HFTFilter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_liveorderbook_.html">"src/core/<wbr>Live<wbr>Orderbook"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_messagequeue_.html">"src/core/<wbr>Message<wbr>Queue"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_messages_.html">"src/core/<wbr>Messages"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_productfilter_.html">"src/core/<wbr>Product<wbr>Filter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_ratelimiter_.html">"src/core/<wbr>Rate<wbr>Limiter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_trader_.html">"src/core/<wbr>Trader"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_core_triggers_.html">"src/core/<wbr>Triggers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_authconfig_.html">"src/exchanges/<wbr>Auth<wbr>Config"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_authenticatedexchangeapi_.html">"src/exchanges/<wbr>Authenticated<wbr>ExchangeAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_exchangefeed_.html">"src/exchanges/<wbr>Exchange<wbr>Feed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_exchangetransferapi_.html">"src/exchanges/<wbr>Exchange<wbr>TransferAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_publicexchangeapi_.html">"src/exchanges/<wbr>Public<wbr>ExchangeAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_bitfinex_bitfinexauth_.html">"src/exchanges/bitfinex/<wbr>Bitfinex<wbr>Auth"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_bitfinex_bitfinexcommon_.html">"src/exchanges/bitfinex/<wbr>Bitfinex<wbr>Common"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_bitfinex_bitfinexexchangeapi_.html">"src/exchanges/bitfinex/<wbr>Bitfinex<wbr>ExchangeAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_bitfinex_bitfinexfeed_.html">"src/exchanges/bitfinex/<wbr>Bitfinex<wbr>Feed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_bitfinex_bitfinexmessages_.html">"src/exchanges/bitfinex/<wbr>Bitfinex<wbr>Messages"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_gdax_gdaxexchangeapi_.html">"src/exchanges/gdax/GDAXExchangeAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_gdax_gdaxfeed_.html">"src/exchanges/gdax/GDAXFeed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_gdax_gdaxmessages_.html">"src/exchanges/gdax/GDAXMessages"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_poloniex_poloniexcommon_.html">"src/exchanges/poloniex/<wbr>Poloniex<wbr>Common"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_poloniex_poloniexexchangeapi_.html">"src/exchanges/poloniex/<wbr>Poloniex<wbr>ExchangeAPI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_poloniex_poloniexfeed_.html">"src/exchanges/poloniex/<wbr>Poloniex<wbr>Feed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_poloniex_poloniexmessages_.html">"src/exchanges/poloniex/<wbr>Poloniex<wbr>Messages"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_exchanges_utils_.html">"src/exchanges/utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_factories_bitfinexfactories_.html">"src/factories/bitfinex<wbr>Factories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_factories_fxservicefactories_.html">"src/factories/fx<wbr>Service<wbr>Factories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_factories_gdaxfactories_.html">"src/factories/gdax<wbr>Factories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_factories_index_.html">"src/factories/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_factories_poloniexfactories_.html">"src/factories/poloniex<wbr>Factories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_index_.html">"src/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_abstractmessagetransform_.html">"src/lib/<wbr>Abstract<wbr>Message<wbr>Transform"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_bookbuilder_.html">"src/lib/<wbr>Book<wbr>Builder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_orderbook_.html">"src/lib/<wbr>Orderbook"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_orderbookdiff_.html">"src/lib/<wbr>Orderbook<wbr>Diff"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_orderbookutils_.html">"src/lib/<wbr>Orderbook<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_staticcommandset_.html">"src/lib/<wbr>Static<wbr>Command<wbr>Set"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_math_bigarray_.html">"src/lib/math/<wbr>Big<wbr>Array"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_lib_types_.html">"src/lib/types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_server_datafeed_.html">"src/server/<wbr>Data<wbr>Feed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_server_wscommands_.html">"src/server/WSCommands"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_server_server_cli_.html">"src/server/server-<wbr>cli"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_utils_logger_.html">"src/utils/<wbr>Logger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_utils_printers_.html">"src/utils/printers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_orderbookutils_createorderbookutils_.html">"test/<wbr>Orderbook<wbr>Utils/create<wbr>Orderbook<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_orderbookutils_indextest_.html">"test/<wbr>Orderbook<wbr>Utils/index<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_orderbookutils_precalctest_.html">"test/<wbr>Orderbook<wbr>Utils/precalc<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_orderbookutils_utilstest_.html">"test/<wbr>Orderbook<wbr>Utils/utils<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_core_liveorderbooktest_.html">"test/core/<wbr>Live<wbr>Orderbook<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_core_orderbookdifftest_.html">"test/core/<wbr>Orderbook<wbr>Diff<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_exchanges_bitfinexexchangetest_.html">"test/exchanges/<wbr>Bitfinex<wbr>Exchange<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_exchanges_gdaxexchangetest_.html">"test/exchanges/GDAXExchange<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_exchanges_gdaxfeedtest_.html">"test/exchanges/GDAXFeed<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_lib_bigarraytest_.html">"test/lib/<wbr>Big<wbr>Array<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_lib_bookbuildertest_.html">"test/lib/<wbr>Book<wbr>Builder<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_mocks_mockfxservice_.html">"test/mocks/<wbr>MockFXService"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_mocks_mocklivebook_.html">"test/mocks/<wbr>Mock<wbr>Livebook"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_mocks_mockorderbook_.html">"test/mocks/<wbr>Mock<wbr>Orderbook"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

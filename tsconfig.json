@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["es6", "es2016", "ES2016.Array.Include", "dom", "ES2017.object"],
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": false,
+    "experimentalDecorators": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "declaration": true
+  },
+  "include": [
+    "types/*.d.ts",
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

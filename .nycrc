@@ -1,0 +1,16 @@
+{
+  "nyc": {
+    "extension": [ ".ts" ],
+    "include": [ "src/**/*.ts" ],
+    "exclude": [ "src/samples/**", "src/tutorials/**", "**/*.d.ts" ],
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "reporter": [ "html", "text-summary" ],
+    "sourceMap": true,
+    "cache": false,
+    "instrument": false,
+    "all": false
+  }
+}
