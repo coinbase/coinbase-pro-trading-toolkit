@@ -5,3 +5,4 @@ node_modules/
 
 !index.d.ts
 !index.ref.d.ts
+docs/apiref
