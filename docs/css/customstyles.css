@@ -410,11 +410,12 @@ ul#mysidebar {
 
 
 .nav ul li a {
-    background-color: #FAFAFA;
+    background-color: #FFFFFF;
 }
 
 .nav li a {
     padding-right:10px;
+
 }
 
 .nav li a:hover {
