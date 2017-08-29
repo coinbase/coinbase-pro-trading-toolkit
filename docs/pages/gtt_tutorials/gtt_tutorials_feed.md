@@ -77,9 +77,9 @@ Most GTT components take a logger object in their configuration, so let's create
 default logger that writes to the console. There's a convenience `ConsoleLoggerFactory`
 method that will create one for you, so let's use that:
 
-    import { ConsoleLoggerFactory } from "../utils/Logger";
+    import * as GTT from 'gdax-trading-toolkit';
 
-    const logger = ConsoleLoggerFactory();
+    const logger = GTT.utils.ConsoleLoggerFactory();
 
 The easiest way to grab hold of a feed stream is to use the utility factory function
 `FeedFactory`. There will be one of these functions for each exchange supported
@@ -100,10 +100,12 @@ If you supply authentication credentials to the feed factory, you might also rec
 emitted when _my_ order has been placed, `TradeExecutedMessage`, emitted when one of _my_ orders is matched, `TradeFinalizedMessage`, for when my order is completely filled, or cancelled.
 
 
-    import { FeedFactory } from "../factories/gdaxFactories";
-    FeedFactory(logger, products).then((feed: GDAXFeed) => {
+    const products: string[] = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
+    GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
         // Do stuff with the feed
     });
+
+{% include tip.html content="For brevity, `import` statements will be omitted from tutorial source snippets. If you're using a TypeScript-friendly IDE, type definition imports should be added automatically. If you're using standard Javascript, the GTT is usually the only import you'll need." %}
 
 ## Doing something (not so) useful
 
@@ -119,7 +121,7 @@ This is pretty straightforward. After setting up the tally variables, we
  which carries a `productId` field. Most messages will be, but we check for the presence of that field
  first and log it as an 'other' message if not.
 
-    const logger = ConsoleLoggerFactory();
+    const logger = GTT.utils.ConsoleLoggerFactory();
     const products: string[] = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
     const tallies: any = {};
     products.forEach((product: string) => {
@@ -128,13 +130,13 @@ This is pretty straightforward. After setting up the tally variables, we
 
     let count = 0;
 
-    FeedFactory(logger, products).then((feed: GDAXFeed) => {
+    GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
         feed.on('data', (msg: OrderbookMessage) => {
             count++;
             if (!(msg as any).productId) {
                 tallies.other += 1;
             } else {
-                let tally = tallies[msg.productId];
+                const tally = tallies[msg.productId];
                 if (!tally[msg.type]) {
                     tally[msg.type] = 0;
                 }
@@ -162,7 +164,7 @@ THe `printTallies` function is just a bit of string-fu:
 
 ## Run the script
 
-If you've skipped ahead, or want to see the finished product, the full script resides at `/src/tutorials/t001_feeds.ts`.
+If you've skipped ahead, or want to see the finished product, the full script resides at `/tutorials/t001_feeds.ts`.
  Execute it with
 
     $ ts-node src/tutorials/t001_feeds.ts

@@ -34,7 +34,7 @@ Triggers are little more than semantic sugar that abstract out event listeners a
 
 we have
 
-    createPriceTrigger(feed, 'BTC-EUR', 1000)
+    GTT.Core.createPriceTrigger(feed, 'BTC-EUR', 1000)
       .setAction((event: TickerMessage) => {
           doSomething(event);
       });
@@ -58,7 +58,7 @@ Then you need to grab the following information:
 
 # The demo
 
-{% include note.html content="The full code for this demo is available at `src/tutorials/t005_alertTrader.ts`." %}
+{% include note.html content="The full code for this demo is available at `tutorials/t005_alertTrader.ts`." %}
 
 The basic strategy of our bot is this:
 
@@ -91,22 +91,22 @@ Usually we use `FeedFactory` to grab a feed, but since we're only interested in 
         apiUrl: GDAX_API_URL
     };
 
-    getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
+    GTT.Factories.GDAX.getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
        ...
     });
 
 Pretty painless. Note that we nulled out the `auth` object to force the feed to use unauthenticated messages. You can set `auth: null` to just use the defaults, which since you have your GDAX API keys set in the environment, will automatically use those and receive authenticated messages (nice if you want to confim when your trades are filled).
 
-Now we can make use of a [nextPriceTrigger](apiref/modules/_src_core_triggers_.html) to get the next ticker from the websocket feed. We extract
+Now we can make use of a [TickerTrigger](apiref/modules/_src_core_triggers_.html) to get the next ticker from the websocket feed. We extract
 the current price, and use that as the basis to create two price triggers, one above, and one below the current price:
 
-    nextPriceTrigger(feed, product).setAction((ticker: TickerMessage) => {
+    GTT.Core.createTickerTrigger(feed, product).setAction((ticker: TickerMessage) => {
         const currentPrice = ticker.price;
-        createPriceTrigger(feed, product, currentPrice.minus(spread)).setAction((event: TickerMessage) => {
+        GTT.Core.createPriceTrigger(feed, product, currentPrice.minus(spread)).setAction((event: TickerMessage) => {
             pushMessage('Price Trigger', `${base} price has fallen and is now ${event.price} ${quote} on ${product} on GDAX`);
             submitTrade('buy', '0.01');
         });
-        createPriceTrigger(feed, product, currentPrice.plus(spread)).setAction((event: TickerMessage) => {
+        GTT.Core.createPriceTrigger(feed, product, currentPrice.plus(spread)).setAction((event: TickerMessage) => {
             pushMessage('Price Trigger', `${base} price has risen and is now ${event.price} ${quote} on ${product} on GDAX`);
             submitTrade('buy', '0.01');
         });
@@ -114,6 +114,7 @@ the current price, and use that as the basis to create two price triggers, one a
 
 The `pushMessage` function just uses the `PushBullet` A{I to direct the information to your phone:
 
+    const pusher = new GTT.utils.PushBullet(process.env.PUSHBULLET_KEY);
     function pushMessage(title: string, msg: string): void {
         pusher.note(deviceID, title, msg, (err: Error, res: any) => {
             if (err) {
@@ -127,6 +128,7 @@ The `pushMessage` function just uses the `PushBullet` A{I to direct the informat
 and `submitTrade` uses the REST API to place a trade for you:
 
 
+    const gdaxAPI = GTT.Factories.GDAX.DefaultAPI(logger);
     function submitTrade(side: string, amount: string) {
         const order: PlaceOrderMessage = {
             type: 'order',

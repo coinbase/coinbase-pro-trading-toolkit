@@ -49,7 +49,7 @@ For convenience, we'll provide a common [`Logger`](apiref/modules/_src_utils_log
 messages to the console -- can be created using the [`ConsoleLoggerFactory`](apiref/modules/_src_utils_logger_.html) factory method (though it's easy to create
 your own to write to file, RDBMS, Kibana etc., just make sure your implementation implements the Logger interface).
 
-    const logger: Logger = ConsoleLoggerFactory({ level: 'info' });
+    const logger = GTT.utils.ConsoleLoggerFactory({ level: 'info' });
   
 To set up the exchange objects, we need to provide a config object for each exchange. The exact configuration can vary
 from exchange to exchange, but typically, you need to give authorization credentials and a product ID. Note that the GTT
@@ -130,7 +130,7 @@ Run `getAndPrintTickers` inside an interval timer and away we go:
     }, 5000);
 
 There are a few formatting details left out of the code snippets above, but these are fairly simple and left
-as an exercise to the reader. The full working example that produced the output below is available as `src/tutorials/t003_tickertape.ts`.
+as an exercise to the reader. The full working example that produced the output below is available as `tutorials/t003_tickertape.ts`.
 
 Pulling this all together and running it produces something like:
 

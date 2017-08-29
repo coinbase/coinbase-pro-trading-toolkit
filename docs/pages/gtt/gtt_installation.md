@@ -36,6 +36,57 @@ You should get output similar to
     Ticker for BTC-USD on GDAX
     Price:    1027.35 | 24hr volume:   8644.4 | Bid:    1026.62 | Ask:    1027.35 | sequence: 16935316
 
+## Using the library with Javascript
+
+If you're writing Javascript projects, then using the GTT is as simple as
+
+    const GTT = require('gdax-trading-toolkit');
+
+This exports the library under the `GTT` variable. You can access sub-components by traversing the root object:
+
+    GTT.Core       // core components
+    GTT.Exchanges  // exchange interfaces
+    GTT.Factories  // factory methods
+    ...
+
+Refer to the API reference docs or browse the index files to explore the full tree.
+
+## Using the library with TypeScript
+
+When writing Typescript projects with the GTT, we recommend the following settings for your `tsconfig.json` file. It should be placed in your root folder:
+
+    {
+      "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "lib": ["es6", "es2016", "ES2016.Array.Include", "dom", "ES2017.object"],
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "strictNullChecks": false,
+        "experimentalDecorators": true,
+        "outDir": "build",
+        "sourceMap": true,
+        "allowJs": true
+      },
+      "exclude": [
+        "node_modules"
+      ]
+    }
+
+Importing the top-level `GTT` object is also a striaghtforward import:
+
+     import * as GTT from 'gdax-trading-toolkit';
+
+Type definitions are not included in the above import, so for example the declaration
+
+    const feed: GDAXFeed
+
+requires an explicit import of the `GDAXFeed` type. Most TypeScript-friendly IDEs will handle the importing for you automatically, so you typically don't need to worry about it, but the resulting import will look like
+
+    import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
+
 # Cloning the repo
 
 If you have Git installed and would like to look at, or better yet, [contribute](/contributing.html), first

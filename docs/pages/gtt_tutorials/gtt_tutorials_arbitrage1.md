@@ -42,7 +42,7 @@ that doesn't match the filter's `productId`.
 Assuming you have a message `feed` that is streaming multiple products' messages, the product filter works
 like this:
 
-    const ltcFilter = new ProductFilter({ logger: logger, productId: 'LTC-BTC' }));
+    const ltcFilter = new GTT.Core.ProductFilter({ logger: logger, productId: 'LTC-BTC' }));
     feed.pipe(ltcFilter);
     ltcfilter.on('data', msg => {
       assert.equal(msg.productId, 'LTC-BTC');
@@ -63,7 +63,7 @@ The filter is easy to configure. It accepts a [ExchangeRateFilterConfig](apiref/
             pair: { from: 'GBP', to: 'USD' },
             precision: 2
         };
-        const fxGBP = new ExchangeRateFilter(config);
+        const fxGBP = new GTT.Core.ExchangeRateFilter(config);
         feed.pipe(fxGBP);
 
 The filter also exposes a single method `getRate` that allows you to obtain the current exchange rate at any time.
@@ -104,19 +104,19 @@ and use the GDAXFeedFactory:
 
     const products = ['BTC-USD', 'BTC-EUR', 'BTC-GBP'];
     // Create a single logger instance to pass around
-    const logger = ConsoleLoggerFactory();
-    FeedFactory(logger, products).then((feed: GDAXFeed) => {
+    const logger = GTT.utils.ConsoleLoggerFactory();
+    GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
       ...
     });
 
 The feed has messages from all three books mixed up in it, So we need to pipe it through three separate product filters to
  split the feed into the three product streams.
 
-    const streams = products.map(product => new ProductFilter({ logger: logger, productId: product }));
+    const streams = products.map(product => new GTT.Core.ProductFilter({ logger: logger, productId: product }));
 
 We then create our FXService and add the currency pairs we want it to fetch from Yahoo finance, and ask it to update every minute:
 
-    const fxService = SimpleFXServiceFactory('yahoo', logger);
+    const fxService = GTT.Factories.SimpleFXServiceFactory('yahoo', logger);
     fxService
         .addCurrencyPair({ from: 'GBP', to: 'USD' })
         .addCurrencyPair({ from: 'EUR', to: 'USD' })
@@ -130,8 +130,8 @@ Now we need to convert GBP and EUR price data from their respective streams to U
         pair: { from: null, to: 'USD' }, // this will be overwritten
         precision: 2
     };
-    const fxGBP = new ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
-    const fxEUR = new ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
+    const fxGBP = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
+    const fxEUR = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
 
 Now we can connect all the pieces together. The `streams` array was created above and contains the split feed streams.
 We'll pipe the BTC-EUR stream (`streams[1]`) and the BTC-GBP stream (`steams[2]`) through their respective exchange rate filters:
@@ -155,4 +155,4 @@ checking whether a ticker message has been sent:
 We've manged to do some pretty nifty stuff in about 45 lines of code. We're printing out the USD-equivalent
 price of all three BTC books on GDAX *in real time* as each trade happens, using up-to-the-minute exchange rate data. Pretty neat!
 
-{% include note.html content="A fully working version of this tutorial is available as `src/tutorials/t004_fxfilter.ts`." %}
+{% include note.html content="A fully working version of this tutorial is available as `tutorials/t004_fxfilter.ts`." %}
