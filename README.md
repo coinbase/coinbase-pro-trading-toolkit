@@ -1,18 +1,20 @@
 # GDAX Trading toolkit
-Provide all the tools traders need, both professional and hobbyist alike, to create profitable trading bots on the GDAX platform.
+Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
+GDAX and supported digital asset exchanges.
 
 
-### Install
-    yarn add gdax-tt
+## Install
+    yarn add gdax-trading-toolkit
 
-### Test
+## Test
  Run the included test suite with the command
 
     yarn test
 
-### Run
+## Run
 
-The `src/samples` folder contains many working demo scripts showcasing different aspects of the toolkit
+The `src/samples` folder contains many working demo scripts showcasing different aspects of the toolkit, while the `tutorials` folder
+contains running demo programs to accompany the [GTT documentation](https://coinbase.github.io/gdax-tt/).
 
 ## Documentation
 
