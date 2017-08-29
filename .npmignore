@@ -1,8 +1,12 @@
 node_modules/
-*.d.ts
 *.log
 *.tgz
 
-!index.d.ts
-!index.ref.d.ts
+!build/
+!types/
 docs/apiref
+
+src/
+npm-shrinkwrap.json
+yarn.lock
+tsconfig.json
