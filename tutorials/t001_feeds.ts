@@ -12,39 +12,45 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { FXRateCalculator } from '../FXRateCalculator';
-import { CurrencyPair, FXObject, FXProvider } from '../FXProvider';
-import { ConsoleLoggerFactory, Logger } from '../../utils/Logger';
+import * as GTT from 'gdax-trading-toolkit';
+import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
+import { OrderbookMessage } from "gdax-trading-toolkit/build/src/core";
 
-/**
- * A simple FX rate calculator that uses a single FXProvider and return the current exchange rate from it directly.
- * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
- */
-export default class SimpleRateCalculator extends FXRateCalculator {
-    logger: Logger;
-    provider: FXProvider;
+const logger = GTT.utils.ConsoleLoggerFactory();
+const products: string[] = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
+const tallies: any = {};
+products.forEach((product: string) => {
+    tallies[product] = {};
+});
 
-    constructor(provider: FXProvider, logger?: Logger) {
-        super();
-        this.provider = provider;
-        this.logger = logger || ConsoleLoggerFactory();
-    }
+let count = 0;
 
-    calculateRatesFor(pairs: CurrencyPair[]): Promise<FXObject[]> {
-        const promises: Promise<FXObject>[] = pairs.map((pair: CurrencyPair) => {
-            return this.provider.fetchCurrentRate(pair)
-                .catch((err: Error) => {
-                this.logger.log('warn', err.message, (err as any).details || null);
-                return Promise.resolve({
-                    from: pair.from,
-                    to: pair.to,
-                    rate: null,
-                    change: null,
-                    time: new Date()
-                });
-            });
-        });
-        // Wait for all promises to resolve before sending results back
-        return Promise.all(promises);
+GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
+    feed.on('data', (msg: OrderbookMessage) => {
+        count++;
+        if (!(msg as any).productId) {
+            tallies.other += 1;
+        } else {
+            const tally = tallies[msg.productId];
+            if (!tally[msg.type]) {
+                tally[msg.type] = 0;
+            }
+            tally[msg.type] += 1;
+        }
+        if (count % 1000 === 0) {
+            printTallies();
+        }
+    });
+}).catch((err: Error) => {
+    logger.log('error', err.message);
+    process.exit(1);
+});
+
+function printTallies() {
+    console.log(`${count} messages received`);
+    for (const p in tallies) {
+        const types = Object.keys(tallies[p]).sort();
+        const tally: string = types.map((t) => `${t}: ${tallies[p][t]}`).join('\t');
+        console.log(`${p}: ${tally}`);
     }
 }

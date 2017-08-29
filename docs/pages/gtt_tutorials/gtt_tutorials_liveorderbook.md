@@ -33,9 +33,11 @@ to the orderbook; and `strictMode`, a boolean, that determines the behavior when
 
 A standard template for creating and configuring a LiveOrderbook looks like this:
 
+    import * as GTT from 'gdax-trading-toolkit';
+
     const products = ['LTC-USD'];
-    const logger = ConsoleLoggerFactory({ level: 'debug' });
-    FeedFactory(logger, products).then((feed: GDAXFeed) => {
+    const logger = GTT.utils.ConsoleLoggerFactory({ level: 'debug' });
+    GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
         // Configure the live book object
         const config: LiveBookConfig = {
             product: product,
@@ -131,7 +133,7 @@ And to track total trading volume since connecting, you would have
        tradeVolume += +(trade.size);
     });
 
-A full working example can be found in the repository, in `src/tutorials/t002_liveOrderbook.ts`. It
+A full working example can be found in the repository, in `tutorials/t002_liveOrderbook.ts`. It
  can be executed by running
 
     $ ts-node src/tutorials/t002_liveOrderbook.ts

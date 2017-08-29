@@ -12,14 +12,9 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
-import { ExchangeRateFilter, ExchangeRateFilterConfig } from '../core/ExchangeRateFilter';
-import { StreamMessage, TradeMessage } from '../core/Messages';
-import { padfloat } from '../utils/printers';
-import { SimpleFXServiceFactory } from '../factories/fxServiceFactories';
-import { FeedFactory } from '../factories/gdaxFactories';
-import { ProductFilter } from '../core/ProductFilter';
+import * as GTT from 'gdax-trading-toolkit';
+import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
+import { ExchangeRateFilterConfig, StreamMessage, TradeMessage } from "gdax-trading-toolkit/build/src/core";
 
 /**
  * This Demonstration program illustrates how one can pipe the GDAX message streams through filters to transform the
@@ -32,14 +27,15 @@ import { ProductFilter } from '../core/ProductFilter';
 const products = ['BTC-USD', 'BTC-EUR', 'BTC-GBP'];
 
 // Create a single logger instance to pass around
-const logger = ConsoleLoggerFactory();
+const logger = GTT.utils.ConsoleLoggerFactory();
+const padfloat = GTT.utils.padfloat;
 
-FeedFactory(logger, products).then((feed: GDAXFeed) => {
+GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
     // Configure all message streams to use the same websocket feed
     // Create the source message streams by creating a MessageStream for each product, using the same WS feed for each
-    const streams = products.map((product) => new ProductFilter({ logger: logger, productId: product }));
+    const streams = products.map((product) => new GTT.Core.ProductFilter({ logger: logger, productId: product }));
     // Let's grab a simple FXService object that uses Yahoo Finance as its source
-    const fxService = SimpleFXServiceFactory('yahoo', logger);
+    const fxService = GTT.Factories.SimpleFXServiceFactory('yahoo', logger);
     // We add the EUR and GBP exchange rates and reset the refresh interval to 1 minute
     fxService
         .addCurrencyPair({ from: 'GBP', to: 'USD' })
@@ -53,8 +49,8 @@ FeedFactory(logger, products).then((feed: GDAXFeed) => {
         precision: 2
     };
     // Use the spread operator to overwrite the config properties that differ. Neat!
-    const fxGBP = new ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
-    const fxEUR = new ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
+    const fxGBP = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
+    const fxEUR = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
     const outStream = new Array(3);
     outStream[0] = feed.pipe(streams[0]);
     // The EUR and GBP stream get passed through an exchange rate filter to convert prices to USD equivalent

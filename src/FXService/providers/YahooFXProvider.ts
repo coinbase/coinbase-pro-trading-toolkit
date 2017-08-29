@@ -13,9 +13,9 @@
  ***************************************************************************************************************************/
 
 import request = require('superagent');
-import { FXProvider, FXObject, EFXRateUnavailable, CurrencyPair } from '../FXProvider';
-import Response = request.Response;
+import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider } from '../FXProvider';
 import { Big } from '../../lib/types';
+import Response = request.Response;
 
 const YAHOO_API_URI = 'https://query.yahooapis.com/v1/public/yql';
 
@@ -56,6 +56,14 @@ export default class YahooFinanceFXProvider extends FXProvider {
                     to: pair.to,
                     rate: Big(rate)
                 });
+            }, (result: Response) => {
+                let details = {};
+                try {
+                    details = JSON.parse(result.text);
+                } catch (e) { /* no-op */ }
+                const err: any = new Error(`Yahoo Finance returned an error: ${result.status}`);
+                err.details = details;
+                return Promise.reject(err);
             });
     }
 
@@ -85,5 +93,4 @@ export default class YahooFinanceFXProvider extends FXProvider {
     private isSupportedPair(pair: CurrencyPair): boolean {
         return SUPPORTED_PAIRS.indexOf(pair.from) >= 0 && SUPPORTED_PAIRS.indexOf(pair.to) >= 0;
     }
-
 }

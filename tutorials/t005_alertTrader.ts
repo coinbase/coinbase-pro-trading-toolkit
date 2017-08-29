@@ -12,28 +12,24 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { DefaultAPI, getSubscribedFeeds } from '../factories/gdaxFactories';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
-import { PlaceOrderMessage, TickerMessage } from '../core/Messages';
-import { GDAX_API_URL } from '../exchanges/gdax/GDAXExchangeAPI';
-import { LiveOrder } from '../lib/Orderbook';
-import { createPriceTrigger, createTickerTrigger } from '../core/Triggers';
-import * as PushBullet from 'pushbullet';
-import { Big } from '../lib/types';
+import * as GTT from "gdax-trading-toolkit";
+import { Big } from "gdax-trading-toolkit/build/src/lib/types";
+import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from "gdax-trading-toolkit/build/src/exchanges";
+import { GDAX_API_URL } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXExchangeAPI";
+import { PlaceOrderMessage, TickerMessage } from "gdax-trading-toolkit/build/src/core";
+import { LiveOrder } from "gdax-trading-toolkit/build/src/lib";
 
-const logger = ConsoleLoggerFactory();
-const pusher = new PushBullet(process.env.PUSHBULLET_KEY);
+const logger = GTT.utils.ConsoleLoggerFactory();
+const pusher = new GTT.utils.PushBullet(process.env.PUSHBULLET_KEY);
 const deviceID = process.env.PUSHBULLET_DEVICE_ID;
 const product = 'ETH-USD';
-
 /**
  * Remember to set GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars to allow trading
  */
 
-const gdaxAPI = DefaultAPI(logger);
+const gdaxAPI = GTT.Factories.GDAX.DefaultAPI(logger);
 const [base, quote] = product.split('-');
-const spread = Big('2.5');
+const spread = Big('0.15');
 
 const options: GDAXFeedConfig = {
     logger: logger,
@@ -43,20 +39,24 @@ const options: GDAXFeedConfig = {
     apiUrl: GDAX_API_URL
 };
 
-getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
-    createTickerTrigger(feed, product)
+GTT.Factories.GDAX.getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
+    GTT.Core.createTickerTrigger(feed, product)
         .setAction((ticker: TickerMessage) => {
             const currentPrice = ticker.price;
-            createPriceTrigger(feed, product, currentPrice.minus(spread))
+            GTT.Core.createPriceTrigger(feed, product, currentPrice.minus(spread))
                 .setAction((event: TickerMessage) => {
                     pushMessage('Price Trigger', `${base} price has fallen and is now ${event.price} ${quote} on ${product} on GDAX`);
                     submitTrade('buy', '0.01');
                 });
-            createPriceTrigger(feed, product, currentPrice.plus(spread))
+            GTT.Core.createPriceTrigger(feed, product, currentPrice.plus(spread))
                 .setAction((event: TickerMessage) => {
                     pushMessage('Price Trigger', `${base} price has risen and is now ${event.price} ${quote} on ${product} on GDAX`);
                     submitTrade('buy', '0.01');
                 });
+        });
+    GTT.Core.createTickerTrigger(feed, product, false)
+        .setAction((ticker: TickerMessage) => {
+            console.log(GTT.utils.printTicker(ticker, 3));
         });
 });
 

@@ -1,3 +1,4 @@
+"use strict";
 /***************************************************************************************************************************
  * @license                                                                                                                *
  * Copyright 2017 Coinbase, Inc.                                                                                           *
@@ -11,28 +12,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
-
-import { FeedFactory } from '../factories/gdaxFactories';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
-import { OrderbookMessage } from '../core/Messages';
-
-const logger = ConsoleLoggerFactory();
-const products: string[] = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
-const tallies: any = {};
-products.forEach((product: string) => {
+Object.defineProperty(exports, "__esModule", { value: true });
+var GTT = require("gdax-trading-toolkit");
+var logger = GTT.utils.ConsoleLoggerFactory();
+var products = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
+var tallies = {};
+products.forEach(function (product) {
     tallies[product] = {};
 });
-
-let count = 0;
-
-FeedFactory(logger, products).then((feed: GDAXFeed) => {
-    feed.on('data', (msg: OrderbookMessage) => {
+var count = 0;
+GTT.Factories.GDAX.FeedFactory(logger, products).then(function (feed) {
+    feed.on('data', function (msg) {
         count++;
-        if (!(msg as any).productId) {
+        if (!msg.productId) {
             tallies.other += 1;
-        } else {
-            const tally = tallies[msg.productId];
+        }
+        else {
+            var tally = tallies[msg.productId];
             if (!tally[msg.type]) {
                 tally[msg.type] = 0;
             }
@@ -42,16 +38,18 @@ FeedFactory(logger, products).then((feed: GDAXFeed) => {
             printTallies();
         }
     });
-}).catch((err: Error) => {
+}).catch(function (err) {
     logger.log('error', err.message);
     process.exit(1);
 });
-
 function printTallies() {
-    console.log(`${count} messages received`);
-    for (const p in tallies) {
-        const types = Object.keys(tallies[p]).sort();
-        const tally: string = types.map((t) => `${t}: ${tallies[p][t]}`).join('\t');
-        console.log(`${p}: ${tally}`);
+    console.log(count + " messages received");
+    var _loop_1 = function (p) {
+        var types = Object.keys(tallies[p]).sort();
+        var tally = types.map(function (t) { return t + ": " + tallies[p][t]; }).join('\t');
+        console.log(p + ": " + tally);
+    };
+    for (var p in tallies) {
+        _loop_1(p);
     }
 }
