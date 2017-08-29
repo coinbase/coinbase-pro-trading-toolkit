@@ -12,8 +12,10 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-export { BookBuilder } from './lib/BookBuilder';
-export { LiveOrderbook } from './core/LiveOrderbook';
-export { BitfinexConfig, BitfinexExchangeAPI } from './exchanges/bitfinex/BitfinexExchangeAPI';
-export { GDAXConfig, GDAXExchangeAPI } from './exchanges/gdax/GDAXExchangeAPI';
-export { Logger, ConsoleLoggerFactory } from './utils/Logger';
+import * as Core from './core';
+import * as Exchanges from './exchanges';
+import * as Factories from './factories';
+import * as FXService from './FXService';
+import * as utils from './utils';
+import * as lib from './lib';
+export { Core, Exchanges, Factories, FXService, utils, lib };

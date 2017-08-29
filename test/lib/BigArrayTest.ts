@@ -13,7 +13,7 @@
  ***************************************************************************************************************************/
 
 import { Big } from '../../src/lib/types';
-import BigArray from '../../src/lib/math/BigArray';
+import BigArray from '../../src/lib/BigArray';
 const assert = require('assert');
 const arr = [Big(2), Big(4), Big(6), Big(8)];
 

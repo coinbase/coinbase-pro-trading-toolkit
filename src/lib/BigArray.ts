@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Big, big, BigJS, Biglike, ONE, ZERO } from '../types';
+import { Big, big, BigJS, Biglike, ONE, ZERO } from './types';
 
 export default class BigArray {
     static copy(a: BigArray) {

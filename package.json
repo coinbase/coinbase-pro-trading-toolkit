@@ -1,23 +1,23 @@
 {
   "name": "gdax-trading-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.8",
   "description": "A trading toolkit for building advanced trading bots on the GDAX platform",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
     "lint": "tslint -c tslint.json -p . -t stylish",
     "pretest": "yarn run build",
-    "build": "tsc -p .",
+    "build": "tsc -d -p .",
     "coverage": "yarn run build && ./node_modules/.bin/nyc --reporter text-summary ./node_modules/.bin/mocha",
     "coverage:report": "./node_modules/.bin/nyc report --reporter text-summary --reporter html && open coverage/index.html",
     "test:mocha": "./node_modules/.bin/mocha",
     "test": "yarn run lint && yarn run test:mocha",
     "clean": "rm -fr build coverage .nyc_output",
-    "postinstall": "yarn run build",
-    "doc": "./node_modules/.bin/typedoc --options typedoc.json ."
+    "doc": "./node_modules/.bin/typedoc --options typedoc.json .",
+    "prepublishOnly": "yarn run build"
   },
   "bin": {
-    "gdaxConsole": "./build/src/console/gdaxConsole.js"
+    "gdaxConsole": "./build/src/consoles/gdaxConsole.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,19 @@
   "author": "Cayle Sharrock <cayle@coinbase.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/bignumber.js": "4.0.2",
+    "@types/bintrees": "1.0.2",
+    "@types/commander": "2.3.31",
+    "@types/crypto-js": "3.1.32",
+    "@types/mocha": "2.2.33",
+    "@types/nock": "8.2.0",
+    "@types/node": "6.0.51",
+    "@types/query-string": "3.0.30",
+    "@types/simple-mock": "0.0.27",
+    "@types/superagent": "2.0.35",
+    "@types/uuid": "2.0.29",
+    "@types/winston": "2.2.0",
+    "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
     "commander": "2.9.0",
@@ -48,19 +61,6 @@
     "ws": "1.1.1"
   },
   "devDependencies": {
-    "@types/bignumber.js": "4.0.2",
-    "@types/bintrees": "1.0.2",
-    "@types/commander": "2.3.31",
-    "@types/crypto-js": "3.1.32",
-    "@types/mocha": "2.2.33",
-    "@types/nock": "8.2.0",
-    "@types/node": "6.0.51",
-    "@types/query-string": "3.0.30",
-    "@types/simple-mock": "0.0.27",
-    "@types/superagent": "2.0.35",
-    "@types/uuid": "2.0.29",
-    "@types/winston": "2.2.0",
-    "@types/ws": "0.0.37",
     "expect.js": "0.3.1",
     "mocha": "3.2.0",
     "nock": "9.0.2",

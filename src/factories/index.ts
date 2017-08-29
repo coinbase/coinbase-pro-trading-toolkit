@@ -41,3 +41,10 @@ export  { GDAX };
 
 import * as Bitfinex from './bitfinexFactories';
 export  { Bitfinex };
+
+/**
+ * Poloniex factories
+ */
+
+import * as Poloniex from './bitfinexFactories';
+export  { Poloniex };
