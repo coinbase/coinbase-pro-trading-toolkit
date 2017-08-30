@@ -67,7 +67,7 @@ getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
     book.on('end', () => {
         console.log('Orderbook closed');
     });
-    book.on('error', (err) => {
+    book.on('error', (err: Error) => {
         console.log('Livebook errored: ', err);
         feed.pipe(book);
     });

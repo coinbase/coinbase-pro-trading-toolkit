@@ -12,11 +12,11 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Big, BigJS, Biglike, ZERO } from "../lib/types";
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from "../lib/Orderbook";
-import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from "../lib/BookBuilder";
-import { Logger } from "../utils/Logger";
-import { Ticker } from "../exchanges/PublicExchangeAPI";
+import { Big, BigJS, Biglike, ZERO } from '../lib/types';
+import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from '../lib/Orderbook';
+import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from '../lib/BookBuilder';
+import { Logger } from '../utils/Logger';
+import { Ticker } from '../exchanges/PublicExchangeAPI';
 import {
     ChangedOrderMessage,
     isStreamMessage,
@@ -26,8 +26,8 @@ import {
     OrderDoneMessage,
     SnapshotMessage,
     TickerMessage
-} from "./Messages";
-import { Transform } from "stream";
+} from './Messages';
+import { Transform } from 'stream';
 
 export interface LiveBookConfig {
     product: string;
