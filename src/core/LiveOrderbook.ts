@@ -12,11 +12,11 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Big, BigJS, Biglike, ZERO } from '../lib/types';
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from '../lib/Orderbook';
-import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from '../lib/BookBuilder';
-import { Logger } from '../utils/Logger';
-import { Ticker } from '../exchanges/PublicExchangeAPI';
+import { Big, BigJS, Biglike, ZERO } from "../lib/types";
+import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from "../lib/Orderbook";
+import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from "../lib/BookBuilder";
+import { Logger } from "../utils/Logger";
+import { Ticker } from "../exchanges/PublicExchangeAPI";
 import {
     ChangedOrderMessage,
     isStreamMessage,
@@ -26,8 +26,8 @@ import {
     OrderDoneMessage,
     SnapshotMessage,
     TickerMessage
-} from './Messages';
-import { Writable } from 'stream';
+} from "./Messages";
+import { Transform } from "stream";
 
 export interface LiveBookConfig {
     product: string;
@@ -50,7 +50,7 @@ export interface SkippedMessageEvent {
  * A live orderbook. This class maintains the state of an orderbook (using BookBuilder) in realtime by responding to
  * messages from attached feeds.
  */
-export class LiveOrderbook extends Writable implements Orderbook {
+export class LiveOrderbook extends Transform implements Orderbook {
     public readonly product: string;
     public readonly baseCurrency: string;
     public readonly quoteCurrency: string;
@@ -149,7 +149,14 @@ export class LiveOrderbook extends Writable implements Orderbook {
         return this._book.ordersForValue(side, Big(value), useQuote, startPrice);
     }
 
+    protected _transform(msg: any, encoding: string, callback: (err: Error, msg: any) => void) {
+        callback(null, msg);
+    }
+
     protected _write(msg: any, encoding: string, callback: () => void): void {
+        // Pass the msg on to downstream users
+        this.push(msg);
+        // Process the message for the orderbook state
         if (!isStreamMessage(msg) || !msg.productId) {
             return callback();
         }
