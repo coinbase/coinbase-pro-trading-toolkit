@@ -7,3 +7,4 @@ export * from './ProductFilter';
 export * from './RateLimiter';
 export * from './Trader';
 export * from './Triggers';
+export * from './ProductSplitter';

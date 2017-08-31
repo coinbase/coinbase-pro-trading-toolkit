@@ -27,7 +27,7 @@ import {
     SnapshotMessage,
     TickerMessage
 } from './Messages';
-import { Transform } from 'stream';
+import { Duplex } from 'stream';
 
 export interface LiveBookConfig {
     product: string;
@@ -50,7 +50,7 @@ export interface SkippedMessageEvent {
  * A live orderbook. This class maintains the state of an orderbook (using BookBuilder) in realtime by responding to
  * messages from attached feeds.
  */
-export class LiveOrderbook extends Transform implements Orderbook {
+export class LiveOrderbook extends Duplex implements Orderbook {
     public readonly product: string;
     public readonly baseCurrency: string;
     public readonly quoteCurrency: string;
@@ -149,9 +149,7 @@ export class LiveOrderbook extends Transform implements Orderbook {
         return this._book.ordersForValue(side, Big(value), useQuote, startPrice);
     }
 
-    protected _transform(msg: any, encoding: string, callback: (err: Error, msg: any) => void) {
-        callback(null, msg);
-    }
+    protected _read() { /* no-op */ }
 
     protected _write(msg: any, encoding: string, callback: () => void): void {
         // Pass the msg on to downstream users
