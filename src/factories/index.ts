@@ -48,3 +48,10 @@ export  { Bitfinex };
 
 import * as Poloniex from './bitfinexFactories';
 export  { Poloniex };
+
+/**
+ * Bittrex factories
+ */
+
+import * as Bittrex from './bitfinexFactories';
+export  { Bittrex };
