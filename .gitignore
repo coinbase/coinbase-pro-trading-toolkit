@@ -12,3 +12,4 @@ build
 src/**/*.js
 .nyc_output
 coverage
+.DS_Store
