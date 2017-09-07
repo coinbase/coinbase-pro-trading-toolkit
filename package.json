@@ -53,6 +53,7 @@
     "crypto": "0.0.3",
     "gdax": "0.3.1",
     "limiter": "git://github.com/jhurliman/node-rate-limiter.git#58ce2fda6b5c2bc4ccb81ba3768c5b1bc06c91a5",
+    "node.bittrex.api": "0.5.1",
     "pushbullet": "2.0.0",
     "querystring": "0.2.0",
     "simple-mock": "0.8.0",

@@ -21,9 +21,10 @@ import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { GDAXConfig, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { PublicExchangeAPI, Ticker } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
-import { printOrderbook } from '../utils/printers';
+import { printOrderbook, printTicker } from '../utils/printers';
 import { AuthenticatedExchangeAPI, Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { LiveOrder } from '../lib/Orderbook';
+import { DefaultAPI } from '../factories/bittrexFactories';
 
 const logger: Logger = ConsoleLoggerFactory({ level: 'info' });
 
@@ -47,9 +48,10 @@ const gdaxConfig: GDAXConfig = {
 
 const bitfinex = new BitfinexExchangeAPI(bitfinexConfig);
 const gdax = new GDAXExchangeAPI(gdaxConfig);
+const bittrex = DefaultAPI(logger);
 
-const publicExchanges: PublicExchangeAPI[] = [gdax, bitfinex];
-const product = 'BTC-USD';
+const publicExchanges: PublicExchangeAPI[] = [bitfinex, gdax, bittrex];
+const product = 'ETH-BTC';
 const [baseCurrency, quoteCurrency] = product.split('-');
 
 // Query some public endpoints
@@ -58,26 +60,19 @@ publicExchanges.forEach((exchange: PublicExchangeAPI) => {
         logger.log('info', 'Products for ' + exchange.owner, products.map((p) => p.id).join(' '));
         return exchange.loadTicker(product);
     }).then((ticker: Ticker) => {
-        printTicker(exchange, ticker);
+        console.log(`${exchange.owner} ${product} Ticker:`);
+        console.log(printTicker(ticker, 4));
         return exchange.loadMidMarketPrice(product);
     }).then((price) => {
-        logger.log('info', `Midmarket price: ${price.toFixed(2)}`);
+        logger.log('info', `${exchange.owner} ${product} Midmarket price: ${price.toFixed(4)}`);
         return exchange.loadOrderbook(product);
     }).then((book: BookBuilder) => {
-        console.log(printOrderbook(book, 5));
+        console.log(`${exchange.owner} ${product} Orderbook:`);
+        console.log(printOrderbook(book, 5, 5, 3));
     }).catch((err) => {
         logger.log('error', err.message, err);
     });
 });
-
-function printTicker(exchange: PublicExchangeAPI, ticker: Ticker) {
-    logger.log('info', `${exchange.owner} ${product} Ticker`);
-    logger.log(
-        'info',
-        `Current Price ${baseCurrency} ${ticker.price.toFixed(2)} | Best Bid: ${ticker.bid.toFixed(2)} ` +
-        `| Best ask: ${ticker.ask.toFixed(2)} | 24 hr Volume: ${ticker.volume.toFixed(0)}\n`
-    );
-}
 
 // If you have the requisite API keys set, then the following will illustrate some authenticated endpoints
 const runAuth: boolean = !!bitfinexConfig.auth.key && !!gdaxConfig.auth.key;
