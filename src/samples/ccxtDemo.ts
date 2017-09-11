@@ -17,6 +17,7 @@ import { printOrderbook, printTicker } from '../utils/printers';
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
+import { Balances } from '../exchanges/AuthenticatedExchangeAPI';
 
 const exchanges = CCXTWrapper.supportedExchanges();
 const logger = ConsoleLoggerFactory();
@@ -28,7 +29,8 @@ console.log('Supported exchange names:');
 console.log(CCXTWrapper.supportedExchangeNames().join(', '));
 
 for (let i = 0; i < 5; i++) {
-    const exchange = randomElement(exchanges);
+    // const exchange = randomElement(exchanges);
+    const exchange = ['bitmex', 'gemini', 'kraken', 'itbit', 'cex'][i];
     const api = CCXTWrapper.createExchange(exchange, { key: null, secret: null }, logger);
     let product: Product;
     api.loadProducts().then((products) => {
@@ -45,8 +47,15 @@ for (let i = 0; i < 5; i++) {
         return api.loadOrderbook(product.id);
     }).then((book: BookBuilder) => {
         console.log(`Top 10 orders for ${product.id} on ${api.owner}`);
-        const s = book ? printOrderbook(book, 10, 4, 4): '... is not available';
+        const s = book ? printOrderbook(book, 10, 4, 4) : '... is not available';
         console.log(s);
+        return api.loadBalances();
+    }).then((balances: Balances) => {
+        console.log(`Account balances for ${api.owner}`);
+        const s = balances ? JSON.stringify(balances) : '... are not available';
+        console.log(s);
+    }, () => {
+        console.log(`No Credentials provided for ${api.owner}.`);
     });
 }
 

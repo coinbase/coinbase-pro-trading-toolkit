@@ -116,7 +116,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const uid = opts.uid || process.env[`${upName}_UID`];
         const options = Object.assign(opts, { apiKey: key, secret: secret, uid: uid, password: password });
         const ccxtInstance = exchange(options);
-        return new CCXTExchangeWrapper(owner, auth, ccxtInstance, logger);
+        return new CCXTExchangeWrapper(owner, options, ccxtInstance, logger);
     }
 
     static supportedExchanges(): string[] {
@@ -274,7 +274,30 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     loadBalances(): Promise<Balances> {
-        return undefined;
+        if (!this.options.apiKey) {
+            return Promise.reject(new Error('An API key is required to make this call'));
+        }
+        return this.instance.fetchBalance().then((balances: any) => {
+            if (!balances) {
+                return Promise.resolve(null);
+            }
+            const result: Balances = { default: {} };
+            for (const cur in balances) {
+                if (cur === 'info') {
+                    continue;
+                }
+                const total = balances[cur].total;
+                const available = balances[cur].free;
+                result.default[cur] = {
+                    balance: isFinite(total) ? Big(total) : null,
+                    available: isFinite(available) ? Big(available) : null
+                };
+            }
+            return Promise.resolve(result);
+        }).catch((err) => {
+            this.log('error', `Could not load balances from ${this.owner}`, err);
+            return Promise.resolve(null);
+        });
     }
 
     requestCryptoAddress(cur: string): Promise<CryptoAddress> {
