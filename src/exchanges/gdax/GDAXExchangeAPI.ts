@@ -112,11 +112,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 return products.map((prod: GDAXAPIProduct) => {
                     return {
                         id: prod.id,
+                        sourceId: prod.id,
                         baseCurrency: prod.base_currency,
                         quoteCurrency: prod.quote_currency,
                         baseMinSize: Big(prod.base_min_size),
                         baseMaxSize: Big(prod.base_max_size),
-                        quoteIncrement: Big(prod.quote_increment)
+                        quoteIncrement: Big(prod.quote_increment),
+                        sourceData: prod
                     } as Product;
                 });
             });

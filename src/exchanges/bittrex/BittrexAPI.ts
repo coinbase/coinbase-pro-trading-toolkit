@@ -55,11 +55,13 @@ export class BittrexAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI {
                 const result: Product[] = data.result.map((market: any) => {
                     return {
                         id: market.MarketName, // same format as GDAX, so no need to map
+                        sourceId: market.MarketName,
                         baseCurrency: market.BaseCurrency,
                         quoteCurrency: market.marketCurrency,
                         baseMinSize: Big(market.MinTradeSize),
                         baseMaxSize: Big('1e18'),
-                        quoteIncrement: Big(market.MinTradeSize)
+                        quoteIncrement: Big(market.MinTradeSize),
+                        sourceData: market
                     };
                 });
                 return resolve(result);
