@@ -13,9 +13,10 @@
  **********************************************************************************************************************/
 
 import CCXTWrapper from '../exchanges/ccxt';
-import { printTicker } from '../utils/printers';
+import { printOrderbook, printTicker } from '../utils/printers';
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { Product } from '../exchanges/PublicExchangeAPI';
+import { BookBuilder } from '../lib/BookBuilder';
 
 const exchanges = CCXTWrapper.supportedExchanges();
 const logger = ConsoleLoggerFactory();
@@ -40,6 +41,11 @@ for (let i = 0; i < 5; i++) {
     }).then((ticker) => {
         console.log(`Ticker for ${product.id} on ${api.owner}`);
         const s = ticker ? printTicker(ticker, 4) : '... is not available';
+        console.log(s);
+        return api.loadOrderbook(product.id);
+    }).then((book: BookBuilder) => {
+        console.log(`Top 10 orders for ${product.id} on ${api.owner}`);
+        const s = book ? printOrderbook(book, 10, 4, 4): '... is not available';
         console.log(s);
     });
 }

@@ -29,10 +29,11 @@ export function printOrderbook(book: Orderbook, numOrders: number = 20, basePrec
         const ask: PriceLevel = state.asks[i];
         totalAsks += +ask.totalSize;
         totalBids += +bid.totalSize;
-        report += (`${padfloat(totalBids, 9, basePrec)}  ${padfloat(bid.totalSize, 8, basePrec)}  $${padfloat(bid.price, 7, quotePrec)}\t\t` +
+        report += (`${padfloat(totalBids, 9, basePrec)}  ${padfloat(bid.totalSize, 8, basePrec)}  ${padfloat(bid.price, 7, quotePrec)}\t\t` +
         `${padfloat(ask.price, 7, quotePrec)}  ${padfloat(ask.totalSize, 8, basePrec)}  ${padfloat(totalAsks, 9, basePrec)}\n`);
     }
     return report;
+
 }
 
 export function printSeparator() {

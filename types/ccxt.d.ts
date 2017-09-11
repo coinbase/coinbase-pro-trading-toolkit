@@ -13,6 +13,13 @@ declare module 'ccxt' {
         info: any;
     }
 
+    export interface CCXTOrderbook {
+        bids: number[][];
+        asks: number[][];
+        timestamp: number;
+        datetime: string;
+    }
+
     export class Exchange {
         readonly rateLimit: number;
         public verbose: boolean;
@@ -43,7 +50,7 @@ declare module 'ccxt' {
 
         fetchBalance(params?: any): Promise<any>;
 
-        fetchOrderBook(market: string, params?: any): Promise<any>;
+        fetchOrderBook(market: string, params?: any): Promise<CCXTOrderbook>;
 
         fetchTicker(market: string): Promise<any>;
 

@@ -13,7 +13,7 @@
  **********************************************************************************************************************/
 
 import * as ccxt from 'ccxt';
-import { CCXTMarket } from 'ccxt';
+import { CCXTMarket, CCXTOrderbook } from 'ccxt';
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
@@ -21,7 +21,7 @@ import { ExchangeAuthConfig } from '../AuthConfig';
 import { Big, BigJS } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage } from '../../core/Messages';
-import { LiveOrder } from '../../lib/Orderbook';
+import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { Logger } from '../../utils/Logger';
 
 type ExchangeDefinition = [string, (opts: any) => ccxt.Exchange];
@@ -131,6 +131,10 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return result;
     }
 
+    static getGDAXSymbol(m: CCXTMarket): string {
+        return `${m.base}-${m.quote}`;
+    }
+
     readonly owner: string;
     private instance: ccxt.Exchange;
     private options: any;
@@ -150,6 +154,19 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         this.logger.log(level, msg, meta);
     }
 
+    getSourceSymbol(gdaxProduct: string): Promise<string> {
+        const [base, quote] = gdaxProduct.split('-');
+        return this.instance.loadMarkets(false).then((markets: CCXTMarket[]) => {
+            for (const id in markets) {
+                const m: CCXTMarket = markets[id];
+                if (m.base === base && m.quote === quote) {
+                    return Promise.resolve(m.symbol);
+                }
+            }
+            return Promise.resolve(null);
+        });
+    }
+
     loadProducts(): Promise<Product[]> {
         return this.instance.loadMarkets(true).then((markets: ccxt.CCXTMarket[]) => {
             if (!markets) {
@@ -159,7 +176,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             for (const id in markets) {
                 const m = markets[id];
                 const product: Product = {
-                    id: `${m.base}-${m.quote}`,
+                    id: CCXTExchangeWrapper.getGDAXSymbol(m),
                     sourceId: m.id,
                     baseCurrency: m.base,
                     quoteCurrency: m.quote,
@@ -178,22 +195,38 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
-        return undefined;
+        return this.loadTicker(gdaxProduct).then((t: Ticker) => {
+            if (!(t && t.ask && t.bid)) {
+                return Promise.resolve(null);
+            }
+            return Promise.resolve(t.bid.plus(t.ask).div(2));
+        });
     }
 
     loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
-        return undefined;
-    }
-
-    getSourceSymbol(gdaxProduct: string): Promise<string> {
-        const [base, quote] = gdaxProduct.split('-');
-        return this.instance.loadMarkets(false).then((markets: CCXTMarket[]) => {
-            for (const id in markets) {
-                const m: CCXTMarket = markets[id];
-                if (m.base === base && m.quote === quote) {
-                    return Promise.resolve(m.symbol);
-                }
-            }
+        return this.getSourceSymbol(gdaxProduct).then((id: string) => {
+            return this.instance.fetchOrderBook(id);
+        }).then((ccxtBook: CCXTOrderbook) => {
+            const book: BookBuilder = new BookBuilder(this.logger);
+            const addSide = (side: string, orders: number[][]) => {
+                orders.forEach((o) => {
+                    if (!Array.isArray(o) ||  o.length !== 2) {
+                        return;
+                    }
+                    const order: Level3Order = {
+                        price: Big(o[0]),
+                        size: Big(o[1]),
+                        side: side,
+                        id: String(o[0])
+                    };
+                    book.add(order);
+                });
+            };
+            addSide('buy', ccxtBook.bids);
+            addSide('sell', ccxtBook.asks);
+            return Promise.resolve(book);
+        }).catch((err) => {
+            this.log('error', `Could not load orderbook for ${gdaxProduct} on ${this.owner}`, err);
             return Promise.resolve(null);
         });
     }
