@@ -1,6 +1,6 @@
 # GDAX Trading toolkit
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
-GDAX and supported digital asset exchanges.
+GDAX and supported digital asset exchanges. Note: Node 6.11 is required.
 
 
 ## Install
