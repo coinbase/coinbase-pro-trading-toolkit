@@ -72,7 +72,7 @@ The filter also exposes a single method `getRate` that allows you to obtain the 
 
 A little more effort is required to configure the FX Service. The Service comprises two sub-components. The first, `FXProvider`
  determines how the exchange rates are obtained, typically via an external service. `YahooFXProvider` and `OpenExchangeProvider`
- are provided out of the box, which retrieves data from Yahoo finance and [OpenExchangeRates][http://openExchangeRates.org] respectively. For crypto pricing, we also provide `coinmarketcap`,
+ are provided out of the box, which retrieves data from Yahoo finance and [OpenExchangeRates](http://openExchangeRates.org) respectively. For crypto pricing, we also provide `coinmarketcap`,
  which loads prices from [coimarketcap.com](https://coimarketcap.com).
 
  {% include note.html content="To use OpenExchangeRates, you'll need to supply an API key based on your subscription plan. They do offer a free option which will allow you to obtain hourly updates on exchange rates." %}
