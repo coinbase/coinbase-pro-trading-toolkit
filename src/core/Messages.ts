@@ -33,6 +33,10 @@ export interface ErrorMessage {
     message: string;
 }
 
+export function isErrorMessage(msg: any): boolean {
+    return !!msg.message && !!msg.message.message && typeof msg.message.message === 'string';
+}
+
 export interface UnknownMessage extends StreamMessage {
     sequence?: number;
     productId?: string;
