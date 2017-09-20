@@ -21,7 +21,7 @@ node.js and don't want to, or can't switch to Typescript, then that's not a prob
 In either case, you can install the GTT by executing 
    
     yarn add gdax-trading-toolkit
-    // or if you're using npm
+    // or if you're using npm (Use yarn if you plan on running examples from /tutorials folder)
     npm i gdax-trading-toolkit
    
 (we're using [Yarn](https://yarnpkg.com/) here, which is essentially a 1:1 drop-in replacement for npm with a whole host 

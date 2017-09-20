@@ -51,7 +51,7 @@ GTT.Factories.GDAX.getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) 
             GTT.Core.createPriceTrigger(feed, product, currentPrice.plus(spread))
                 .setAction((event: TickerMessage) => {
                     pushMessage('Price Trigger', `${base} price has risen and is now ${event.price} ${quote} on ${product} on GDAX`);
-                    submitTrade('buy', '0.01');
+                    submitTrade('sell', '0.01');
                 });
         });
     GTT.Core.createTickerTrigger(feed, product, false)
@@ -70,7 +70,7 @@ function submitTrade(side: string, amount: string) {
         size: amount
     };
     gdaxAPI.placeOrder(order).then((result: LiveOrder) => {
-        pushMessage('Order executed', `Order to sell 0.1 ${base} placed. Result: ${result.status}`);
+        pushMessage('Order executed', `Order to ${order.side} 0.1 ${base} placed. Result: ${result.status}`);
     });
 }
 
