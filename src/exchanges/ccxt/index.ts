@@ -210,7 +210,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             const book: BookBuilder = new BookBuilder(this.logger);
             const addSide = (side: string, orders: number[][]) => {
                 orders.forEach((o) => {
-                    if (!Array.isArray(o) ||  o.length !== 2) {
+                    if (!Array.isArray(o) || o.length !== 2) {
                         return;
                     }
                     const order: Level3Order = {
@@ -254,7 +254,29 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
-        return undefined;
+        return this.getSourceSymbol(order.productId).then((id: string) => {
+            if (!id) {
+                return Promise.resolve(null);
+            }
+            const args = Object.assign({ postOnly: order.postOnly, funds: order.funds, clientId: order.clientId }, order.extra);
+            return this.instance.createOrder(id, order.orderType, order.side, order.size.toString(), order.price.toString(), args).then((res: any) => {
+                const result: LiveOrder = {
+                    productId: order.productId,
+                    price: Big(order.price),
+                    size: Big(order.size),
+                    side: order.side,
+                    id: res.id,
+                    time: new Date(),
+                    extra: res.info,
+                    status: 'active'
+                };
+                return Promise.resolve(result);
+            }).catch((err) => {
+                this.log('error', `Could not place order on ${this.owner}`, {error: err, order: order});
+                return Promise.resolve(null);
+            });
+        });
+
     }
 
     cancelOrder(id: string): Promise<string> {
