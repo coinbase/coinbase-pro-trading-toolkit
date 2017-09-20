@@ -118,11 +118,13 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                     const quote = prod.pair.slice(3, 6);
                     return {
                         id: REVERSE_PRODUCT_MAP[prod.pair] || prod.pair,
+                        sourceId: prod.pair,
                         baseCurrency: REVERSE_CURRENCY_MAP[base] || base,
                         quoteCurrency: REVERSE_CURRENCY_MAP[quote] || quote,
                         baseMinSize: Big(prod.minimum_order_size),
                         baseMaxSize: Big(prod.maximum_order_size),
-                        quoteIncrement: Big(prod.minimum_order_size)
+                        quoteIncrement: Big(prod.minimum_order_size),
+                        sourceData: prod
                     };
                 });
                 return products;

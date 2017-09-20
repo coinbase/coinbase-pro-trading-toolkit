@@ -57,11 +57,13 @@ export function gdaxifyProduct(poloProduct: string): Product {
     base = REVERSE_CURRENCY_MAP[base] || base;
     return {
         id: REVERSE_PRODUCT_MAP[poloProduct] || `${base}-${quote}`,
+        sourceId: poloProduct,
         quoteCurrency: quote,
         baseCurrency: base,
         baseMaxSize: Big(1e6),
         baseMinSize: Big(1e-6),
-        quoteIncrement: Big(1e-6)
+        quoteIncrement: Big(1e-6),
+        sourceData: null
     };
 }
 
