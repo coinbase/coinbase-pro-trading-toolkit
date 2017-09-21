@@ -22,6 +22,16 @@ export interface GDAXMessage {
     user_id?: string; // Authenticated messages only
 }
 
+export interface GDAXChannel {
+    name: string;
+    product_ids: string[];
+}
+
+export interface GDAXSubscriptionsMessage {
+    type: string;
+    channels: GDAXChannel[];
+}
+
 export interface GDAXOpenMessage extends GDAXMessage {
     sequence: number;
     time: string;
