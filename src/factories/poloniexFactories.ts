@@ -12,34 +12,22 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { PoloniexExchangeAPI } from '../exchanges/poloniex/PoloniexExchangeAPI';
 import { Logger } from '../utils/Logger';
 import { PoloniexFeed, PoloniexFeedConfig } from '../exchanges/poloniex/PoloniexFeed';
-import {
-    gdaxToPolo,
-    getAllProductInfo,
-    POLONIEX_WS_FEED,
-    PoloniexProducts,
-    PRODUCT_MAP
-} from '../exchanges/poloniex/PoloniexCommon';
+import { gdaxToPolo, getAllProductInfo, POLONIEX_WS_FEED, PoloniexProducts } from '../exchanges/poloniex/PoloniexCommon';
 import { ExchangeFeedConfig, getFeed } from '../exchanges/ExchangeFeed';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
+import CCXTExchangeWrapper from '../exchanges/ccxt';
 
-let publicAPIInstance: PoloniexExchangeAPI;
+let publicAPIInstance: CCXTExchangeWrapper;
 
 /**
  * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
  * key details are found in the GDAX_KEY etc. envars, they will be used
  */
-export function DefaultAPI(logger: Logger): PoloniexExchangeAPI {
+export function DefaultAPI(logger: Logger): CCXTExchangeWrapper {
     if (!publicAPIInstance) {
-        publicAPIInstance = new PoloniexExchangeAPI({
-            logger: logger,
-            auth: {
-                key: process.env.POLONIEX_KEY,
-                secret: process.env.POLONIEX_SECRET,
-            }
-        });
+        publicAPIInstance = CCXTExchangeWrapper.createExchange('poloniex', { key: process.env.POLONIEX_KEY, secret: process.env.POLONIEX_SECRET }, logger);
     }
     return publicAPIInstance;
 }
@@ -82,9 +70,9 @@ function subscribeToAll(products: string[], feed: PoloniexFeed, info: PoloniexPr
 function getChannelId(product: string, info: PoloniexProducts): number {
     let result: number;
     for (const id in info) {
-        const symbol = info[id].poloniexSymbol;
-        const found = (symbol === (PRODUCT_MAP[product] || product)) || (symbol === gdaxToPolo(product));
-        result = found ? info[id].poloniexId : -1;
+        const symbol = info[id].id;
+        const found = (symbol === product) || (symbol === gdaxToPolo(product));
+        result = found ? info[id].sourceData.id : -1;
         if (found) {
             break;
         }
@@ -99,9 +87,10 @@ function getChannelId(product: string, info: PoloniexProducts): number {
  * It is assumed that your API keys are stored in the GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars
  */
 export function FeedFactory(logger: Logger, products: string[], auth?: ExchangeAuthConfig): Promise<PoloniexFeed> {
-    auth = auth || {
-            key: process.env.POLONIEX_KEY,
-            secret: process.env.POLONIEX_SECRET,
-        };
+    // auth = auth || {
+    //         key: process.env.POLONIEX_KEY,
+    //         secret: process.env.POLONIEX_SECRET,
+    //     };
+    auth = null; // Polo doesn't provide auth feeds yet
     return getSubscribedFeeds({ auth: auth, logger: logger, tickerChannel: true }, products);
 }

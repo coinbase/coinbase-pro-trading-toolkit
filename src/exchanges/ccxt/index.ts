@@ -90,7 +90,7 @@ const exchanges: { [index: string]: ExchangeDefinition } = {
     okcoinusd: ['Okcoinusd', ccxt.okcoinusd],
     okex: ['Okex', ccxt.okex],
     paymium: ['Paymium', ccxt.paymium],
-    // poloniex: ['poloniex', ccxt.poloniex],
+    poloniex: ['poloniex', ccxt.poloniex],
     quadrigacx: ['Quadrigacx', ccxt.quadrigacx],
     quoine: ['Quoine', ccxt.quoine],
     southxchange: ['Southxchange', ccxt.southxchange],
