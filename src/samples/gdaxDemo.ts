@@ -51,6 +51,14 @@ gdax.loadAllOrders(product).then((orders) => {
         total = total.plus(o.size);
     });
     console.log(`You have ${orders.length} orders on the book for a total of ${total.toFixed(1)} BTC`);
+    return gdax.handleResponse(gdax.authCall('GET', '/users/self', {}), {});
+}).then((result) => {
+    console.log('Self');
+    console.log(JSON.stringify(result));
+    return gdax.handleResponse(gdax.authCall('GET', '/users/self/verify', {}), {});
+}).then((result) => {
+    console.log('Self verify');
+    console.log(JSON.stringify(result));
 }).catch(logError);
 
 const order: PlaceOrderMessage = {
