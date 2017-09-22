@@ -34,7 +34,7 @@ export interface ErrorMessage {
 }
 
 export function isErrorMessage(msg: any): boolean {
-    return !!msg.message && !!msg.message.message && typeof msg.message.message === 'string';
+    return !!msg.message && typeof msg.message === 'string';
 }
 
 export interface UnknownMessage extends StreamMessage {
