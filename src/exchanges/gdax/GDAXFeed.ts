@@ -16,6 +16,7 @@ import { AuthHeaders, GDAXAuthConfig, GDAXExchangeAPI } from './GDAXExchangeAPI'
 import { Big } from '../../lib/types';
 import {
     ChangedOrderMessage,
+    ErrorMessage,
     LevelMessage,
     MyOrderPlacedMessage,
     NewOrderMessage,
@@ -32,6 +33,7 @@ import { OrderPool } from '../../lib/BookBuilder';
 import {
     GDAXChangeMessage, GDAXChannel,
     GDAXDoneMessage,
+    GDAXErrorMessage,
     GDAXL2UpdateMessage,
     GDAXMatchMessage,
     GDAXMessage,
@@ -374,12 +376,20 @@ export class GDAXFeed extends ExchangeFeed {
                     price: change.price,
                     newSize: change.new_size
                 } as ChangedOrderMessage;
+            case 'error':
+                const error: GDAXErrorMessage = feedMessage as GDAXErrorMessage;
+                return {
+                    type: 'error',
+                    time: new Date(),
+                    message: error.message,
+                    details: { reason: error.reason }
+                } as ErrorMessage;
             default:
                 return {
                     type: 'unknown',
                     time: new Date(),
                     sequence: (feedMessage as any).sequence,
-                    productId: feedMessage.product_id,
+                    productId: (feedMessage as any).product_id,
                     message: feedMessage
                 } as UnknownMessage;
         }

@@ -18,7 +18,6 @@
 
 export interface GDAXMessage {
     type: string;
-    product_id: string;
     user_id?: string; // Authenticated messages only
 }
 
@@ -27,12 +26,22 @@ export interface GDAXChannel {
     product_ids: string[];
 }
 
-export interface GDAXSubscriptionsMessage {
+export interface GDAXErrorMessage extends GDAXMessage {
+    type: string;
+    message: string;
+    reason: string;
+}
+
+export interface GDAXProductMessage extends GDAXMessage {
+    product_id: string;
+}
+
+export interface GDAXSubscriptionsMessage extends GDAXMessage {
     type: string;
     channels: GDAXChannel[];
 }
 
-export interface GDAXOpenMessage extends GDAXMessage {
+export interface GDAXOpenMessage extends GDAXProductMessage {
     sequence: number;
     time: string;
     order_id: string;
@@ -41,7 +50,7 @@ export interface GDAXOpenMessage extends GDAXMessage {
     side: string;
 }
 
-export interface GDAXDoneMessage extends GDAXMessage {
+export interface GDAXDoneMessage extends GDAXProductMessage {
     sequence: number;
     time: string;
     price: string;
@@ -51,7 +60,7 @@ export interface GDAXDoneMessage extends GDAXMessage {
     remaining_size: string;
 }
 
-export interface GDAXMatchMessage extends GDAXMessage {
+export interface GDAXMatchMessage extends GDAXProductMessage {
     sequence: number;
     time: string;
     trade_id: string;
@@ -62,7 +71,7 @@ export interface GDAXMatchMessage extends GDAXMessage {
     side: string;
 }
 
-export interface GDAXChangeMessage extends GDAXMessage {
+export interface GDAXChangeMessage extends GDAXProductMessage {
     sequence: number;
     time: string;
     order_id: string;
@@ -74,11 +83,11 @@ export interface GDAXChangeMessage extends GDAXMessage {
     side: string;
 }
 
-export interface GDAXL2UpdateMessage extends GDAXMessage {
+export interface GDAXL2UpdateMessage extends GDAXProductMessage {
     changes: string[][]; // [ [ side, price, newSize ] ]
 }
 
-export interface GDAXTickerMessage extends GDAXMessage {
+export interface GDAXTickerMessage extends GDAXProductMessage {
     trade_id: number;
     sequence: number;
     time: string;
@@ -89,7 +98,7 @@ export interface GDAXTickerMessage extends GDAXMessage {
     last_size: string;
 }
 
-export interface GDAXSnapshotMessage extends GDAXMessage {
+export interface GDAXSnapshotMessage extends GDAXProductMessage {
     bids: string[][]; // [ [price, size] ]
     asks: string[][]; // [ [price, size] ]
 }
