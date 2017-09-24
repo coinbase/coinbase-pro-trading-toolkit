@@ -140,7 +140,7 @@ export class GeminiExchangeAPI implements PublicExchangeAPI, AuthenticatedExchan
             .accept('application/json')
             .then((response) => {
                 if (response.status !== 200) {
-                    throw new Error('publicRequest for ' + command + ' was not successful');
+                    throw new Error('publicRequest for ' + command + ' was not successful; status was ' + response.status);
                 }
                 return response.body;
             });
