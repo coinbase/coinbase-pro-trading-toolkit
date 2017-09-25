@@ -15,40 +15,28 @@
 import { PublicExchangeAPI, Product, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { BookBuilder } from '../../lib/BookBuilder';
-import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder, Level3Order } from '../../lib/Orderbook';
-import { ExchangeAuthConfig } from '../AuthConfig';
-import { Logger } from '../../utils/Logger';
 import { Big } from '../../lib/types';
+import { PlaceOrderMessage } from '../../core/Messages';
+import { Logger } from '../../utils/Logger';
+import * as GI from './GeminiInterfaces';
+import { ExchangeAuthConfig } from '../AuthConfig';
+
 import request = require('superagent');
 
 export const GEMINI_API_URL = 'https://api.gemini.com/v1';
 
-export interface GeminiConfig {
-    apiUrl?: string;
-    auth?: GeminiAuthConfig;
-    logger: Logger;
-}
-
-export interface GeminiAuthConfig extends ExchangeAuthConfig {
-    passphrase: string;
-}
-
 export class GeminiExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI {
     readonly owner: string;
-    private _apiURL: string;
-    private auth: GeminiAuthConfig;
+    readonly apiUrl: string;
+    private auth: ExchangeAuthConfig;
     private logger: Logger;
 
-    constructor(options: GeminiConfig) {
+    constructor(options: GI.GeminiConfig) {
         this.owner = 'Gemini';
-        this._apiURL = options.apiUrl || GEMINI_API_URL;
+        this.apiUrl = options.apiUrl || GEMINI_API_URL;
         this.auth = options.auth;
         this.logger = options.logger;
-    }
-
-    get apiURL(): string {
-        return this._apiURL;
     }
 
     loadProducts(): Promise<Product[]> {
@@ -135,7 +123,7 @@ export class GeminiExchangeAPI implements PublicExchangeAPI, AuthenticatedExchan
     }
 
     private publicRequest(command: string): Promise<any> {
-        const url = `${this.apiURL}${command}`;
+        const url = `${this.apiUrl}${command}`;
         return request.get(url)
             .accept('application/json')
             .then((response) => {
