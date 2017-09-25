@@ -13,16 +13,14 @@
  ***************************************************************************************************************************/
 
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
-import {
-    ChannelSubscription, PoloniexSnapshotLevel, PoloniexSnapshotMessage,
-    PoloniexTrollboxMessage
-} from './PoloniexMessages';
-import { getProductInfo, PoloniexProduct } from './PoloniexCommon';
+import { ChannelSubscription, PoloniexSnapshotLevel, PoloniexSnapshotMessage, PoloniexTrollboxMessage } from './PoloniexMessages';
+import { getProductInfo } from './PoloniexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage, UnknownMessage } from '../../core/Messages';
 import { Big, BigJS } from '../../lib/types';
 import Timer = NodeJS.Timer;
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
+import { Product } from '../PublicExchangeAPI';
 
 const AUTH_CHANNEL = 1000;
 const TROLL_BOX = 1001;
@@ -52,10 +50,14 @@ export class PoloniexFeed extends ExchangeFeed {
             connected: false,
             sequence: -1
         };
-        const message = {
+        const message: any = {
             command: 'subscribe',
             channel: channel
         };
+        if (channel === 1000) {
+            this.log('info', 'Authenticated feeds from Poloniex are not available from their API yet');
+            return;
+        }
         this.send(message);
     }
 
@@ -225,7 +227,7 @@ export class PoloniexFeed extends ExchangeFeed {
             this.log('warn', 'Unexpected ticker array in Poloniex WS message', { data: msg });
             return;
         }
-        getProductInfo(data[0], false, this.logger).then((info: PoloniexProduct) => {
+        getProductInfo(data[0], false, this.logger).then((info: Product) => {
             const ticker: TickerMessage = {
                 type: 'ticker',
                 time: new Date(),
@@ -236,6 +238,8 @@ export class PoloniexFeed extends ExchangeFeed {
                 volume: Big(data[4])
             };
             this.push(ticker);
+        }).catch((err: Error) => {
+            this.log('warn', 'A client process may have a bug. Check the error and stacktrace for details', {error: err});
         });
     }
 
@@ -253,7 +257,7 @@ export class PoloniexFeed extends ExchangeFeed {
     private handle_orderbook_message(msg: any[]): void {
         const id: number = msg[0];
         const self: PoloniexFeed = this;
-        getProductInfo(id, false, this.logger).then((info: PoloniexProduct) => {
+        getProductInfo(id, false, this.logger).then((info: Product) => {
             if (msg[1] === 0) {
                 this.log('debug', `Unsubscribed from ${info.id}`);
                 delete this.subscriptions[id];

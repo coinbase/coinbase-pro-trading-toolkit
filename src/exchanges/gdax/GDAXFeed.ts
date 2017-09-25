@@ -16,6 +16,7 @@ import { AuthHeaders, GDAXAuthConfig, GDAXExchangeAPI } from './GDAXExchangeAPI'
 import { Big } from '../../lib/types';
 import {
     ChangedOrderMessage,
+    ErrorMessage,
     LevelMessage,
     MyOrderPlacedMessage,
     NewOrderMessage,
@@ -30,13 +31,14 @@ import {
 } from '../../core/Messages';
 import { OrderPool } from '../../lib/BookBuilder';
 import {
-    GDAXChangeMessage,
+    GDAXChangeMessage, GDAXChannel,
     GDAXDoneMessage,
+    GDAXErrorMessage,
     GDAXL2UpdateMessage,
     GDAXMatchMessage,
     GDAXMessage,
     GDAXOpenMessage,
-    GDAXSnapshotMessage,
+    GDAXSnapshotMessage, GDAXSubscriptionsMessage,
     GDAXTickerMessage
 } from './GDAXMessages';
 import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
@@ -132,10 +134,6 @@ export class GDAXFeed extends ExchangeFeed {
                     this.emit('error', err);
                     return reject(err);
                 }
-                this.products = new Set<string>();
-                products.forEach((p) => {
-                    this.products.add(p);
-                });
                 return resolve(true);
             });
         });
@@ -163,6 +161,9 @@ export class GDAXFeed extends ExchangeFeed {
             const feedMessage: GDAXMessage = JSON.parse(msg);
             let message: StreamMessage;
             switch (feedMessage.type) {
+                case 'subscriptions':
+                    this.setProducts(feedMessage as any);
+                    return;
                 case 'heartbeat':
                     this.confirmAlive();
                     return;
@@ -209,7 +210,7 @@ export class GDAXFeed extends ExchangeFeed {
     }
 
     private signMessage(msg: any): any {
-        const headers: AuthHeaders = this.gdaxAPI.getSignature('GET', '/users/self', '');
+        const headers: AuthHeaders = this.gdaxAPI.getSignature('GET', '/users/self/verify', '');
         msg.signature = headers['CB-ACCESS-SIGN'];
         msg.key = headers['CB-ACCESS-KEY'];
         msg.timestamp = headers['CB-ACCESS-TIMESTAMP'];
@@ -375,12 +376,20 @@ export class GDAXFeed extends ExchangeFeed {
                     price: change.price,
                     newSize: change.new_size
                 } as ChangedOrderMessage;
+            case 'error':
+                const error: GDAXErrorMessage = feedMessage as GDAXErrorMessage;
+                return {
+                    type: 'error',
+                    time: new Date(),
+                    message: error.message,
+                    details: { reason: error.reason }
+                } as ErrorMessage;
             default:
                 return {
                     type: 'unknown',
                     time: new Date(),
                     sequence: (feedMessage as any).sequence,
-                    productId: feedMessage.product_id,
+                    productId: (feedMessage as any).product_id,
                     message: feedMessage
                 } as UnknownMessage;
         }
@@ -405,10 +414,10 @@ export class GDAXFeed extends ExchangeFeed {
      * consideration
      */
     private mapAuthMessage(feedMessage: GDAXMessage): StreamMessage {
+        const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
         switch (feedMessage.type) {
             case 'match':
                 const isTaker: boolean = !!(feedMessage as any).taker_user_id;
-                const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
                 let side: string;
                 if (!isTaker) {
                     side = (feedMessage as GDAXMatchMessage).side;
@@ -454,5 +463,12 @@ export class GDAXFeed extends ExchangeFeed {
                     message: feedMessage
                 } as UnknownMessage;
         }
+    }
+
+    private setProducts(msg: GDAXSubscriptionsMessage) {
+        msg.channels.forEach((ch: GDAXChannel) => {
+            ch.product_ids.forEach((p: string) => this.products.add(p));
+        });
+        this.log('debug', 'GDAX Feed subscriptions confirmed', msg);
     }
 }

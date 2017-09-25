@@ -23,7 +23,6 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import request = require('superagent');
 import querystring = require('querystring');
-import Buffer = require('buffer');
 import crypto = require('crypto');
 import Response = request.Response;
 
@@ -112,11 +111,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 return products.map((prod: GDAXAPIProduct) => {
                     return {
                         id: prod.id,
+                        sourceId: prod.id,
                         baseCurrency: prod.base_currency,
                         quoteCurrency: prod.quote_currency,
                         baseMinSize: Big(prod.base_min_size),
                         baseMaxSize: Big(prod.base_max_size),
-                        quoteIncrement: Big(prod.quote_increment)
+                        quoteIncrement: Big(prod.quote_increment),
+                        sourceData: prod
                     } as Product;
                 });
             });
@@ -324,7 +325,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         body = body || '';
         const timestamp = (Date.now() / 1000).toFixed(3);
         const what: string = timestamp + method + relativeURI + body;
-        const key = new Buffer.Buffer(this.auth.secret, 'base64');
+        const key = Buffer.from(this.auth.secret, 'base64');
         const hmac = crypto.createHmac('sha256', key);
         const signature = hmac.update(what).digest('base64');
         return {

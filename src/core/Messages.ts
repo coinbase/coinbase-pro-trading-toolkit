@@ -29,14 +29,23 @@ export function isStreamMessage(msg: any): boolean {
     return !!msg.type;
 }
 
-export interface ErrorMessage {
+export interface ErrorMessage extends StreamMessage {
     message: string;
+    details?: any;
+}
+
+export function isErrorMessage(msg: any): boolean {
+    return isStreamMessage(msg) && !!msg.message && typeof msg.message === 'string';
 }
 
 export interface UnknownMessage extends StreamMessage {
     sequence?: number;
     productId?: string;
     message: any;
+}
+
+export function isUnknownMessage(msg: any): boolean {
+    return isStreamMessage(msg) && !!msg.message && typeof msg.message !== 'string';
 }
 
 /**

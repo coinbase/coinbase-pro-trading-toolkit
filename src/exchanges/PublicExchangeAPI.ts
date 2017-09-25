@@ -73,9 +73,13 @@ export interface Ticker {
 
 export interface Product {
     id: string;
+    // The id on the underlying source exchange
+    sourceId: string;
     baseCurrency: string;
     quoteCurrency: string;
     baseMinSize: BigJS;
     baseMaxSize: BigJS;
     quoteIncrement: BigJS;
+    // The original data from the underlying exchange
+    sourceData: any;
 }

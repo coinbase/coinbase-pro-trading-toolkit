@@ -32,6 +32,10 @@ FeedFactory(logger, products).then((feed: PoloniexFeed) => {
         if (!(msg as any).productId) {
             tallies.other += 1;
         } else {
+            // Polo ticker channel pushes all product tickers through, so check for valid product
+            if (!products.includes(msg.productId)) {
+                return;
+            }
             const tally = tallies[msg.productId];
             if (!tally[msg.type]) {
                 tally[msg.type] = 0;

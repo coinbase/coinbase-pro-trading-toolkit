@@ -16,11 +16,9 @@ import { Product } from '../PublicExchangeAPI';
 import { Big } from '../../lib/types';
 import { DefaultAPI } from '../../factories/poloniexFactories';
 import { Logger } from '../../utils/Logger';
-import { PoloniexTicker, PoloniexTickers } from './PoloniexMessages';
-import { handleResponse } from '../utils';
 
 export const POLONIEX_WS_FEED = 'wss://api2.poloniex.com';
-export const POLONIEX_API_URL = 'https://poloniex.com/public';
+export const POLONIEX_API_URL = 'https://poloniex.com';
 
 /**
  * A map of supported GDAX books to the equivalent Poloniex book
@@ -57,40 +55,29 @@ export function gdaxifyProduct(poloProduct: string): Product {
     base = REVERSE_CURRENCY_MAP[base] || base;
     return {
         id: REVERSE_PRODUCT_MAP[poloProduct] || `${base}-${quote}`,
+        sourceId: poloProduct,
         quoteCurrency: quote,
         baseCurrency: base,
         baseMaxSize: Big(1e6),
         baseMinSize: Big(1e-6),
-        quoteIncrement: Big(1e-6)
+        quoteIncrement: Big(1e-6),
+        sourceData: null
     };
 }
 
-export interface PoloniexProduct extends Product {
-    poloniexId: number;
-    poloniexSymbol: string;
-    isFrozen: boolean;
-}
-
-export interface PoloniexProducts { [id: number]: PoloniexProduct; }
+export interface PoloniexProducts { [id: number]: Product; }
 let productInfo: PoloniexProducts  = {};
 
-export function getProductInfo(id: number, refresh: boolean, logger?: Logger): Promise<PoloniexProduct> {
+export function getProductInfo(id: number, refresh: boolean, logger?: Logger): Promise<Product> {
     if (!refresh && productInfo[id]) {
         return Promise.resolve(productInfo[id]);
     }
     productInfo = {};
-    const req =  DefaultAPI(logger).publicRequest('returnTicker');
-    return handleResponse<PoloniexTickers>(req, null).then((tickers: PoloniexTickers) => {
-        for (const poloProduct in tickers) {
-            const ticker: PoloniexTicker = tickers[poloProduct];
-            const product: PoloniexProduct = {
-                poloniexId: ticker.id,
-                poloniexSymbol: poloProduct,
-                isFrozen: ticker.isFrozen === '1',
-                ...gdaxifyProduct(poloProduct)
-            };
-            productInfo[ticker.id] = product;
-        }
+    return DefaultAPI(logger).loadProducts().then((products: Product[]) => {
+        productInfo = {};
+        products.forEach((p: Product) => {
+            productInfo[p.sourceData.id] = p;
+        });
         return Promise.resolve(productInfo[id]);
     });
 }
@@ -98,18 +85,6 @@ export function getProductInfo(id: number, refresh: boolean, logger?: Logger): P
 export function getAllProductInfo(refresh: boolean, logger?: Logger): Promise<PoloniexProducts> {
     return getProductInfo(0, refresh, logger).then(() => {
         return Promise.resolve(productInfo);
-    });
-}
-
-/**
- * Return the product Info given a product ID, which can be in GDAX or Poloniex format
- */
-export function getProductID(product: string, refresh: boolean, logger?: Logger): Promise<PoloniexProduct> {
-    return getProductInfo(1, refresh, logger).then(() => {
-        const result: PoloniexProduct = (productInfo as any).values().find((p: PoloniexProduct) => {
-            return p.poloniexSymbol === (PRODUCT_MAP[product] || product);
-        });
-        return Promise.resolve(result);
     });
 }
 
