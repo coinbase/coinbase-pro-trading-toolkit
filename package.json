@@ -13,7 +13,8 @@
     "test:mocha": "./node_modules/.bin/mocha",
     "test": "yarn run lint && yarn run test:mocha",
     "clean": "rm -fr build coverage .nyc_output",
-    "doc": "./node_modules/.bin/typedoc --options typedoc.json .",
+    "doc": "yarn run readme && ./node_modules/.bin/typedoc --options typedoc.json .",
+    "readme": "node generate-md.js",
     "prepublishOnly": "yarn run build"
   },
   "bin": {
@@ -64,6 +65,9 @@
   },
   "devDependencies": {
     "expect.js": "0.3.1",
+    "markdown-magic": "^0.1.18",
+    "markdown-magic-github-contributors": "^0.0.3",
+    "markdown-magic-version-badge": "^1.1.1",
     "mocha": "3.2.0",
     "nock": "9.0.2",
     "nyc": "11.1.0",
