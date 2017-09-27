@@ -30,7 +30,7 @@ FeedFactory(logger, 'btcusd').then((feed: GeminiMarketFeed) => {
     feed.on('data', (msg: StreamMessage) => {
         count++;
         if (!msg.type) {
-            tallies['other'] += 1;
+            tallies.other += 1;
         } else {
             tallies[msg.type] += 1;
         }

@@ -14,9 +14,8 @@
  ***************************************************************************************************************************/
 import { ExchangeFeed } from '../ExchangeFeed';
 import { LevelMessage, TradeMessage, StreamMessage } from '../../core/Messages';
+import { GEMINI_WS_FEED } from './GeminiCommon';
 import * as GI from './GeminiInterfaces';
-
-export const GEMINI_WS_FEED = 'wss://api.gemini.com/v1/marketdata/';
 
 export class GeminiMarketFeed extends ExchangeFeed {
     readonly owner: string;
@@ -28,25 +27,6 @@ export class GeminiMarketFeed extends ExchangeFeed {
         this.owner = 'Gemini';
         this.feedUrl = config.wsUrl || GEMINI_WS_FEED;
     }
-
-    // subscribe(productId: string): Promise<boolean> {
-    //     console.log('Given symbol: ' + productId);
-    //     if (!this.isConnected) {
-    //         return Promise.reject(
-    //             new Error('Socket is not connected. Have you called connect()? Otherwise the connection may have dropped and is in the process of reconnecting.')
-    //         );
-    //     }
-    //     return new Promise((resolve, reject) => {
-    //         this.send(productId, (err: Error) => {
-    //             if (err) {
-    //                 this.log('error', `The subscription request to ${productId} on ${this.url} failed`, { error: err });
-    //                 this.emit('error', err);
-    //                 return reject(err);
-    //             }
-    //             return resolve(true);
-    //         });
-    //     });
-    // }
 
     protected handleMessage(msg: string): void {
         try {

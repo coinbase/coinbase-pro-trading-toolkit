@@ -11,32 +11,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
-import { GEMINI_WS_FEED, GeminiMarketFeed } from '../exchanges/gemini/GeminiMarketFeed';
-import { GEMINI_API_URL, GeminiExchangeAPI } from '../exchanges/gemini/GeminiExchangeAPI';
+import { GeminiMarketFeed } from '../exchanges/gemini/GeminiMarketFeed';
+import { GEMINI_WS_FEED } from '../exchanges/gemini/GeminiCommon';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import * as GI from '../exchanges/gemini/GeminiInterfaces';
 import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
 
-let publicAPIInstance: GeminiExchangeAPI;
-
-export function DefaultAPI(logger: Logger): GeminiExchangeAPI {
-    if (!publicAPIInstance) {
-        publicAPIInstance = new GeminiExchangeAPI({
-            logger: logger,
-            apiUrl: GEMINI_API_URL,
-            auth: {
-                key: process.env.GEMINI_KEY,
-                secret: process.env.GEMINI_SECRET
-            }
-        });
-    }
-    return publicAPIInstance;
-}
-
 export function getSubscribedFeeds(options: any, symbol: string): Promise<GeminiMarketFeed> {
     return new Promise((resolve, reject) => {
-        //const logger = options.logger;
         const config: GI.GeminiMarketFeedConfig = {
             wsUrl: (options.wsUrl || GEMINI_WS_FEED) + symbol,
             auth: null,
@@ -47,24 +30,10 @@ export function getSubscribedFeeds(options: any, symbol: string): Promise<Gemini
         if (!feed.isConnected()) {
             feed.reconnect(0);
             feed.on('websocket-open', () => {
-                //feed.subscribe(symbol).then(() => {
-                    return resolve(feed);
-                //}).catch((err) => {
-                //    if (logger) {
-                //        logger.log('error', 'A websocket connection to Gemini was established, but product subscription failed.', { reason: err.message });
-                //    }
-                //    return reject(err);
-                //});
+                return resolve(feed);
             });
         } else {
-            //feed.subscribe(symbol).then(() => {
-                return resolve(feed);
-            //}).catch((err) => {
-            //    if (logger) {
-            //        logger.log('error', 'The subscription request to the Gemini WS feed failed', { reason: err.message });
-            //    }
-            //    return reject(err);
-            //});
+            return resolve(feed);
         }
     });
 }
