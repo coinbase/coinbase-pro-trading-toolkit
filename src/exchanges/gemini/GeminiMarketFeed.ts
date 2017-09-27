@@ -94,6 +94,6 @@ export class GeminiMarketFeed extends ExchangeFeed {
     }
 
     private processAuction(event: GI.GeminiAuctionEvent, update: GI.GeminiUpdateMessage): StreamMessage {
-        throw new Error('Method not implemented.');
+        return undefined;
     }
 }

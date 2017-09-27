@@ -13,3 +13,15 @@
   ***************************************************************************************************************************/
 export const GEMINI_API_URL = 'https://api.gemini.com/v1';
 export const GEMINI_WS_FEED = 'wss://api.gemini.com/v1/marketdata/';
+
+import { Logger } from '../../utils/Logger';
+import CCXTExchangeWrapper from '../ccxt';
+
+let publicAPIInstance: CCXTExchangeWrapper;
+
+export function GeminiAPI(logger: Logger): CCXTExchangeWrapper {
+    if (!publicAPIInstance) {
+        publicAPIInstance = CCXTExchangeWrapper.createExchange('gemini', { key: process.env.GEMINI_KEY, secret: process.env.GEMINI_SECRET }, logger);
+    }
+    return publicAPIInstance;
+}
