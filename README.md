@@ -1,4 +1,9 @@
 # GDAX Trading toolkit
+
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (VERSIONBADGE) -->
+[![npm](https://img.shields.io/badge/npm-v0.1.16-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
+
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
 GDAX and supported digital asset exchanges. Note: Node 7.6 or above is required.
 
@@ -29,3 +34,20 @@ authors, copyright holders, or Coinbase Inc. be liable for any claim, damages or
 liability, whether in an action of contract, tort or otherwise, arising from,
 out of or in connection with the software or the use or other dealings in the
 software.
+
+# Contributors
+
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
+| **Commits** | **Contributor** |  
+| --- | --- |  
+| 13 | [CjS77](https://github.com/CjS77) |  
+| 3  | [mihar](https://github.com/mihar) |  
+| 2  | [kostola](https://github.com/kostola) |  
+| 1  | [abe238](https://github.com/abe238) |  
+| 1  | [fb55](https://github.com/fb55) |  
+| 1  | [discosultan](https://github.com/discosultan) |  
+| 1  | [maxbeatty](https://github.com/maxbeatty) |  
+| 1  | [pzagor2](https://github.com/pzagor2) |  
+| 1  | [jcronq](https://github.com/jcronq) |  
+
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
