@@ -13,3 +13,4 @@ src/**/*.js
 .nyc_output
 coverage
 .DS_Store
+tutorials/*.js
