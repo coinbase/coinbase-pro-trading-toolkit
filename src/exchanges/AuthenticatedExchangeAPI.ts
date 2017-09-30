@@ -22,8 +22,8 @@ import { BigJS } from '../lib/types';
 export interface AuthenticatedExchangeAPI {
     readonly owner: string;
     /**
-     * Place a new order. Returns a promise for placing a new order on the exchange. It will resolve with the order id if successful,
-     * or undefined if not. If any other error occurs, the promise will be rejected.
+     * Place a new order. Returns a promise for placing a new order on the exchange. It will resolve with the order id if successful, otherwise the promise should be
+     * be rejected.
      */
     placeOrder(order: PlaceOrderMessage): Promise<LiveOrder>;
 

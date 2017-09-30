@@ -21,6 +21,11 @@ import { CancelOrderRequestMessage, isStreamMessage, MyOrderPlacedMessage, Place
 import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
 
+/**
+ * Configuration interface for the Trader class.
+ *
+ * If `fitOrders` is set the incoming `placeTrade` messages will be modified to satisfy the `sizePrecision` and `pricePrecision` constraints.
+ */
 export interface TraderConfig {
     logger: Logger;
     exchangeAPI: AuthenticatedExchangeAPI;
@@ -82,13 +87,21 @@ export class Trader extends Writable {
         this._fitOrders = value;
     }
 
+    /**
+     * Place a new order request. If successful, the method resolves with the details of the newly placed order.
+     * If the order placement fails, the promise resolves with null, and a `Trader.place-order-failed` message is emitted.
+     */
     placeOrder(req: PlaceOrderMessage): Promise<LiveOrder> {
         if (this.fitOrders) {
             req.size = Big(req.size).round(this.sizePrecision, 1).toString();
             req.price = Big(req.price).round(this.pricePrecision, 2).toString();
         }
         return this.api.placeOrder(req).then((order: LiveOrder) => {
-            this.myBook.add(order);
+            if (order) {
+                this.myBook.add(order);
+            } else {
+                this.emit('Trader.place-order-failed', order);
+            }
             return order;
         }).catch((err: Error) => {
             // Errors can fail if they're too precise, too small, or the API is down

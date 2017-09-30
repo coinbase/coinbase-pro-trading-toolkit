@@ -65,7 +65,7 @@ export function createSpreadRule(pricePrecision: number): ReplicatorRule {
     return {
         apply(source: BookBuilder, settings: BookReplicatorSettingsValues): BookBuilder {
             const spread = Big(settings.extraSpread * 0.01);
-            // We use a state clone so that we don't have to keep track to totalSize / Value and just recalculate at the end
+            // We use a state clone so that we don't have to keep track of totalSize / Value and just recalculate at the end
             const state: OrderbookState = source.state();
             ['bids', 'asks'].forEach((side: string) => {
                 ((state as any)[side] as PriceLevel[]).forEach((level: PriceLevel) => {

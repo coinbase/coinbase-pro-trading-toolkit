@@ -167,7 +167,7 @@ export class BookReplicator extends Readable {
             this.recalculate();
         });
         book.on('LiveOrderbook.snapshot', (snapshot: OrderbookState) => {
-            this.log('debug', 'Source snapshot received');
+            this.log('debug', 'BookReplicator: Source snapshot received');
             this.recalculate(snapshot);
         });
 

@@ -13,8 +13,7 @@
  ***************************************************************************************************************************/
 
 import { ConsoleLoggerFactory } from '../utils/Logger';
-import { FeedFactory as BitfinexFeedFactory } from '../factories/bitfinexFactories';
-import { BitfinexFeed } from '../exchanges/bitfinex/BitfinexFeed';
+import * as GDAX from '../factories/gdaxFactories';
 import { LiveOrderbook } from '../core/LiveOrderbook';
 import { ExchangeRateFilter } from '../core/ExchangeRateFilter';
 import { BookReplicator } from '../MarketMaker/BookReplicator';
@@ -24,54 +23,56 @@ import { Trader } from '../core/Trader';
 import { PlaceOrderMessage, TradeExecutedMessage } from '../core/Messages';
 import { useDefaultReplicatorRules } from '../MarketMaker/DefaultReplicatorRules';
 import { BookReplicatorSettings } from '../MarketMaker/BookReplicatorSettings';
-import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import RateLimiter from '../core/RateLimiter';
+import { GDAXFeed } from '../exchanges/index';
+import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAX_WS_FEED, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
 
 /*
-// For arguments' sake, let's say we're copying the Bitfinex BTC-USD book onto the GDAX BTC-EUR book.
-// We replicate orders on the target book by piping in the message stream from Bitfinex to the rate converter which uses
+// For arguments' sake, let's say we're copying the GDAX BTC-USD book onto the GDAX BTC-EUR book.
+// We replicate orders on the target book by piping in the message stream from GDAX to the rate converter which uses
 // the latest exchange rate to convert BTC-USD to BTC-EUR. This stream is then piped to the replicator which selects and
-// modifies orders according to our taste (we halve the order size and copy 100 BTC-worth on each side of the book);
+// modifies orders according to our taste (we divide order size by 4 and copy 100 BTC-worth on each side of the book);
 // finally replicator streams a series of trade control messages that the replicatorTrader receives and places the necessary trades
 */
 const sourceProduct = 'BTC-USD';
 const targetProduct = 'BTC-EUR';
-const RATE_LIMIT = 15; // messages per second
-let bitfinexFeed: BitfinexFeed;
+const fxPair = { from: 'USD', to: 'EUR' };
+const RATE_LIMIT = 20; // messages per second
 let replicatorTrader: Trader;
 
 // Create support services
 const logger = ConsoleLoggerFactory();
-const fxPair = { from: 'USD', to: 'EUR' };
-const fxService = SimpleFXServiceFactory('yahoo', logger);
-fxService
-    .addCurrencyPair(fxPair)
-    .setRefreshInterval(1000 * 10);
-const rateConverter = new ExchangeRateFilter({
-    fxService: fxService,
-    logger: logger,
-    pair: fxPair,
-    precision: 2
-});
+const { rateConverter, fxService } = createExchangeRateFilter('yahoo', 10 * 1000);
 
-const settings = new BookReplicatorSettings();
-settings.update({
-    isActive: true,
-    fxChangeThreshold: 0.005,
-    quoteCurrencyTarget: 30000,
-    baseCurrencyTarget: 10,
-    extraSpread: 3,
-    replicationFraction: 0.1
-});
+let gdaxFeed: GDAXFeed;
+
 // Wait until we have an exchange rate before getting the feed
 fxService.once('FXRateUpdate', () => {
-    BitfinexFeedFactory(logger, [sourceProduct]).then((bitfinex: BitfinexFeed) => {
-        bitfinexFeed = bitfinex;
-        setupReplicator(bitfinexFeed);
+    // GDAX.FeedFactory(logger, [sourceProduct]).then((feed: GDAXFeed) => {
+    const options: GDAXFeedConfig = {
+        logger: logger,
+        channels: ['level2', 'user', 'ticker'],
+        auth: { key: process.env.GDAX_KEY, secret: process.env.GDAX_SECRET, passphrase: process.env.GDAX_PASSPHRASE },
+        apiUrl : GDAX_API_URL,
+        wsUrl: GDAX_WS_FEED
+    };
+    GDAX.getSubscribedFeeds(options, [sourceProduct]).then((feed: GDAXFeed) => {
+        gdaxFeed = feed;
+        setupReplicator(gdaxFeed);
     });
 });
 
 function setupReplicator(sourceFeed: Readable) {
+    const settings = new BookReplicatorSettings();
+    settings.update({
+        isActive: true,
+        fxChangeThreshold: 0.005,
+        quoteCurrencyTarget: 30000,
+        baseCurrencyTarget: 10,
+        extraSpread: 1,
+        replicationFraction: 0.1
+    });
     const sourceBook = new LiveOrderbook({
         product: sourceProduct,
         logger: logger
@@ -85,20 +86,13 @@ function setupReplicator(sourceFeed: Readable) {
         targetProductId: targetProduct
     });
     useDefaultReplicatorRules(replicator, 6, 2);
+    // Connect up the live orderbook
     sourceFeed.pipe(rateConverter).pipe(sourceBook);
 
-    // This is only half a market-making system though. We also need a way to detect when our limit orders are filled
-    // so that we can replay them on the source order book. So to do that, let's set up some event listeners to detect
-    // and respond to those trades
-    // const sourceTrader: Trader = new Trader({
-    //     logger: logger,
-    //     productId: sourceProduct,
-    //     exchangeAPI: DefaultBitfinexAPI(logger)
-    // });
-    // For information purposes, let's just log when a limit order gets placed and cancelled.
+    // const gdaxAPI = GDAX.DefaultAPI(logger);
     const gdaxAPI = new GDAXExchangeAPI({
         logger: logger,
-        apiUrl: process.env.GDAX_API_URL,
+        apiUrl: 'http://localhost:3001',
         auth: {
             key: process.env.GDAX_KEY,
             secret: process.env.GDAX_SECRET,
@@ -116,6 +110,16 @@ function setupReplicator(sourceFeed: Readable) {
     replicator.pipe(new RateLimiter(RATE_LIMIT, 1000)).pipe(replicatorTrader);
     replicatorTrader.on('Trader.order-placed', logMessage.bind(null, 'Target book order placed'));
     replicatorTrader.on('Trader.order-canceled', logMessage.bind(null, 'Target book order cancelled'));
+
+    // This is only half a market-making system though. We also need a way to detect when our limit orders are filled
+    // so that we can replay them on the source order book. So to do that, let's set up some event listeners to detect
+    // and respond to those trades
+    // const sourceTrader: Trader = new Trader({
+    //     logger: logger,
+    //     productId: sourceProduct,
+    //     exchangeAPI: DefaultBitfinexAPI(logger)
+    // });
+    // For information purposes, let's just log when a limit order gets placed and cancelled.
     // When an order gets filled, we need to replay it on the source book
     replicatorTrader.on('Trader.order-executed', (msg: TradeExecutedMessage) => {
         const req: PlaceOrderMessage = {
@@ -130,7 +134,7 @@ function setupReplicator(sourceFeed: Readable) {
         // sourceTrader.placeOrder(req).then((order: LiveOrder) => {
         //     console.log(order.id + ' placed.')
         // });
-        console.log(req);
+        logMessage('This order should be replayed', req);
     });
     // Start the replicator
     replicator.isActive = true;
@@ -139,4 +143,23 @@ function setupReplicator(sourceFeed: Readable) {
 
 function logMessage(title: string, msg: any) {
     logger.log('info', title, JSON.stringify(msg));
+}
+
+function createExchangeRateFilter(serviceProvider: string, refreshRate: number): any {
+    // Create and set up the exchange rate service. Use Yahoo Finance and refresh every 10 seconds
+    const _fxService = SimpleFXServiceFactory(serviceProvider, logger);
+    _fxService.addCurrencyPair(fxPair)
+        .setRefreshInterval(1000 * 10);
+
+    const _fxFilter = new ExchangeRateFilter({
+        fxService: _fxService,
+        logger: logger,
+        pair: fxPair,
+        precision: 2
+    });
+
+    return {
+        rateConverter: _fxFilter,
+        fxService: _fxService
+    };
 }

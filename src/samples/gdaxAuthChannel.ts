@@ -25,8 +25,8 @@ const options: GDAXFeedConfig = {
         secret: process.env.GDAX_SECRET,
         passphrase: process.env.GDAX_PASSPHRASE
     },
-    wsUrl: null,
-    apiUrl: null
+    wsUrl: 'http://localhost:3006',
+    apiUrl: 'http://localhost:3001'
 };
 
 if (!options.auth.key || !options.auth.secret) {
