@@ -13,39 +13,36 @@
  ***************************************************************************************************************************/
 
 import { ConsoleLoggerFactory } from '../utils/Logger';
-import { StreamMessage } from '../core/Messages';
+import { printOrderbook, printTicker } from '../utils/printers';
 import { FeedFactory } from '../factories/geminiFactories';
+import { LiveBookConfig, LiveOrderbook } from '../core/LiveOrderbook';
+import { Ticker } from '../exchanges/PublicExchangeAPI';
+import { TradeMessage } from '../core/Messages';
 import { GeminiMarketFeed } from '../exchanges/gemini/GeminiMarketFeed';
 
+const product = 'BTC-USD';
 const logger = ConsoleLoggerFactory();
 
-let count = 0;
-const keys: string[] = ['snapshot', 'level', 'trade', 'other'];
-const tallies: any = {};
-keys.forEach((key: string) => {
-    tallies[key] = 0;
-});
-
-const product = 'BTC-USD';
-
 FeedFactory(logger, product).then((feed: GeminiMarketFeed) => {
-    feed.on('data', (msg: StreamMessage) => {
-        count++;
-        if (!msg.type) {
-            tallies.other += 1;
-        } else {
-            tallies[msg.type] += 1;
-        }
-        if (count % 100 === 0) {
-            printTallies();
-        }
+    const liveBookConfig: LiveBookConfig = {
+        product: product,
+        logger: logger
+    };
+    const book = new LiveOrderbook(liveBookConfig);
+    book.on('LiveOrderbook.snapshot', () => {
+        logger.log('info', 'Snapshot received');
+        setInterval(() => {
+            console.log(printOrderbook(book, 20, 4, 6));
+        }, 2000);
     });
-}).catch((err: Error) => {
-    logger.log('error', err.message);
-    process.exit(1);
+    book.on('LiveOrderbook.ticker', (ticker: Ticker) => {
+        console.log(printTicker(ticker, 6));
+    });
+    book.on('LiveOrderbook.trade', (trade: TradeMessage) => {
+        logger.log('info', `${trade.side} ${trade.size} on ${trade.productId} at ${trade.price}`);
+    });
+    book.on('end', () => {
+        console.log('Orderbook closed');
+    });
+    feed.pipe(book);
 });
-
-function printTallies() {
-    console.log(`${count} messages received`);
-    console.log(keys.map((key) => `${key}: ${tallies[key]}`).join('  '));
-}

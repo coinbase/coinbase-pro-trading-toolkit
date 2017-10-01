@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 import { GeminiMarketFeed } from '../exchanges/gemini/GeminiMarketFeed';
-import { GEMINI_WS_FEED } from '../exchanges/gemini/GeminiCommon';
+import { GEMINI_WS_FEED, PRODUCT_MAP } from '../exchanges/gemini/GeminiCommon';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import * as GI from '../exchanges/gemini/GeminiInterfaces';
 import { Logger } from '../utils/Logger';
@@ -44,11 +44,12 @@ export function FeedFactory(logger: Logger, symbol: string, auth?: ExchangeAuthC
             secret: process.env.GEMINI_SECRET
         };
     let productPromise: Promise<string>;
-    if (symbol) {
-        productPromise = Promise.resolve(symbol);
+    const gemSymbol = PRODUCT_MAP[symbol];
+    if (gemSymbol) {
+        productPromise = Promise.resolve(gemSymbol);
     } else {
         return Promise.reject(
-            new Error('productId must be btcusd, ethusd, or ethbtc')
+            new Error('gemSymbol must be btcusd, ethusd, or ethbtc')
         );
     }
     return productPromise.then((productId: string) => {

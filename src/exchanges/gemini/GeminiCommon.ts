@@ -25,3 +25,18 @@ export function GeminiAPI(logger: Logger): CCXTExchangeWrapper {
     }
     return publicAPIInstance;
 }
+
+/**
+ * A map of supported GDAX products to the equivalent Gemini product
+ */
+export const PRODUCT_MAP: { [index: string]: string } = {
+    'BTC-USD': 'btcusd',
+    'ETH-USD': 'ethusd',
+    'ETH-BTC': 'ethbtc'
+};
+
+export const REVERSE_PRODUCT_MAP: { [index: string]: string } = {
+    btcusd: 'BTC-USD',
+    ethusd: 'ETH-USD',
+    ethbtc: 'ETH-BTC'
+};
