@@ -8,6 +8,7 @@ sudo: true
 
 before_script:
   - npm install -g yarn
+  - yarn add gdax-trading-toolkit
 
 script:
   - yarn test
