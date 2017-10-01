@@ -11,7 +11,7 @@ before_script:
   - yarn add gdax-trading-toolkit
 
 script:
-  - yarn test
+  - yarn ci
 
 notifications:
   email: false
