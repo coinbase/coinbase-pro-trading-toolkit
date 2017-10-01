@@ -31,7 +31,10 @@ export class GeminiMarketFeed extends ExchangeFeed {
         this.owner = 'Gemini';
         this.feedUrl = config.wsUrl || GEMINI_WS_FEED;
         this.productId = config.productId;
+
+        // Use this property to create StreamMessages
         this.ccxtProductId = REVERSE_PRODUCT_MAP[this.productId];
+        this.connect();
     }
 
     protected handleMessage(msg: string): void {
@@ -56,6 +59,7 @@ export class GeminiMarketFeed extends ExchangeFeed {
 
     private processUpdate(update: GI.GeminiUpdateMessage) {
         if (update.socket_sequence === 0) {
+            // Process the first message with the orderbook state
             this.push(this.createSnapshotMessage(update));
         } else {
             update.events.forEach((event) => {
@@ -87,6 +91,7 @@ export class GeminiMarketFeed extends ExchangeFeed {
             bids: [],
             orderPool: orders
         };
+        // First message only contains 'change' events with reason as 'initial'
         update.events.forEach((event) => {
             if (event.type === 'change') {
                 const changeEvent = event as GI.GeminiChangeEvent;
@@ -122,7 +127,7 @@ export class GeminiMarketFeed extends ExchangeFeed {
             tradeId: event.tid.toString(),
             price: event.price,
             size: event.amount,
-            side: event.makerSide
+            side: event.makerSide === 'ask' ? 'sell' : 'buy'
         };
         return message;
     }
@@ -135,13 +140,14 @@ export class GeminiMarketFeed extends ExchangeFeed {
             price: event.price,
             size: event.remaining,
             sequence: update.socket_sequence,
-            side: event.side,
+            side: event.side === 'ask' ? 'sell' : 'buy',
             count: 1
         };
         return message;
     }
 
     private processAuction(event: GI.GeminiAuctionEvent, update: GI.GeminiUpdateMessage): StreamMessage {
+        // TODO: Are auctions unique to Gemini?
         return undefined;
     }
 }

@@ -92,7 +92,7 @@ export interface GeminiTradeEvent extends GeminiEvent {
     tid: number;
     price: string;
     amount: string;
-    makerSide: string;
+    makerSide: 'bid' | 'ask' | 'auction';
 }
 
 export interface GeminiAuctionEvent extends GeminiEvent {
