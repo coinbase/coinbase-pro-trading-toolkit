@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OrderbookState | GDAX Trading Toolkit API Reference</title>
+	<title>GDAXErrorMessage | GDAX Trading Toolkit API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_lib_orderbook_.html">&quot;src/lib/Orderbook&quot;</a>
+					<a href="../modules/_src_exchanges_gdax_gdaxmessages_.html">&quot;src/exchanges/gdax/GDAXMessages&quot;</a>
 				</li>
 				<li>
-					<a href="_src_lib_orderbook_.orderbookstate.html">OrderbookState</a>
+					<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html">GDAXErrorMessage</a>
 				</li>
 			</ul>
-			<h1>Interface OrderbookState</h1>
+			<h1>Interface GDAXErrorMessage</h1>
 		</div>
 	</div>
 </header>
@@ -73,10 +73,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">OrderbookState</span>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html" class="tsd-signature-type">GDAXMessage</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="_src_core_messages_.snapshotmessage.html" class="tsd-signature-type">SnapshotMessage</a>
+								<span class="target">GDAXErrorMessage</span>
 							</li>
 						</ul>
 					</li>
@@ -89,11 +89,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_lib_orderbook_.orderbookstate.html#asks" class="tsd-kind-icon">asks</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_lib_orderbook_.orderbookstate.html#bids" class="tsd-kind-icon">bids</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_lib_orderbook_.orderbookstate.html#orderpool" class="tsd-kind-icon">order<wbr>Pool</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_lib_orderbook_.orderbookstate.html#sequence" class="tsd-kind-icon">sequence</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_lib_orderbook_.orderbookstate.html#sourcesequence" class="tsd-kind-icon">source<wbr>Sequence</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#reason" class="tsd-kind-icon">reason</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#user_id" class="tsd-kind-icon">user_<wbr>id</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,52 +101,44 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="asks" class="tsd-anchor"></a>
-					<h3>asks</h3>
-					<div class="tsd-signature tsd-kind-icon">asks<span class="tsd-signature-symbol">:</span> <a href="_src_lib_orderbook_.pricelevelwithorders.html" class="tsd-signature-type">PriceLevelWithOrders</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="message" class="tsd-anchor"></a>
+					<h3>message</h3>
+					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/lib/Orderbook.ts#L93">src/lib/Orderbook.ts:93</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXMessages.ts#L31">src/exchanges/gdax/GDAXMessages.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="bids" class="tsd-anchor"></a>
-					<h3>bids</h3>
-					<div class="tsd-signature tsd-kind-icon">bids<span class="tsd-signature-symbol">:</span> <a href="_src_lib_orderbook_.pricelevelwithorders.html" class="tsd-signature-type">PriceLevelWithOrders</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="reason" class="tsd-anchor"></a>
+					<h3>reason</h3>
+					<div class="tsd-signature tsd-kind-icon">reason<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/lib/Orderbook.ts#L94">src/lib/Orderbook.ts:94</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXMessages.ts#L32">src/exchanges/gdax/GDAXMessages.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="orderpool" class="tsd-anchor"></a>
-					<h3>order<wbr>Pool</h3>
-					<div class="tsd-signature tsd-kind-icon">order<wbr>Pool<span class="tsd-signature-symbol">:</span> <a href="_src_lib_bookbuilder_.orderpool.html" class="tsd-signature-type">OrderPool</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Overrides <a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html">GDAXMessage</a>.<a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/lib/Orderbook.ts#L95">src/lib/Orderbook.ts:95</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXMessages.ts#L30">src/exchanges/gdax/GDAXMessages.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="sequence" class="tsd-anchor"></a>
-					<h3>sequence</h3>
-					<div class="tsd-signature tsd-kind-icon">sequence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="user_id" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> user_<wbr>id</h3>
+					<div class="tsd-signature tsd-kind-icon">user_<wbr>id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html">GDAXMessage</a>.<a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html#user_id">user_id</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/lib/Orderbook.ts#L91">src/lib/Orderbook.ts:91</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="sourcesequence" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> source<wbr>Sequence</h3>
-					<div class="tsd-signature tsd-kind-icon">source<wbr>Sequence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/lib/Orderbook.ts#L92">src/lib/Orderbook.ts:92</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXMessages.ts#L21">src/exchanges/gdax/GDAXMessages.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,65 +151,77 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_src_lib_orderbook_.html">"src/lib/<wbr>Orderbook"</a>
+						<a href="../modules/_src_exchanges_gdax_gdaxmessages_.html">"src/exchanges/gdax/GDAXMessages"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.basicorder.html" class="tsd-kind-icon">Basic<wbr>Order</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxchangemessage.html" class="tsd-kind-icon">GDAXChange<wbr>Message</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.cumulativepricelevel.html" class="tsd-kind-icon">Cumulative<wbr>Price<wbr>Level</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxchannel.html" class="tsd-kind-icon">GDAXChannel</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.level3order.html" class="tsd-kind-icon">Level3<wbr>Order</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.liveorder.html" class="tsd-kind-icon">Live<wbr>Order</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.orderbook.html" class="tsd-kind-icon">Orderbook</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxdonemessage.html" class="tsd-kind-icon">GDAXDone<wbr>Message</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.orderbookstate.html" class="tsd-kind-icon">Orderbook<wbr>State</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html" class="tsd-kind-icon">GDAXError<wbr>Message</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_lib_orderbook_.orderbookstate.html#asks" class="tsd-kind-icon">asks</a>
+								<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#message" class="tsd-kind-icon">message</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_lib_orderbook_.orderbookstate.html#bids" class="tsd-kind-icon">bids</a>
+								<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#reason" class="tsd-kind-icon">reason</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_lib_orderbook_.orderbookstate.html#orderpool" class="tsd-kind-icon">order<wbr>Pool</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#type" class="tsd-kind-icon">type</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_lib_orderbook_.orderbookstate.html#sequence" class="tsd-kind-icon">sequence</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_lib_orderbook_.orderbookstate.html#sourcesequence" class="tsd-kind-icon">source<wbr>Sequence</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_exchanges_gdax_gdaxmessages_.gdaxerrormessage.html#user_id" class="tsd-kind-icon">user_<wbr>id</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.pricecomparable.html" class="tsd-kind-icon">Price<wbr>Comparable</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxl2updatemessage.html" class="tsd-kind-icon">GDAXL2<wbr>Update<wbr>Message</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.pricelevel.html" class="tsd-kind-icon">Price<wbr>Level</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxmatchmessage.html" class="tsd-kind-icon">GDAXMatch<wbr>Message</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_lib_orderbook_.pricelevelwithorders.html" class="tsd-kind-icon">Price<wbr>Level<wbr>With<wbr>Orders</a>
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxmessage.html" class="tsd-kind-icon">GDAXMessage</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_src_lib_orderbook_.html#pricelevelfactory" class="tsd-kind-icon">Price<wbr>Level<wbr>Factory</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxopenmessage.html" class="tsd-kind-icon">GDAXOpen<wbr>Message</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../modules/_src_lib_orderbook_.html#pricetreefactory" class="tsd-kind-icon">Price<wbr>Tree<wbr>Factory</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxorder.html" class="tsd-kind-icon">GDAXOrder</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxorderrequest.html" class="tsd-kind-icon">GDAXOrder<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxproductmessage.html" class="tsd-kind-icon">GDAXProduct<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxsnapshotmessage.html" class="tsd-kind-icon">GDAXSnapshot<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxsubscriptionrequest.html" class="tsd-kind-icon">GDAXSubscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxsubscriptionsmessage.html" class="tsd-kind-icon">GDAXSubscriptions<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxtickermessage.html" class="tsd-kind-icon">GDAXTicker<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxmessages_.gdaxtickerrequest.html" class="tsd-kind-icon">GDAXTicker<wbr>Request</a>
 					</li>
 				</ul>
 			</nav>
