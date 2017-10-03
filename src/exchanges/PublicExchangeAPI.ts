@@ -14,6 +14,7 @@
 
 import { BookBuilder } from '../lib/BookBuilder';
 import { BigJS } from '../lib/types';
+
 /**
  * A generic API interface that defines the standard REST features that any crypto exchange typically exposes
  *

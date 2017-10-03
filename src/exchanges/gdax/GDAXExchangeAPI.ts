@@ -207,7 +207,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 }
                 order.size = order.size.plus(bid[1]);
             });
-            if (order) { book.add(order); }
+            if (order) {
+                book.add(order);
+            }
         });
         return book;
     }
@@ -298,27 +300,33 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     authCall(method: string, path: string, opts: AuthCallOptions): Promise<Response> {
-        return this.checkAuth().then(() => {
-            method = method.toUpperCase();
-            const url = `${this.apiURL}${path}`;
-            let body: string = '';
-            let req = request(method, url)
-                .accept('application/json')
-                .set('content-type', 'application/json');
-            if (opts.body) {
-                body = JSON.stringify(opts.body);
-                req.send(body);
-            } else if (opts.qs && Object.keys(opts.qs).length !== 0) {
-                req.query(opts.qs);
-                body = '?' + querystring.stringify(opts.qs);
-            }
-            const signature = this.getSignature(method, path, body);
-            req.set(signature);
-            if (opts.headers) {
-                req = req.set(opts.headers);
-            }
-            return Promise.resolve(req);
+        try {
+            this.checkAuth();
+        } catch (err) {
+            return Promise.reject(err);
+        }
+        method = method.toUpperCase();
+        const url = `${this.apiURL}${path}`;
+        let body: string = '';
+        let req = request(method, url)
+            .accept('application/json')
+            .set('content-type', 'application/json');
+        if (opts.body) {
+            body = JSON.stringify(opts.body);
+            req.send(body);
+        } else if (opts.qs && Object.keys(opts.qs).length !== 0) {
+            req.query(opts.qs);
+            body = '?' + querystring.stringify(opts.qs);
+        }
+        const signature = this.getSignature(method, path, body);
+        req.set(signature);
+        req.on('error', (err) => {
+            this.logger.log('error', 'Error with HTTP request', err);
         });
+        if (opts.headers) {
+            req = req.set(opts.headers);
+        }
+        return req;
     }
 
     getSignature(method: string, relativeURI: string, body: string): AuthHeaders {
@@ -337,7 +345,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
-        // then<T> is required to workaround bug in TS2.1 https://github.com/Microsoft/TypeScript/issues/10977
         return req.then<T>((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
                 return Promise.resolve<T>(res.body as T);
@@ -353,16 +360,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    checkAuth(): Promise<GDAXAuthConfig> {
-        return new Promise((resolve, reject) => {
-            if (this.auth === null) {
-                return reject(new Error('You cannot make authenticated requests if a GDAXAuthConfig object was not provided to the GDAXExchangeAPI constructor'));
-            }
-            if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {
-                return reject(new Error('You cannot make authenticated requests without providing all API credentials'));
-            }
-            return resolve();
-        });
+    private checkAuth(): void {
+        if (this.auth === null) {
+            throw new Error('You cannot make authenticated requests if a GDAXAuthConfig object was not provided to the GDAXExchangeAPI constructor');
+        }
+        if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {
+            throw new Error('You cannot make authenticated requests without providing all API credentials');
+        }
     }
 
     private buildBook(body: any): BookBuilder {

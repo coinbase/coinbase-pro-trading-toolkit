@@ -51,7 +51,7 @@ export class BookReplicator extends Readable {
     private replicatorRules: ReplicatorRule[];
 
     constructor(config: BookReplicatorConfig) {
-        super({ objectMode: true, highWaterMark: 1024 });
+        super({ objectMode: true, highWaterMark: 64 });
         this._settings = config.settings;
         this._fxService = config.fxService;
         this.fxPair = config.fxPair;
@@ -64,6 +64,7 @@ export class BookReplicator extends Readable {
         this.clonedBook = new BookBuilder(this.logger);
         this.targetProduct = config.targetProductId;
         this.replicatorRules = [];
+        this._isActive = false;
     }
 
     get settings(): BookReplicatorSettings {
@@ -87,7 +88,8 @@ export class BookReplicator extends Readable {
         this._isActive = value;
         if (!value) {
             this.cancelMyOrders();
-        } else {
+        }
+        if (value && (this._sourceOrderbook.numBids + this._sourceOrderbook.numAsks > 0)) {
             this.recalculate();
         }
     }
@@ -115,26 +117,31 @@ export class BookReplicator extends Readable {
 
     protected listenForSettingsChanges() {
         const settings = this._settings;
-        settings.on('BookReplicator.baseCurrencyTargetChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.baseCurrencyTargetChanged', (update: any) => {
+            this.log('info', 'BookReplicator baseCurrencyTarget setting changed', update);
+            this.recalculate();
         });
-        settings.on('BookReplicator.quoteCurrencyTargetChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.quoteCurrencyTargetChanged', (update: any) => {
+            this.log('info', 'BookReplicator quoteCurrencyTarget setting changed', update);
+            this.recalculate();
         });
-        settings.on('BookReplicator.isActiveChanged', (value: boolean) => {
-            this.isActive = value;
+        settings.on('BookReplicator.isActiveChanged', (update: any) => {
+            this.log('info', 'BookReplicator isActive setting changed', update);
         });
-        settings.on('BookReplicator.maxReplicationLimitChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.maxReplicationLimitChanged', (update: any) => {
+            this.log('info', 'BookReplicator maxReplicationLimit setting changed', update);
+            this.recalculate();
         });
-        settings.on('BookReplicator.minReplicationLimitChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.minReplicationLimitChanged', (update: any) => {
+            this.log('info', 'BookReplicator minReplicationLimit settings changed', update);
+            this.recalculate();
         });
-        settings.on('BookReplicator.extraSpreadChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.extraSpreadChanged', (update: any) => {
+            this.log('info', 'BookReplicator extraSpread settings changed', update);
+            this.recalculate();
         });
-        settings.on('BookReplicator.fxExchangeThresholdChanged', (value: number) => {
-            // TODO
+        settings.on('BookReplicator.fxExchangeThresholdChanged', (update: any) => {
+            this.log('info', 'BookReplicator fxExchangeThreshold setting changed', update);
         });
     }
 
@@ -178,10 +185,9 @@ export class BookReplicator extends Readable {
      * emit messages to apply the diff.
      */
     protected recalculate(snapshot?: OrderbookState) {
-        if (this.isRecalculating) {
+        if (this.isRecalculating || !this.isActive) {
             return;
         }
-        this.isRecalculating = true;
         // Create a copy of the source orderbook because the Replicator rules are allowed to modify them
         snapshot = snapshot || this._sourceOrderbook.book.stateCopy();
         const sourceBook: BookBuilder = new BookBuilder(this.logger);
@@ -189,7 +195,7 @@ export class BookReplicator extends Readable {
         const desiredState: BookBuilder = this.applyReplicatorRules(sourceBook);
         const diff: OrderbookDiff = new OrderbookDiff(this.targetProduct, this.clonedBook, desiredState);
         this.clonedBook = desiredState;
-        const commandSet: StreamMessage[] = diff.generateDiffCommands();
+        const commandSet: StreamMessage[] = diff.generateDiffCommands(null, { productId: this.targetProduct }, true);
         this.sendMessages(commandSet);
         this.isRecalculating = false;
     }
@@ -218,5 +224,7 @@ export class BookReplicator extends Readable {
         return state;
     }
 
-    protected _read(size: number): void { /* TODO */ }
+    protected _read(size: number): void {
+        console.log('Reading...');
+    }
 }

@@ -20,12 +20,11 @@ import { BookReplicator } from '../MarketMaker/BookReplicator';
 import { SimpleFXServiceFactory } from '../factories/fxServiceFactories';
 import { Readable } from 'stream';
 import { Trader } from '../core/Trader';
-import { PlaceOrderMessage, TradeExecutedMessage } from '../core/Messages';
+import { ErrorMessage, PlaceOrderMessage, TradeExecutedMessage } from '../core/Messages';
 import { useDefaultReplicatorRules } from '../MarketMaker/DefaultReplicatorRules';
 import { BookReplicatorSettings } from '../MarketMaker/BookReplicatorSettings';
-import RateLimiter from '../core/RateLimiter';
 import { GDAXFeed } from '../exchanges/index';
-import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAX_API_URL } from '../exchanges/gdax/GDAXExchangeAPI';
 import { GDAX_WS_FEED, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
 
 /*
@@ -38,32 +37,56 @@ import { GDAX_WS_FEED, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
 const sourceProduct = 'BTC-USD';
 const targetProduct = 'BTC-EUR';
 const fxPair = { from: 'USD', to: 'EUR' };
-const RATE_LIMIT = 20; // messages per second
+const RATE_LIMIT = 10; // messages per second
 let replicatorTrader: Trader;
 
 // Create support services
 const logger = ConsoleLoggerFactory();
 const { rateConverter, fxService } = createExchangeRateFilter('yahoo', 10 * 1000);
 
-let gdaxFeed: GDAXFeed;
+process.on('unhandledRejection', (error: Error) => {
+    console.log('unhandledRejection', error.message, error.stack);
+});
 
 // Wait until we have an exchange rate before getting the feed
 fxService.once('FXRateUpdate', () => {
     // GDAX.FeedFactory(logger, [sourceProduct]).then((feed: GDAXFeed) => {
-    const options: GDAXFeedConfig = {
+    const sourceOptions: GDAXFeedConfig = {
         logger: logger,
-        channels: ['level2', 'user', 'ticker'],
-        auth: { key: process.env.GDAX_KEY, secret: process.env.GDAX_SECRET, passphrase: process.env.GDAX_PASSPHRASE },
-        apiUrl : GDAX_API_URL,
+        channels: ['level2', 'ticker'],
+        auth: null,
+        apiUrl: GDAX_API_URL,
         wsUrl: GDAX_WS_FEED
     };
-    GDAX.getSubscribedFeeds(options, [sourceProduct]).then((feed: GDAXFeed) => {
-        gdaxFeed = feed;
-        setupReplicator(gdaxFeed);
+
+    const targetOptions: GDAXFeedConfig = {
+        logger: logger,
+        channels: ['user'],
+        auth: {
+            key: process.env.GDAX_KEY,
+            secret: process.env.GDAX_SECRET,
+            passphrase: process.env.GDAX_PASSPHRASE
+        },
+        apiUrl: 'http://localhost:3001',
+        wsUrl: 'http://localhost:3006'
+    };
+
+    Promise.all([
+        GDAX.getSubscribedFeeds(sourceOptions, [sourceProduct]),
+        GDAX.getSubscribedFeeds(targetOptions, [targetProduct])
+    ]).then((results) => {
+        const [sourceFeed, targetFeed] = results;
+        sourceFeed.on('feed-error', (msg: ErrorMessage) => {
+            logger.log('error', 'Source Feed error', msg);
+        });
+        targetFeed.on('feed-error', (msg: ErrorMessage) => {
+            logger.log('error', 'Target Feed error', msg);
+        });
+        setupReplicator(sourceFeed, targetFeed);
     });
 });
 
-function setupReplicator(sourceFeed: Readable) {
+function setupReplicator(sourceFeed: Readable, targetFeed: GDAXFeed) {
     const settings = new BookReplicatorSettings();
     settings.update({
         isActive: true,
@@ -77,6 +100,10 @@ function setupReplicator(sourceFeed: Readable) {
         product: sourceProduct,
         logger: logger
     });
+
+    // Connect up the live orderbook
+    sourceFeed.pipe(rateConverter).pipe(sourceBook);
+
     const replicator = new BookReplicator({
         logger: logger,
         settings: settings,
@@ -86,28 +113,17 @@ function setupReplicator(sourceFeed: Readable) {
         targetProductId: targetProduct
     });
     useDefaultReplicatorRules(replicator, 6, 2);
-    // Connect up the live orderbook
-    sourceFeed.pipe(rateConverter).pipe(sourceBook);
 
-    // const gdaxAPI = GDAX.DefaultAPI(logger);
-    const gdaxAPI = new GDAXExchangeAPI({
-        logger: logger,
-        apiUrl: 'http://localhost:3001',
-        auth: {
-            key: process.env.GDAX_KEY,
-            secret: process.env.GDAX_SECRET,
-            passphrase: process.env.GDAX_PASSPHRASE
-        }
-    });
     replicatorTrader = new Trader({
         logger: logger,
         productId: targetProduct,
-        exchangeAPI: gdaxAPI,
+        exchangeAPI: targetFeed.authenticatedAPI,
+        messageFeed: targetFeed,
         fitOrders: true,
         pricePrecision: 2,
-        sizePrecision: 6
+        sizePrecision: 6,
+        rateLimit: RATE_LIMIT
     });
-    replicator.pipe(new RateLimiter(RATE_LIMIT, 1000)).pipe(replicatorTrader);
     replicatorTrader.on('Trader.order-placed', logMessage.bind(null, 'Target book order placed'));
     replicatorTrader.on('Trader.order-canceled', logMessage.bind(null, 'Target book order cancelled'));
 
@@ -136,9 +152,12 @@ function setupReplicator(sourceFeed: Readable) {
         // });
         logMessage('This order should be replayed', req);
     });
-    // Start the replicator
-    replicator.isActive = true;
 
+    replicator.isActive = true;
+    replicator.pipe(replicatorTrader);
+    replicator.on('data', (msg: any) => {
+        console.log('msg');
+    });
 }
 
 function logMessage(title: string, msg: any) {

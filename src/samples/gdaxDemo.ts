@@ -16,11 +16,19 @@ import { AvailableBalance, Balances } from '../exchanges/AuthenticatedExchangeAP
 import { Big, BigJS } from '../lib/types';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { LiveOrder, Orderbook } from '../lib/Orderbook';
-import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
-import { DefaultAPI } from '../factories/gdaxFactories';
+import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { PlaceOrderMessage } from '../core/Messages';
+import { ConsoleLoggerFactory } from '../utils/Logger';
 
-const gdax: GDAXExchangeAPI = DefaultAPI(null);
+const gdax: GDAXExchangeAPI = new GDAXExchangeAPI({
+    logger: ConsoleLoggerFactory(),
+    apiUrl: process.env.GDAX_API_URL || GDAX_API_URL,
+    auth: {
+        key: process.env.GDAX_KEY,
+        secret: process.env.GDAX_SECRET,
+        passphrase: process.env.GDAX_PASSPHRASE
+    }
+});
 const product = 'BTC-USD';
 
 gdax.loadMidMarketPrice(product).then((price: BigJS) => {

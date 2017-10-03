@@ -158,6 +158,13 @@ export interface CancelOrderRequestMessage extends StreamMessage {
     orderId: string;
 }
 
+export interface CancelOrdersAtPriceRequestMessage extends StreamMessage {
+    type: string; // cancelOrdersAtPrice
+    productId: string;
+    price: string;
+    side: string;
+}
+
 /**
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
  */

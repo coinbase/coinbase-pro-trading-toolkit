@@ -60,11 +60,12 @@ export class BookReplicatorSettings extends EventEmitter {
         if ((this as any).values[parameter] === undefined) {
             return false;
         }
-        if (value === (this as any).values[parameter]) {
+        const oldValue: any = (this as any).values[parameter];
+        if (value === oldValue) {
             return false;
         }
         (this._values as any)[parameter] = value;
-        this.emit(`BookReplicator.${parameter}Changed`, value);
+        this.emit(`BookReplicator.${parameter}Changed`, { oldValue, value });
         return true;
     }
 

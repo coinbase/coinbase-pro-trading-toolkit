@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { CancelOrderRequestMessage, PlaceOrderMessage, StreamMessage } from '../core/Messages';
+import { CancelOrderRequestMessage, CancelOrdersAtPriceRequestMessage, PlaceOrderMessage, StreamMessage } from '../core/Messages';
 import { Level3Order, OrderbookState, PriceLevel, PriceLevelWithOrders } from './Orderbook';
 import { AggregatedLevel, AggregatedLevelWithOrders, BookBuilder } from './BookBuilder';
 import { RBTree } from 'bintrees';
@@ -176,12 +176,13 @@ export class OrderbookDiff {
      * If set, defaultOrderFields will be used to provide default values for any missing fields
      * on the order.
      */
-    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any): StreamMessage[] {
+    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any, cancelLevel?: boolean): StreamMessage[] {
         const commands: StreamMessage[] = [];
         const now = new Date();
         if (!diff) {
             diff = OrderbookDiff.compareByLevel(this.initial, this.final, true, true);
         }
+        const productId = defaultOrderFields && defaultOrderFields.productId || null;
         ['bids', 'asks'].forEach((side: string) => {
             const diffLevels: PriceLevel[] = (diff as any)[side];
             diffLevels.forEach((diffLevel: PriceLevelWithOrders) => {
@@ -190,11 +191,22 @@ export class OrderbookDiff {
                     if (order.size.gt(ZERO)) {
                         return;
                     }
-                    const cmd: CancelOrderRequestMessage = {
-                        type: 'cancelOrder',
-                        time: now,
-                        orderId: order.id
-                    };
+                    let cmd: StreamMessage;
+                    if (order.id && !cancelLevel) {
+                        cmd = {
+                            type: 'cancelOrder',
+                            time: now,
+                            orderId: order.id
+                        } as CancelOrderRequestMessage;
+                    } else {
+                        cmd = {
+                            type: 'cancelOrdersAtPrice',
+                            time: now,
+                            price: order.price.toString(),
+                            side: side === 'bids' ? 'buy' : 'sell',
+                            productId: productId
+                        } as CancelOrdersAtPriceRequestMessage;
+                    }
                     commands.push(cmd);
                 });
                 // Place a new order for the desired size

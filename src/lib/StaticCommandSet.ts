@@ -31,18 +31,19 @@ export class StaticCommandSet extends Readable {
             this.push(msg);
         });
         this.messages = [];
-        this.push(null);
     }
 
-    sendOne() {
-        const message: StreamMessage = this.messages.shift();
+    sendOne(msg?: StreamMessage) {
+        const message: StreamMessage = msg || this.messages.shift();
         if (message) {
             this.push(message);
         }
-        if (this.messages.length === 0) {
-            this.push(null);
-        }
     }
 
-    protected _read(size: number): void { /* no-op */ }
+    end() {
+        this.push(null);
+    }
+
+    protected _read(size: number): void { /* no-op */
+    }
 }

@@ -37,6 +37,7 @@
   "dependencies": {
     "@types/bignumber.js": "4.0.2",
     "@types/bintrees": "1.0.2",
+    "@types/bluebird": "^3.5.12",
     "@types/commander": "2.3.31",
     "@types/crypto-js": "3.1.32",
     "@types/mocha": "2.2.33",
@@ -50,6 +51,7 @@
     "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
+    "bluebird": "^3.5.0",
     "ccxt": "^1.6.72",
     "commander": "2.9.0",
     "crypto": "0.0.3",
@@ -59,7 +61,7 @@
     "pushbullet": "2.0.0",
     "querystring": "0.2.0",
     "simple-mock": "0.8.0",
-    "superagent": "3.0.0",
+    "superagent": "^3.6.2",
     "winston": "2.3.0",
     "ws": "1.1.1"
   },
