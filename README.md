@@ -1,5 +1,6 @@
 # GDAX Trading toolkit
 
+[![CircleCI](https://circleci.com/gh/coinbase/gdax-tt.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-tt)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (VERSIONBADGE) -->
 [![npm](https://img.shields.io/badge/npm-v0.1.16-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
