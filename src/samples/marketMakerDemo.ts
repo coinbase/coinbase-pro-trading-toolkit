@@ -153,11 +153,20 @@ function setupReplicator(sourceFeed: Readable, targetFeed: GDAXFeed) {
         logMessage('This order should be replayed', req);
     });
 
+    replicator.on('readable', () => console.log('REP READABALE'));
+    replicator.on('close', () => console.log('REP CLOSE'));
+    replicator.on('end', () => console.log('REP END'));
+    replicator.on('error', (err) => console.log('REP ERROR', err));
+
+    replicatorTrader.on('drain', () => console.log('DRAIN'));
+    replicatorTrader.on('pipe', () => console.log('PiPE'));
+    replicatorTrader.on('unpipe', () => console.log('UnPiPE'));
+    replicatorTrader.on('close', () => console.log('CLOSE'));
+    replicatorTrader.on('drain', () => console.log('DRAIN'));
+    replicatorTrader.on('error', (err) => console.log('ERROR', err));
+
     replicator.isActive = true;
     replicator.pipe(replicatorTrader);
-    replicator.on('data', (msg: any) => {
-        console.log('msg');
-    });
 }
 
 function logMessage(title: string, msg: any) {
