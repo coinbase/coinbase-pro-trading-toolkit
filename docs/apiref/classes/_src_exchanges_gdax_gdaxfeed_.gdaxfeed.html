@@ -75,7 +75,8 @@
 						<p>The GDAX message feed. Messages are created via a combination of WS and REST calls, which are then sent down the pipe.
 							It handles automatically reconnects on errors and tracks the connection by monitoring a heartbeat.
 							You can create the feeds from here, but it&#39;s preferable to use the <code>getFeed</code> or <code>FeedFactory</code> functions to get a
-						connection from the pool</p>
+							connection from the pool.
+						Error messages from the Websocket feed are passed down the stream and also emitted as &#39;feederror&#39; events.</p>
 					</div>
 				</div>
 			</section>
@@ -206,7 +207,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L82">src/exchanges/gdax/GDAXFeed.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L85">src/exchanges/gdax/GDAXFeed.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -229,7 +230,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#auth">auth</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L34">src/exchanges/ExchangeFeed.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L34">src/exchanges/ExchangeFeed.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -239,7 +240,7 @@
 					<div class="tsd-signature tsd-kind-icon">channels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L82">src/exchanges/gdax/GDAXFeed.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L85">src/exchanges/gdax/GDAXFeed.ts:85</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -249,7 +250,7 @@
 					<div class="tsd-signature tsd-kind-icon">gdaxAPI<span class="tsd-signature-symbol">:</span> <a href="_src_exchanges_gdax_gdaxexchangeapi_.gdaxexchangeapi.html" class="tsd-signature-type">GDAXExchangeAPI</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L78">src/exchanges/gdax/GDAXFeed.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L81">src/exchanges/gdax/GDAXFeed.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -259,7 +260,7 @@
 					<div class="tsd-signature tsd-kind-icon">internal<wbr>Sequence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L81">src/exchanges/gdax/GDAXFeed.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L84">src/exchanges/gdax/GDAXFeed.ts:84</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -278,7 +279,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#isconnecting">isConnecting</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L36">src/exchanges/ExchangeFeed.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L36">src/exchanges/ExchangeFeed.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -288,7 +289,7 @@
 					<div class="tsd-signature tsd-kind-icon">products<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L77">src/exchanges/gdax/GDAXFeed.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L80">src/exchanges/gdax/GDAXFeed.ts:80</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -298,7 +299,7 @@
 					<div class="tsd-signature tsd-kind-icon">queue<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L79">src/exchanges/gdax/GDAXFeed.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L82">src/exchanges/gdax/GDAXFeed.ts:82</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -316,7 +317,7 @@
 					<div class="tsd-signature tsd-kind-icon">queueing<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L80">src/exchanges/gdax/GDAXFeed.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L83">src/exchanges/gdax/GDAXFeed.ts:83</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -346,7 +347,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#url">url</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L35">src/exchanges/ExchangeFeed.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L35">src/exchanges/ExchangeFeed.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -385,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L102">src/exchanges/gdax/GDAXFeed.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L105">src/exchanges/gdax/GDAXFeed.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -408,7 +409,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#logger">logger</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L50">src/exchanges/ExchangeFeed.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L50">src/exchanges/ExchangeFeed.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_src_utils_logger_.logger.html" class="tsd-signature-type">Logger</a></h4>
@@ -426,7 +427,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#owner">owner</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L95">src/exchanges/gdax/GDAXFeed.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L98">src/exchanges/gdax/GDAXFeed.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -448,7 +449,7 @@
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#_read">_read</a></p>
 								<p>Overrides Readable._read</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L186">src/exchanges/ExchangeFeed.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L186">src/exchanges/ExchangeFeed.ts:186</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -705,7 +706,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#checkconnection">checkConnection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L149">src/exchanges/ExchangeFeed.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L149">src/exchanges/ExchangeFeed.ts:149</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -734,7 +735,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#close">close</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L133">src/exchanges/ExchangeFeed.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L133">src/exchanges/ExchangeFeed.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -752,7 +753,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#confirmalive">confirmAlive</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L129">src/exchanges/ExchangeFeed.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L129">src/exchanges/ExchangeFeed.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -775,7 +776,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#connect">connect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L86">src/exchanges/ExchangeFeed.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L86">src/exchanges/ExchangeFeed.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -792,7 +793,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L246">src/exchanges/gdax/GDAXFeed.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L249">src/exchanges/gdax/GDAXFeed.ts:249</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -816,7 +817,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#disconnect">disconnect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L79">src/exchanges/ExchangeFeed.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L79">src/exchanges/ExchangeFeed.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -990,7 +991,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L225">src/exchanges/gdax/GDAXFeed.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L228">src/exchanges/gdax/GDAXFeed.ts:228</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1020,7 +1021,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#handlemessage">handleMessage</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L159">src/exchanges/gdax/GDAXFeed.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L162">src/exchanges/gdax/GDAXFeed.ts:162</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1049,7 +1050,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#isconnected">isConnected</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L61">src/exchanges/ExchangeFeed.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L61">src/exchanges/ExchangeFeed.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1117,7 +1118,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#log">log</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L54">src/exchanges/ExchangeFeed.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L54">src/exchanges/ExchangeFeed.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1146,7 +1147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L416">src/exchanges/gdax/GDAXFeed.ts:416</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L430">src/exchanges/gdax/GDAXFeed.ts:430</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1175,7 +1176,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L314">src/exchanges/gdax/GDAXFeed.ts:314</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L317">src/exchanges/gdax/GDAXFeed.ts:317</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1198,7 +1199,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L398">src/exchanges/gdax/GDAXFeed.ts:398</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L412">src/exchanges/gdax/GDAXFeed.ts:412</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1221,7 +1222,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L331">src/exchanges/gdax/GDAXFeed.ts:331</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L334">src/exchanges/gdax/GDAXFeed.ts:334</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1251,7 +1252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L300">src/exchanges/gdax/GDAXFeed.ts:300</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L303">src/exchanges/gdax/GDAXFeed.ts:303</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1475,7 +1476,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#onclose">onClose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L142">src/exchanges/gdax/GDAXFeed.ts:142</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L145">src/exchanges/gdax/GDAXFeed.ts:145</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1502,7 +1503,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#onerror">onError</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L113">src/exchanges/ExchangeFeed.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L113">src/exchanges/ExchangeFeed.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1526,7 +1527,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#onnewconnection">onNewConnection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L139">src/exchanges/ExchangeFeed.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L139">src/exchanges/ExchangeFeed.ts:139</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1544,7 +1545,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#onopen">onOpen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L194">src/exchanges/gdax/GDAXFeed.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L197">src/exchanges/gdax/GDAXFeed.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2217,7 +2218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L322">src/exchanges/gdax/GDAXFeed.ts:322</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L325">src/exchanges/gdax/GDAXFeed.ts:325</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2240,7 +2241,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L282">src/exchanges/gdax/GDAXFeed.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L285">src/exchanges/gdax/GDAXFeed.ts:285</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2290,7 +2291,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L235">src/exchanges/gdax/GDAXFeed.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L238">src/exchanges/gdax/GDAXFeed.ts:238</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2343,7 +2344,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#reconnect">reconnect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L65">src/exchanges/ExchangeFeed.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L65">src/exchanges/ExchangeFeed.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2610,7 +2611,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#send">send</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/ExchangeFeed.ts#L174">src/exchanges/ExchangeFeed.ts:174</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/ExchangeFeed.ts#L174">src/exchanges/ExchangeFeed.ts:174</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2703,7 +2704,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L468">src/exchanges/gdax/GDAXFeed.ts:468</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L482">src/exchanges/gdax/GDAXFeed.ts:482</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2726,7 +2727,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L212">src/exchanges/gdax/GDAXFeed.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L215">src/exchanges/gdax/GDAXFeed.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2749,7 +2750,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L114">src/exchanges/gdax/GDAXFeed.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L117">src/exchanges/gdax/GDAXFeed.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2833,7 +2834,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_exchanges_exchangefeed_.exchangefeed.html">ExchangeFeed</a>.<a href="_src_exchanges_exchangefeed_.exchangefeed.html#validateauth">validateAuth</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5ae1795/src/exchanges/gdax/GDAXFeed.ts#L151">src/exchanges/gdax/GDAXFeed.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/exchanges/gdax/GDAXFeed.ts#L154">src/exchanges/gdax/GDAXFeed.ts:154</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
