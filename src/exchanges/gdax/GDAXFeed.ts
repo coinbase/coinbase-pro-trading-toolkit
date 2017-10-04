@@ -389,12 +389,21 @@ export class GDAXFeed extends ExchangeFeed {
                 } as ErrorMessage;
                 this.emit('feed-error', msg);
                 return msg;
-            default:
+            case 'received':
                 return {
                     type: 'unknown',
                     time: new Date(),
                     sequence: (feedMessage as any).sequence,
                     productId: (feedMessage as any).product_id,
+                    message: feedMessage
+                } as UnknownMessage;
+            default:
+                const product: string = (feedMessage as any).product_id;
+                return {
+                    type: 'unknown',
+                    time: new Date(),
+                    sequence: this.getSequence(product),
+                    productId: product,
                     message: feedMessage
                 } as UnknownMessage;
         }
