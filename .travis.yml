@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "node"
+
+cache: yarn
+
+sudo: true
+
+before_script:
+  - npm install -g yarn
+  - yarn add gdax-trading-toolkit
+
+script:
+  - yarn ci
+
+notifications:
+  email: false
