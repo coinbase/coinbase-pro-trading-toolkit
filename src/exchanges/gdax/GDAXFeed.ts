@@ -189,6 +189,7 @@ export class GDAXFeed extends ExchangeFeed {
                 if ((feedMessage as any).sequence) {
                     (message as any).sourceSequence = (feedMessage as any).sequence;
                 }
+                message.origin = feedMessage;
                 this.pushMessage(message);
             }
         } catch (err) {
@@ -297,7 +298,8 @@ export class GDAXFeed extends ExchangeFeed {
                 count: 1,
                 sequence: this.getSequence(product),
                 productId: update.product_id,
-                side: side
+                side: side,
+                origin: update
             };
             this.pushMessage(message);
         });
@@ -477,7 +479,6 @@ export class GDAXFeed extends ExchangeFeed {
             default:
                 return {
                     type: 'unknown',
-                    origin: feedMessage
                 } as UnknownMessage;
         }
     }
