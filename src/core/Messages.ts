@@ -18,11 +18,14 @@ import { Ticker } from '../exchanges/PublicExchangeAPI';
  * Interfaces for the GTT Stream message types. These messages are generated and passed on my the GTT streaming
  * infrastructure. The `type` field is conventionally named after the interface, first letter lowercased,  with the word Message
  * stripped out, so e.g. HeartbeatMessage => heartbeat and NewOrderMessage => newOrder
+ *
+ * The origin field, if present represents the original unmodified message that was mapped (e.g. original trade message from exchange)
  */
 
 export interface StreamMessage {
     type: string;
     time: Date;
+    origin?: any;
 }
 
 export function isStreamMessage(msg: any): boolean {
@@ -38,10 +41,16 @@ export function isErrorMessage(msg: any): boolean {
     return isStreamMessage(msg) && !!msg.message && typeof msg.message === 'string';
 }
 
+/**
+ * Interface for any message type not supported explicitly elsewhere.
+ * The type must always be 'unknown'. If the source of the message is actually known, (e.g. trollbox chats), this can be indicated in the `tag` field.
+ * Any context-rich information can be extracted into the `extra` field, and the original message should be attached to the `origin` field as usual.
+ */
 export interface UnknownMessage extends StreamMessage {
     sequence?: number;
     productId?: string;
-    message: any;
+    tag?: string;
+    extra?: any;
 }
 
 export function isUnknownMessage(msg: any): boolean {

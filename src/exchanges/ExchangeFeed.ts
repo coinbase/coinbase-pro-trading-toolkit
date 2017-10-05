@@ -133,6 +133,10 @@ export abstract class ExchangeFeed extends Readable {
     protected close() {
         // We're initiating the socket closure, so don't reconnect
         this.socket.removeAllListeners('close');
+        this.socket.removeAllListeners('message');
+        this.socket.removeAllListeners('open');
+        this.socket.removeAllListeners('close');
+        this.socket.removeAllListeners('connection');
         this.socket.close();
     }
 

@@ -176,7 +176,7 @@ export class PoloniexFeed extends ExchangeFeed {
             time: new Date(),
             productId: null,
             sequence: null,
-            message: msg
+            origin: msg
         };
         this.push(message);
     }
@@ -193,26 +193,30 @@ export class PoloniexFeed extends ExchangeFeed {
             reputation: +msg[4]
         };
         const message: UnknownMessage = {
-            type: 'poloniex-trollbox',
+            type: 'unknown',
+            tag: 'poloniex-trollbox',
             time: new Date(),
             productId: null,
             sequence: null,
-            message: chat
+            extra: chat,
+            origin: msg
         };
         this.push(message);
     }
 
     private handle_total_volume_message(msg: any[]): void {
         const message: UnknownMessage = {
-            type: 'poloniex-volume',
+            type: 'unknown',
+            tag: 'poloniex-volume',
             time: new Date(msg[2][0]),
             productId: null,
             sequence: msg[1],
-            message: {
+            extra: {
                 serverTime: msg[2][0],
                 usersOnline: msg[2][1],
                 volume: msg[2][2]
-            }
+            },
+            origin: msg
         };
         this.push(message);
     }
@@ -235,7 +239,8 @@ export class PoloniexFeed extends ExchangeFeed {
                 price: Big(data[1]),
                 bid: Big(data[3]),
                 ask: Big(data[2]),
-                volume: Big(data[4])
+                volume: Big(data[4]),
+                origin: msg
             };
             this.push(ticker);
         }).catch((err: Error) => {
@@ -245,11 +250,12 @@ export class PoloniexFeed extends ExchangeFeed {
 
     private handle_unknown_system_message(msg: any[]) {
         const message: UnknownMessage = {
-            type: 'poloniex-unknown',
+            type: 'unknown',
+            tag: 'poloniex-system',
             time: new Date(),
             productId: null,
             sequence: null,
-            message: msg
+            origin: msg
         };
         this.push(message);
     }
