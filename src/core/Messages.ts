@@ -184,6 +184,7 @@ export interface TradeFinalizedMessage extends StreamMessage {
     productId: string;
     orderId: string;
     side: string;
+    price: string;
     remainingSize: string;
     reason: string;
 }

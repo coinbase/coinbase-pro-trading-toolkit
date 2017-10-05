@@ -45,36 +45,32 @@ export function DefaultAPI(logger: Logger): GDAXExchangeAPI {
  * @param products {string[]} An array of products to subscribe to
  */
 export function getSubscribedFeeds(options: any, products: string[]): Promise<GDAXFeed> {
-    return new Promise((resolve, reject) => {
-        const logger = options.logger;
-        const config: GDAXFeedConfig = {
-            wsUrl: options.wsUrl || GDAX_WS_FEED,
-            auth: options.auth,
-            logger: options.logger,
-            apiUrl: options.apiUrl || GDAX_API_URL,
-            channels: options.channels || null
-        };
-        const feed = getFeed<GDAXFeed, GDAXFeedConfig>(GDAXFeed, config);
-        if (!feed.isConnected()) {
-            feed.reconnect(0);
-            feed.on('websocket-open', () => {
+    const config: GDAXFeedConfig = {
+        wsUrl: options.wsUrl || GDAX_WS_FEED,
+        auth: options.auth,
+        logger: options.logger,
+        apiUrl: options.apiUrl || GDAX_API_URL,
+        channels: options.channels || null
+    };
+    const feed = getFeed<GDAXFeed, GDAXFeedConfig>(GDAXFeed, config);
+    if (feed.isConnected()) {
+        return feed.subscribe(products).then(() => {
+            return feed;
+        });
+    }
+    return new Promise((resolve) => {
+        if (feed.isConnecting) {
+            feed.once('websocket-open', () => {
                 feed.subscribe(products).then(() => {
                     return resolve(feed);
-                }).catch((err) => {
-                    if (logger) {
-                        logger.log('error', 'A websocket connection to GDAX was established, but product subscription failed.', { reason: err.message });
-                    }
-                    return reject(err);
                 });
             });
         } else {
-            feed.subscribe(products).then(() => {
-                return resolve(feed);
-            }).catch((err) => {
-                if (logger) {
-                    logger.log('error', 'The subscription request to the GDAX WS feed failed', { reason: err.message });
-                }
-                return reject(err);
+            feed.reconnect(50);
+            feed.on('websocket-open', () => {
+                feed.subscribe(products).then(() => {
+                    return resolve(feed);
+                });
             });
         }
     });
@@ -88,10 +84,10 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<GD
  */
 export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAuthConfig): Promise<GDAXFeed> {
     auth = auth || {
-            key: process.env.GDAX_KEY,
-            secret: process.env.GDAX_SECRET,
-            passphrase: process.env.GDAX_PASSPHRASE
-        };
+        key: process.env.GDAX_KEY,
+        secret: process.env.GDAX_SECRET,
+        passphrase: process.env.GDAX_PASSPHRASE
+    };
     // Use the GAX API to get, and subscribe to all the endpoints
     let productPromise: Promise<string[]>;
     if (productIDs) {

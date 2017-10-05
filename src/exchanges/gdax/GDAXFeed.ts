@@ -179,9 +179,6 @@ export class GDAXFeed extends ExchangeFeed {
                 case 'snapshot':
                     this.processSnapshot(this.createSnapshotMessage(feedMessage as GDAXSnapshotMessage));
                     return;
-                case 'last_match':
-                    message = this.mapMatchMessage(feedMessage as GDAXMatchMessage);
-                    break;
                 default:
                     message = this.mapFullFeed(feedMessage);
             }
@@ -450,6 +447,7 @@ export class GDAXFeed extends ExchangeFeed {
                     orderId: isTaker ? (feedMessage as GDAXMatchMessage).taker_order_id : (feedMessage as GDAXMatchMessage).maker_order_id,
                     orderType: isTaker ? 'market' : 'limit',
                     side: side,
+                    price: (feedMessage as GDAXMatchMessage).price,
                     tradeSize: (feedMessage as GDAXMatchMessage).size,
                     remainingSize: null
                 } as TradeExecutedMessage;
@@ -461,6 +459,7 @@ export class GDAXFeed extends ExchangeFeed {
                     orderId: (feedMessage as GDAXDoneMessage).order_id,
                     reason: (feedMessage as GDAXDoneMessage).reason,
                     side: (feedMessage as GDAXDoneMessage).side,
+                    price: (feedMessage as GDAXMatchMessage).price,
                     filledSize: (feedMessage as GDAXMatchMessage).size,
                     remainingSize: (feedMessage as GDAXDoneMessage).remaining_size
                 } as TradeFinalizedMessage;
@@ -479,6 +478,7 @@ export class GDAXFeed extends ExchangeFeed {
             default:
                 return {
                     type: 'unknown',
+                    productId: (feedMessage as any).product_id
                 } as UnknownMessage;
         }
     }
