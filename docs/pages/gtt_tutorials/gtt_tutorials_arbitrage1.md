@@ -99,7 +99,7 @@ Once you have an `FXService` instance you need to tell it which currency pairs t
 
 # Putting it all together
 
-Now that we have all our filters configured, we need to grab a message feed for our three order books. We'll follow the usual patter
+Now that we have all our filters configured, we need to grab a message feed for our three order books. We'll follow the usual pattern
 and use the GDAXFeedFactory:
 
     const products = ['BTC-USD', 'BTC-EUR', 'BTC-GBP'];
