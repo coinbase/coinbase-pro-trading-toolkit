@@ -14,7 +14,7 @@ toc: true
 The GTT is an open-source project. While it was conceived and is maintained by Coinbase, our vision is to have the community actively
 contribute to the project.
 
-To contribute to the GTT, [fork the project on GitHub](), make your changes and [subit them as a PR](). The community will review and
+To contribute to the GTT, [fork the project on GitHub](https://github.com/coinbase/gdax-tt/), make your changes and [submit them as a PR](https://github.com/coinbase/gdax-tt/pulls). The community will review and
 then hopefully merge your changes in, and it will form part of the next release of the GTT.
 
 We want this to be a community project, so the GTT should evolve to become what you want it to be. So we will accept pull requests for
@@ -26,7 +26,7 @@ any and all of the following:
 * Tutorials
 * Working trading bot engines (that make use of the GTT, obviously)
 * Algorithm components
-* UI components (see the [gtt-ui]() project.
+* UI components (see the [gtt-ui](https://github.com/coinbase/gdax-tt/issues/52) project.
 
 Please read and follow the contribution guidelines before you submit. This will smooth the flow for getting your code included in
 the project.
