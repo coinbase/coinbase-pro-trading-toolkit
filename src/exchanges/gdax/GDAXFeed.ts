@@ -179,6 +179,9 @@ export class GDAXFeed extends ExchangeFeed {
                 case 'snapshot':
                     this.processSnapshot(this.createSnapshotMessage(feedMessage as GDAXSnapshotMessage));
                     return;
+                case 'last_match':
+                    message = this.mapMatchMessage(feedMessage as GDAXMatchMessage);
+                    break;
                 default:
                     message = this.mapFullFeed(feedMessage);
             }
@@ -474,7 +477,7 @@ export class GDAXFeed extends ExchangeFeed {
             default:
                 return {
                     type: 'unknown',
-                    message: feedMessage
+                    origin: feedMessage
                 } as UnknownMessage;
         }
     }
