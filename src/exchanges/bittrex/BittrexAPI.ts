@@ -57,7 +57,7 @@ export class BittrexAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI {
                         id: market.MarketName, // same format as GDAX, so no need to map
                         sourceId: market.MarketName,
                         baseCurrency: market.BaseCurrency,
-                        quoteCurrency: market.marketCurrency,
+                        quoteCurrency: market.MarketCurrency,
                         baseMinSize: Big(market.MinTradeSize),
                         baseMaxSize: Big('1e18'),
                         quoteIncrement: Big(market.MinTradeSize),
