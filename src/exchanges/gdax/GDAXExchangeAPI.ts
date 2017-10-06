@@ -405,23 +405,17 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
 }
 
 function GDAXOrderToOrder(order: GDAXOrder): LiveOrder {
+    // this is actually the average price, since an order can me matched multiple times if it was a market order
+    const size = Big(order.size);
+    const price: BigJS = Big(order.executed_value).div(size);
     return {
-        price: Big(order.price),
-        size: Big(order.size),
+        price: price,
+        size: size,
         side: order.side,
         id: order.id,
         time: new Date(order.created_at),
         productId: order.product_id,
         status: order.status,
-        extra: {
-            post_only: order.post_only,
-            time_in_force: order.time_in_force,
-            settled: order.settled,
-            done_reason: order.done_reason,
-            filled_size: order.filled_size,
-            executed_value: order.executed_value,
-            fill_fees: order.fill_fees,
-            done_at: order.done_at
-        }
+        extra: order
     };
 }
