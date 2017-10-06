@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.1.18
+
+* Add `origin` tag to messages
+* Many bugfixes to GDAX feed
+
 ## v0.1.17
 
 * New Features
