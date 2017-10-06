@@ -157,7 +157,7 @@ export class HFTFilter extends Duplex {
         });
     }
 
-    protected _read() {
+    _read() {
         /* The rules regarding readable streams are:
          - You have to call `push` to keep the stream alive.
          - Pushing 'null' ends the stream
@@ -176,7 +176,7 @@ export class HFTFilter extends Duplex {
     /**
      * If this stream has another stream piped into it, we just pass the data into the READABLE stream's filter
      */
-    protected _write(chunk: any, encoding: string, callback: (err: Error) => void) {
+    _write(chunk: any, encoding: string, callback: (err: Error) => void) {
         if (typeof chunk === 'object' && isStreamMessage(chunk)) {
             this.filterMessage(chunk as StreamMessage);
             return callback(null);
