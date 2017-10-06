@@ -44,5 +44,5 @@ export class StaticCommandSet extends Readable {
         }
     }
 
-    protected _read(size: number): void { /* no-op */ }
+    _read(size: number): void { /* no-op */ }
 }

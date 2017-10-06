@@ -87,6 +87,11 @@ export abstract class ExchangeFeed extends Readable {
         this.close();
     }
 
+    _read(size: number) {
+        // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
+        // in from the websocket, so there's nothing to do here.
+    }
+
     protected connect() {
         if (this._isConnecting || this.isConnected()) {
             return;
@@ -191,11 +196,6 @@ export abstract class ExchangeFeed extends Readable {
             this.log('error', 'Could not send message to GDAX WS server because the message was invalid',
                 { error: err, message: msg });
         }
-    }
-
-    protected _read(size: number) {
-        // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
-        // in from the websocket, so there's nothing to do here.
     }
 }
 

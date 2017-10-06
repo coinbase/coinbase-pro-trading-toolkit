@@ -154,7 +154,7 @@ export class Trader extends Writable {
         });
     }
 
-    public executeMessage(msg: StreamMessage) {
+    executeMessage(msg: StreamMessage) {
         if (!isStreamMessage(msg)) {
             return;
         }
@@ -183,7 +183,7 @@ export class Trader extends Writable {
         }
     }
 
-    protected _write(msg: any, encoding: string, callback: (err?: Error) => any): void {
+    _write(msg: any, encoding: string, callback: (err?: Error) => any): void {
         this.executeMessage(msg);
         callback();
     }
