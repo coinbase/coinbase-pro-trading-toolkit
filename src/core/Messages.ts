@@ -33,7 +33,7 @@ export function isStreamMessage(msg: any): boolean {
 }
 
 export interface ErrorMessage extends StreamMessage {
-    type: 'error',
+    type: 'error';
     message: string;
     details?: any;
 }

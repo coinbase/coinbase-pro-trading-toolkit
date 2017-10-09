@@ -105,14 +105,14 @@ describe('BitMEX Market Feed', () => {
     const expectedState: OrderbookState = {
         sequence: 5,
         orderPool: {
-            '4498.9': { id: '22899900005', side: 'buy',  price: Big(4498.9), size: Big(1007) },
-            '4499':   { id: '22899900004', side: 'buy',  price: Big(4499),   size: Big(1300) },
-            '4499.9': { id: '22899900003', side: 'buy',  price: Big(4499.9), size: Big(30) },
-            '4500.2': { id: '22899900002', side: 'sell', price: Big(4500.2), size: Big(450) },
-            '4505':   { id: '22899900000', side: 'sell', price: Big(4505),   size: Big(5000) },
-            '4505.3': { id: '22899900006', side: 'sell', price: Big(4505.3), size: Big(440) },
-            '4505.4': { id: '22899900007', side: 'sell', price: Big(4505.4), size: Big(4180) },
-            '4506':   { id: '22899900008', side: 'sell', price: Big(4506),   size: Big(4180) },
+            [4498.9]: { id: '22899900005', side: 'buy',  price: Big(4498.9), size: Big(1007) },
+            [4499]:   { id: '22899900004', side: 'buy',  price: Big(4499),   size: Big(1300) },
+            [4499.9]: { id: '22899900003', side: 'buy',  price: Big(4499.9), size: Big(30) },
+            [4500.2]: { id: '22899900002', side: 'sell', price: Big(4500.2), size: Big(450) },
+            [4505]:   { id: '22899900000', side: 'sell', price: Big(4505),   size: Big(5000) },
+            [4505.3]: { id: '22899900006', side: 'sell', price: Big(4505.3), size: Big(440) },
+            [4505.4]: { id: '22899900007', side: 'sell', price: Big(4505.4), size: Big(4180) },
+            [4506]:   { id: '22899900008', side: 'sell', price: Big(4506),   size: Big(4180) },
         },
         bids: [{
             price: Big(4498.9),
