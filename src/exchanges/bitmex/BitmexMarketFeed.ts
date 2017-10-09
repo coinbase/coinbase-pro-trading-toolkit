@@ -30,6 +30,8 @@ export class BitmexMarketFeed extends ExchangeFeed {
     readonly feedUrl: string;
     // Maps order IDs to the price that they exist at
     private orderIdMap: { [orderId: number]: number };
+    // BitMEX WsAPI doesn't include a sequence number, so we have to keep track if it ourselves and hope for the best.
+    private seq: number;
 
     constructor(config: ExchangeFeedConfig) {
         if (!config.wsUrl) {
@@ -38,6 +40,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         super(config);
         this.owner = 'BitMEX';
         this.feedUrl = config.wsUrl;
+        this.seq = 0;
         this.connect();
     }
 
@@ -91,13 +94,21 @@ export class BitmexMarketFeed extends ExchangeFeed {
         }
     }
 
+    /**
+     * Gets the next sequence number, incrementing it for the next time it's called.
+     */
+    private getSeq(): number {
+        this.seq += 1;
+        return this.seq;
+    }
+
     private handleSnapshot(snapshot: OrderbookSnapshotMessage) {
         // (re)initialize our order id map
         const newIdMap = snapshot.data.reduce((acc, { id, price }) => ({...acc, [id]: price }), {});
         this.orderIdMap = newIdMap;
 
         const mapLevelUpdates: (date: PriceData) => PriceLevelWithOrders =
-            ({ price, size, side }) => PriceLevelFactory(price, size, side.toLowerCase());
+            ({ id, price, size, side }) => PriceLevelFactory(price, size, side.toLowerCase());
 
         const asks: PriceLevelWithOrders[] = snapshot.data
             .filter(R.propEq('side', 'Sell'))
@@ -144,7 +155,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
 
             const message: LevelMessage = {
                 time: new Date(),
-                sequence: -1,
+                sequence: this.getSeq(),
                 type: 'level',
                 productId: update.symbol,
                 price: (price ? price : update.price).toString(),

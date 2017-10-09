@@ -45,17 +45,17 @@ describe('BitMEX Market Feed', () => {
         docs: 'https://www.bitmex.com/app/wsAPI',
     } as WelcomeMessage, {
         success: true,
-        subscribe: 'orderBookL2:XBTZ17',
+        subscribe: 'orderBookL2:XBTUSD',
         request: {
             op: 'subscribe',
-            args: [ 'orderBookL2:XBTZ17', 'trade:XBTZ17' ],
+            args: [ 'orderBookL2:XBTUSD', 'trade:XBTUSD' ],
         },
     } as SubscriptionResponseMessage, {
         success: true,
-        subscribe: 'trade:XBTZ17',
+        subscribe: 'trade:XBTUSD',
         request: {
             op: 'subscribe',
-            args: [ 'orderBookL2:XBTZ17', 'trade:XBTZ17' ],
+            args: [ 'orderBookL2:XBTUSD', 'trade:XBTUSD' ],
         },
     } as SubscriptionResponseMessage, {
         table: 'orderBookL2',
@@ -77,76 +77,76 @@ describe('BitMEX Market Feed', () => {
         },
         action: 'partial',
         data: [
-            { symbol: 'XBTZ17', id: 22899900000, side: 'Sell', size: 5000, price: 4505 },
-            { symbol: 'XBTZ17', id: 22899900001, side: 'Sell', size: 3000, price: 4502.8 },
-            { symbol: 'XBTZ17', id: 22899900002, side: 'Sell', size: 450,  price: 4500.2 },
-            { symbol: 'XBTZ17', id: 22899900003, side: 'Buy',  size: 30,   price: 4499.9 },
-            { symbol: 'XBTZ17', id: 22899900004, side: 'Buy',  size: 2000, price: 4499 },
-            { symbol: 'XBTZ17', id: 22899900005, side: 'Buy',  size: 1007, price: 4498.9 },
+            { symbol: 'XBTUSD', id: 22899900000, side: 'Sell', size: 5000, price: 4505 },
+            { symbol: 'XBTUSD', id: 22899900001, side: 'Sell', size: 3000, price: 4502.8 },
+            { symbol: 'XBTUSD', id: 22899900002, side: 'Sell', size: 450,  price: 4500.2 },
+            { symbol: 'XBTUSD', id: 22899900003, side: 'Buy',  size: 30,   price: 4499.9 },
+            { symbol: 'XBTUSD', id: 22899900004, side: 'Buy',  size: 2000, price: 4499 },
+            { symbol: 'XBTUSD', id: 22899900005, side: 'Buy',  size: 1007, price: 4498.9 },
         ],
     } as OrderbookSnapshotMessage, {
         table: 'orderBookL2',
         action: 'delete',
-        data: [ { symbol: 'XBTZ17', id: 22899900001, side: 'Sell' } ],
+        data: [ { symbol: 'XBTUSD', id: 22899900001, side: 'Sell' } ],
     } as OrderbookDeleteMessage, {
         table: 'orderBookL2',
         action: 'insert',
         data: [
-            { symbol: 'XBTZ17', id: 22899900006, side: 'Sell', size: 440,  price: 4505.3 },
-            { symbol: 'XBTZ17', id: 22899900007, side: 'Sell', size: 4180, price: 4505.4 },
-            { symbol: 'XBTZ17', id: 22899900008, side: 'Sell', size: 4180, price: 4506 },
+            { symbol: 'XBTUSD', id: 22899900006, side: 'Sell', size: 440,  price: 4505.3 },
+            { symbol: 'XBTUSD', id: 22899900007, side: 'Sell', size: 4180, price: 4505.4 },
+            { symbol: 'XBTUSD', id: 22899900008, side: 'Sell', size: 4180, price: 4506 },
         ]
     } as OrderbookInsertMessage, {
         table: 'orderBookL2',
         action: 'update',
-        data: [ { symbol: 'XBTZ17', id: 22899900004, side: 'Buy', size: 1300 } ]
+        data: [ { symbol: 'XBTUSD', id: 22899900004, side: 'Buy', size: 1300 } ]
     } as OrderbookUpdateMessage];
 
     const expectedState: OrderbookState = {
-        sequence: -1,
+        sequence: 5,
         orderPool: {
-            4498.9: { id: '22899900005', side: 'buy',  price: Big(4498.9), size: Big(1007) },
-            4499:   { id: '22899900004', side: 'buy',  price: Big(4499),   size: Big(1300) },
-            4499.9: { id: '22899900003', side: 'buy',  price: Big(4499.9), size: Big(30) },
-            4500.2: { id: '22899900002', side: 'sell', price: Big(4500.2), size: Big(450) },
-            4505:   { id: '22899900000', side: 'sell', price: Big(4505),   size: Big(5000) },
-            4505.3: { id: '22899900006', side: 'sell', price: Big(4505.3), size: Big(440) },
-            4505.4: { id: '22899900007', side: 'sell', price: Big(4505.5), size: Big(4180) },
-            4506:   { id: '22899900008', side: 'sell', price: Big(4506),   size: Big(4180) },
+            '4498.9': { id: '22899900005', side: 'buy',  price: Big(4498.9), size: Big(1007) },
+            '4499':   { id: '22899900004', side: 'buy',  price: Big(4499),   size: Big(1300) },
+            '4499.9': { id: '22899900003', side: 'buy',  price: Big(4499.9), size: Big(30) },
+            '4500.2': { id: '22899900002', side: 'sell', price: Big(4500.2), size: Big(450) },
+            '4505':   { id: '22899900000', side: 'sell', price: Big(4505),   size: Big(5000) },
+            '4505.3': { id: '22899900006', side: 'sell', price: Big(4505.3), size: Big(440) },
+            '4505.4': { id: '22899900007', side: 'sell', price: Big(4505.4), size: Big(4180) },
+            '4506':   { id: '22899900008', side: 'sell', price: Big(4506),   size: Big(4180) },
         },
         bids: [{
             price: Big(4498.9),
             totalSize: Big(1007),
-            orders: [ { id: '22899900005', side: 'buy',  price: Big(4498.9), size: Big(1007) } ],
+            orders: [ { id: '4498.9', side: 'buy',  price: Big(4498.9), size: Big(1007) } ],
         }, {
             price: Big(4499),
             totalSize: Big(1300),
-            orders: [ { id: '22899900004', side: 'buy',  price: Big(4499),   size: Big(1300) } ],
+            orders: [ { id: '4499',   side: 'buy',  price: Big(4499),   size: Big(1300) } ],
         }, {
             price: Big(4499.9),
             totalSize: Big(30),
-            orders: [ { id: '22899900003', side: 'buy',  price: Big(4499.9), size: Big(30) } ],
+            orders: [ { id: '4499.9', side: 'buy',  price: Big(4499.9), size: Big(30) } ],
         }],
         asks: [{
             price: Big(4500.2),
             totalSize: Big(450),
-            orders: [ { id: '22899900002', side: 'sell', price: Big(4500.2), size: Big(450) } ],
+            orders: [ { id: '4500.2', side: 'sell', price: Big(4500.2), size: Big(450) } ],
         }, {
             price: Big(4505),
             totalSize: Big(5000),
-            orders: [ { id: '22899900000', side: 'sell', price: Big(4505),   size: Big(5000) } ],
+            orders: [ { id: '4505',   side: 'sell', price: Big(4505),   size: Big(5000) } ],
         }, {
             price: Big(4505.3),
             totalSize: Big(440),
-            orders: [ { id: '22899900006', side: 'sell', price: Big(4505.3), size: Big(440) } ],
+            orders: [ { id: '4505.3', side: 'sell', price: Big(4505.3), size: Big(440) } ],
         }, {
             price: Big(4505.4),
             totalSize: Big(4180),
-            orders: [ { id: '22899900007', side: 'sell', price: Big(4505.5), size: Big(4180) } ],
+            orders: [ { id: '4505.4', side: 'sell', price: Big(4505.4), size: Big(4180) } ],
         }, {
             price: Big(4506),
             totalSize: Big(4180),
-            orders: [ { id: '22899900008', side: 'sell', price: Big(4506),   size: Big(4180) } ],
+            orders: [ { id: '4506',   side: 'sell', price: Big(4506),   size: Big(4180) } ],
         }],
     };
 
@@ -165,7 +165,7 @@ describe('BitMEX Market Feed', () => {
         book = new LiveOrderbook({
             logger: NullLogger,
             strictMode: true,
-            product: 'XBT-USD',
+            product: 'XBTUSD',
         });
 
         bitmexFeed.pipe(book);
