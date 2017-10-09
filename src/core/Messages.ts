@@ -33,6 +33,7 @@ export function isStreamMessage(msg: any): boolean {
 }
 
 export interface ErrorMessage extends StreamMessage {
+    type: 'error',
     message: string;
     details?: any;
 }
@@ -47,6 +48,7 @@ export function isErrorMessage(msg: any): boolean {
  * Any context-rich information can be extracted into the `extra` field, and the original message should be attached to the `origin` field as usual.
  */
 export interface UnknownMessage extends StreamMessage {
+    type: 'unknown',
     sequence?: number;
     productId?: string;
     tag?: string;
@@ -91,6 +93,7 @@ export function isOrderMessage(msg: any): boolean {
  * `orderType` is market, limit, stop
  */
 export interface NewOrderMessage extends BaseOrderMessage {
+    type: 'newOrder';
     size: string;
 }
 
@@ -99,6 +102,7 @@ export interface NewOrderMessage extends BaseOrderMessage {
  * was left unfilled if it was cancelled
  */
 export interface OrderDoneMessage extends BaseOrderMessage {
+    type: 'orderDone';
     reason: string;
     remainingSize: string;
 }
@@ -108,6 +112,7 @@ export interface OrderDoneMessage extends BaseOrderMessage {
  * or changedAmount (which adds to the old value) must be specified.
  */
 export interface ChangedOrderMessage extends BaseOrderMessage {
+    type: 'changedOrder';
     newSize?: string;
     changedAmount?: string;
 }
@@ -119,6 +124,7 @@ export interface ChangedOrderMessage extends BaseOrderMessage {
  * replace the old one.
  */
 export interface LevelMessage extends OrderbookMessage {
+    type: 'level';
     price: string;
     size: string;
     count: number;
@@ -129,6 +135,7 @@ export interface LevelMessage extends OrderbookMessage {
  * sequence field. A corresponding `level`, `done`, or 'change` message will also be sent.
  */
 export interface TradeMessage extends StreamMessage {
+    type: 'trade';
     productId: string;
     side: string;
     tradeId: string;
@@ -137,10 +144,12 @@ export interface TradeMessage extends StreamMessage {
 }
 
 export interface SnapshotMessage extends StreamMessage, OrderbookState {
+    type: 'snapshot';
     productId: string;
 }
 
 export interface TickerMessage extends StreamMessage, Ticker {
+    type: 'ticker';
     productId: string;
 }
 

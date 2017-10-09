@@ -12,10 +12,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
-import * as R from 'ramda';
 
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
-import { SnapshotMessage, LevelMessage, TradeMessage } from '../../core/Messages';
+import { SnapshotMessage, LevelMessage, TradeMessage, ErrorMessage, UnknownMessage } from '../../core/Messages';
 import { BITMEX_WS_FEED } from './BitmexCommon';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
@@ -30,7 +29,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
     readonly feedUrl: string;
     // Maps order IDs to the price that they exist at
     private orderIdMap: { [orderId: number]: number };
-    // BitMEX WsAPI doesn't include a sequence number, so we have to keep track if it ourselves and hope for the best.
+    // BitMEX WSAPI doesn't include a sequence number, so we have to keep track if it ourselves and hope for the best.
     private seq: number;
 
     constructor(config: ExchangeFeedConfig) {
@@ -64,8 +63,13 @@ export class BitmexMarketFeed extends ExchangeFeed {
         const msg: BitmexMessage = JSON.parse(rawMsg) as BitmexMessage;
 
         if (msg.error) {
-            const err = new Error(`Error while subscribing to symbols: ${msg.error}`);
-            this.onError(err);
+            const errMsg: ErrorMessage = {
+                type: 'error',
+                time: new Date(),
+                message: `Error while subscribing to symbols: ${msg.error}`,
+            };
+
+            this.push(errMsg);
         } else if (msg.table === 'trade') {
             // trade message
             const tradeMsg: BitmexTradeMessage = msg as BitmexTradeMessage;
@@ -89,8 +93,12 @@ export class BitmexMarketFeed extends ExchangeFeed {
             this.logger.log('debug', 'Received welcome message from BitMEX WS feed.');
         } else {
             // unhandled/unexpected message
-            const err = new Error(`An unhandled message was received over the websocket connection: ${JSON.stringify(rawMsg)}`);
-            this.onError(err);
+            const unkMsg: UnknownMessage = {
+                type: 'unknown',
+                time: new Date(),
+                origin: msg,
+            };
+            this.push(unkMsg);
         }
     }
 
@@ -111,10 +119,10 @@ export class BitmexMarketFeed extends ExchangeFeed {
             ({ id, price, size, side }) => PriceLevelFactory(price, size, side.toLowerCase());
 
         const asks: PriceLevelWithOrders[] = snapshot.data
-            .filter(R.propEq('side', 'Sell'))
+            .filter( ({ side }) => side === 'Sell' )
             .map(mapLevelUpdates);
         const bids: PriceLevelWithOrders[] = snapshot.data
-            .filter(R.propEq('side', 'Buy'))
+            .filter( ({ side }) => side === 'Buy' )
             .map(mapLevelUpdates);
 
         const priceDataToLvl3: (pd: PriceData) => Level3Order = ({ price, size, side, id }) => ({
