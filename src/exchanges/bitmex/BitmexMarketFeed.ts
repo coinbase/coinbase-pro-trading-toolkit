@@ -87,7 +87,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         } else {
             // unhandled/unexpected message
             const err = new Error(`An unhandled message was received over the websocket connection: ${JSON.stringify(rawMsg)}`);
-            this.onError(err)
+            this.onError(err);
         }
     }
 

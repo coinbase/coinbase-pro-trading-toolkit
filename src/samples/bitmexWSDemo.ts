@@ -21,7 +21,7 @@ import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { TradeMessage } from '../core/Messages';
 
 const logger = ConsoleLoggerFactory();
-const productId = 'XBTZ17';
+const productId = 'XBTUSD';
 
 const config: ExchangeFeedConfig = {
     logger: logger,

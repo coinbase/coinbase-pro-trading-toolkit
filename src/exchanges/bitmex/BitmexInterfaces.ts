@@ -29,7 +29,7 @@ export interface BitmexMessage {
     table?: string;
     action?: string;
     success?: boolean;
-    info?: boolean;
+    info?: string;
 }
 
 export interface WelcomeMessage extends BitmexMessage {
@@ -81,12 +81,6 @@ export interface LevelUpdate {
     side: Side;
     size?: number;
     price?: number;
-}
-
-export interface OrderbookUpdateMessage extends DataMessage {
-    table: 'orderBookL2';
-    action: 'update' | 'insert' | 'delete';
-    data: LevelUpdate[];
 }
 
 export interface OrderbookInsert extends LevelUpdate {
