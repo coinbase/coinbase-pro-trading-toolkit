@@ -29,6 +29,14 @@ export interface BitmexMessage {
     table?: string;
     action?: string;
     success?: boolean;
+    info?: boolean;
+}
+
+export interface WelcomeMessage extends BitmexMessage {
+    info: string;
+    version: string;
+    timestamp: string;
+    docs: string;
 }
 
 // Three possible message types: `SubscriptionResponseMessage`; `ErrorMessage`; `DataMessage`
