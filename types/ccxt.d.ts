@@ -20,8 +20,25 @@ declare module 'ccxt' {
         datetime: string;
     }
 
+    export interface CCXTHistTrade {
+        info: {};                  // the original decoded JSON as is
+        id: string;                // string trade id
+        timestamp: number;         // Unix timestamp in milliseconds
+        datetime: string;          // ISO8601 datetime with milliseconds;
+        symbol: string;            // symbol in CCXT format
+        order?: string;             // string order id or undefined/None/null
+        type?: 'market' | 'limit'; // order type, 'market', 'limit' or undefined/None/null
+        side: 'buy' | 'sell';
+        price: number;             // float price in quote currency
+        amount: number;            // amount of base currency
+    }
+
+    // timestamp, open, high, low, close, volume
+    export type CCXTOHLCV = [number, number, number, number, number, number];
+
     export class Exchange {
         readonly rateLimit: number;
+        readonly hasFetchOHLCV: boolean;
         public verbose: boolean;
         public substituteCommonCurrencyCodes: boolean;
         public hasFetchTickers: boolean;
@@ -54,7 +71,9 @@ declare module 'ccxt' {
 
         fetchTicker(market: string): Promise<any>;
 
-        fetchTrades(symbol: string, params?: any): Promise<any>;
+        fetchTrades(symbol: string, params?: {}): Promise<CCXTHistTrade[]>;
+
+        fetchOHLCV?(symbol: string, params?: {}): Promise<CCXTOHLCV[]>;
 
         cancelOrder(id: string): Promise<any>;
 
