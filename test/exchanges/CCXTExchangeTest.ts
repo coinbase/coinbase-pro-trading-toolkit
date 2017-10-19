@@ -180,7 +180,6 @@ const setupMocks = () => {
         }]);
 
     nock('https://www.bitmex.com', { encodedQueryParams: true })
-        .log(console.error)
         .get('/api/v1/quote/bucketed?symbol=XBTUSD&binSize=1d&partial=true&count=1&reverse=true')
         .reply(200, [{
             timestamp: '2017-10-20T00:00:00.000Z',
