@@ -21,7 +21,7 @@ import { NullLogger } from '../../src/utils/Logger';
 
 const setupMocks = () => {
     nock('https://www.bitmex.com', { encodedQueryParams: true })
-        .get('/api/v1/instrument/active')
+        .get(/\/api\/v1\/instrument\/active.*/)
         .reply(200, [{
             symbol: 'XBTUSD',
             rootSymbol: 'XBT',
