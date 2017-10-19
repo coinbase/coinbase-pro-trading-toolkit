@@ -19,26 +19,33 @@ import CCXTExchangeWrapper from '../../src/exchanges/ccxt';
 import { NullLogger } from '../../src/utils/Logger';
 
 describe('CCXT Exchange Wrapper', () => {
+    const exchangeId = 'bitmex';
+    const productId = 'BTC-USD';
     let wrapper: CCXTExchangeWrapper;
-    let productId: string;
 
     before(async () => {
         const auth: ExchangeAuthConfig = { key: null, secret: null };
-        wrapper = CCXTExchangeWrapper.createExchange('poloniex', auth, NullLogger);
-        const products = await wrapper.loadProducts();
-        // assert.deepEqual(products, []);
-        assert(products.length > 0);
-        productId = products[0].sourceId;
+        wrapper = CCXTExchangeWrapper.createExchange(exchangeId, auth, NullLogger);
     });
 
     it('is able to fetch historical trade data from an exchange', async () => {
-        const data = await wrapper.fetchHistTrades('BTC-ETH');
+        const data = await wrapper.fetchHistTrades(productId);
         assert(data.length && data.length > 0);
     });
 
     it('is able to fetch historical OHLCV candlestick data from an exchange', async () => {
-        const data = await wrapper.fetchOHLCV('BTC-ETH');
+        const data = await wrapper.fetchOHLCV(productId);
         assert.notEqual(data, null);
         assert(data.length && data.length > 0);
+    });
+
+    it('is able to fetch a ticker', async () => {
+        const data = await wrapper.loadTicker(productId);
+        assert(data.bid > data.ask);
+    });
+
+    it('is able to load an orderbook image', async () => {
+        const data = await wrapper.loadOrderbook(productId);
+        assert(data.numAsks > 0 && data.numBids > 0);
     });
 });
