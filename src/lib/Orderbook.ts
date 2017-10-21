@@ -53,9 +53,7 @@ export function PriceLevelFactory(price: number, size: number, side: string): Pr
 }
 
 export function PriceTreeFactory<T extends PriceComparable>() {
-    return new RBTree<T>((a: T, b: T) => {
-        return a.price.cmp(b.price);
-    });
+    return new RBTree<T>( (a: T, b: T) => a.price.cmp(b.price) );
 }
 
 /**

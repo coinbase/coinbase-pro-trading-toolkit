@@ -40,9 +40,9 @@ export function getSubscribedFeeds(options: any, symbol: string): Promise<Gemini
 
 export function FeedFactory(logger: Logger, symbol: string, auth?: ExchangeAuthConfig): Promise<GeminiMarketFeed> {
     auth = auth || {
-            key: process.env.GEMINI_KEY,
-            secret: process.env.GEMINI_SECRET
-        };
+        key: process.env.GEMINI_KEY,
+        secret: process.env.GEMINI_SECRET
+    };
     let productPromise: Promise<string>;
     const gemSymbol = PRODUCT_MAP[symbol];
     if (gemSymbol) {

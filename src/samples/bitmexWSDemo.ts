@@ -13,15 +13,15 @@
  **********************************************************************************************************************/
 
 import { ConsoleLoggerFactory } from '../utils/Logger';
-import { BittrexFeed } from '../exchanges/bittrex/BittrexFeed';
+import { BitmexMarketFeed } from '../exchanges/bitmex/BitmexMarketFeed';
 import { ExchangeFeedConfig } from '../exchanges/ExchangeFeed';
 import { LiveOrderbook, SkippedMessageEvent } from '../core/LiveOrderbook';
-import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { printOrderbook, printTicker } from '../utils/printers';
+import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { TradeMessage } from '../core/Messages';
 
 const logger = ConsoleLoggerFactory();
-const product: string = 'BTC-ETH';
+const productId = 'XBTUSD';
 
 const config: ExchangeFeedConfig = {
     logger: logger,
@@ -29,11 +29,14 @@ const config: ExchangeFeedConfig = {
     wsUrl: null,
 };
 
-const feed: BittrexFeed = new BittrexFeed(config);
-feed.on('websocket-connection', () => {
-    feed.subscribe([product]);
+const feed: BitmexMarketFeed = new BitmexMarketFeed(config);
+
+feed.on('websocket-open', () => {
+    feed.subscribe([productId]);
 });
-const book = new LiveOrderbook({ logger: logger, product: product, strictMode: false });
+
+const book = new LiveOrderbook({ logger: logger, product: productId, strictMode: false });
+
 book.on('LiveOrderbook.snapshot', () => {
     logger.log('info', 'Snapshot received by LiveOrderbook Demo');
     setInterval(() => {
@@ -58,4 +61,5 @@ book.on('error', (err: Error) => {
     console.log('Livebook errored: ', err);
     feed.pipe(book);
 });
+
 feed.pipe(book);
