@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/coinbase/gdax-tt.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-tt)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (VERSIONBADGE) -->
-[![npm](https://img.shields.io/badge/npm-v0.1.17-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
+[![npm](https://img.shields.io/badge/npm-v0.1.20-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
@@ -41,14 +41,17 @@ software.
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
 | **Commits** | **Contributor** |  
 | --- | --- |  
-| 18 | [CjS77](https://github.com/CjS77) |  
+| 27 | [CjS77](https://github.com/CjS77) |  
 | 4  | [mihar](https://github.com/mihar) |  
+| 3  | [balupton](https://github.com/balupton) |  
 | 2  | [kostola](https://github.com/kostola) |  
 | 1  | [abe238](https://github.com/abe238) |  
+| 1  | [Ameobea](https://github.com/Ameobea) |  
 | 1  | [fb55](https://github.com/fb55) |  
 | 1  | [discosultan](https://github.com/discosultan) |  
 | 1  | [maxbeatty](https://github.com/maxbeatty) |  
 | 1  | [pzagor2](https://github.com/pzagor2) |  
 | 1  | [jcronq](https://github.com/jcronq) |  
+| 1  | [kahmienah](https://github.com/kahmienah) |  
 
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
