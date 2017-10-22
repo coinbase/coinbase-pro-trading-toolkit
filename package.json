@@ -59,6 +59,7 @@
     "pushbullet": "2.0.0",
     "querystring": "0.2.0",
     "simple-mock": "0.8.0",
+    "simple-statistics": "5.0.1",
     "superagent": "3.0.0",
     "winston": "2.3.0",
     "ws": "1.1.1"

@@ -55,12 +55,12 @@ export class FXService extends EventEmitter {
 
     constructor(config: FXServiceConfig) {
         super();
+        this._rates = {};
         this.setLogger(config.logger || ConsoleLoggerFactory())
             .setCalculator(config.calculator)
             .setRefreshInterval(config.refreshInterval || 1000 * 60 * 5) // 5 minutes
             .setActivePairs(config.activePairs || []);
         this.errorState = false;
-        this._rates = {};
     }
 
     /**
@@ -194,7 +194,7 @@ export class FXService extends EventEmitter {
     /**
      * Returns the last set of exchange rate data that was returned by the RateCalculator
      */
-    get rates() {
+    get rates(): FXRates {
         return this._rates;
     }
 
