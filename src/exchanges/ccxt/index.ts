@@ -13,14 +13,14 @@
  **********************************************************************************************************************/
 
 import * as ccxt from 'ccxt';
-import { CCXTMarket, CCXTOrderbook } from 'ccxt';
+import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
 import { Big, BigJS } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
-import { PlaceOrderMessage } from '../../core/Messages';
+import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { Logger } from '../../utils/Logger';
 
@@ -336,5 +336,31 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
         throw new Error('Not implemented yet');
+    }
+
+    /**
+     * Attempts to fetch historical trade data from the exchange and return it in
+     */
+    async fetchHistTrades(symbol: string, params?: {}): Promise<TradeMessage[]> {
+        const sourceSymbol = await this.getSourceSymbol(symbol);
+        const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
+        return rawTrades.map(({ info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount }) => ({
+            type: 'trade' as 'trade',
+            time: new Date(timestamp),
+            productId: _symbol,
+            side,
+            tradeId: id,
+            price: price.toString(),
+            size: amount.toString(),
+        }));
+    }
+
+    async fetchOHLCV(symbol: string, params?: {}): Promise<CCXTOHLCV[] | null> {
+        if (!this.instance.hasFetchOHLCV) {
+            return null;
+        } else {
+            const sourceSymbol = await this.getSourceSymbol(symbol);
+            return await this.instance.fetchOHLCV(sourceSymbol, params);
+        }
     }
 }
