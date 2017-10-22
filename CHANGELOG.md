@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.1.20
+
+* Add BitMex live feed
+* Add CryptoProvider (exchange rates)
+* Add RobustCalculator (exchange rates)
+* `Trader` should handle Market orders better
+
+## v0.1.19
+
+* Bugfixes
+
 ## v0.1.18
 
 * Add `origin` tag to messages

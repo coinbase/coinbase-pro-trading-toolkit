@@ -69,6 +69,15 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Interface for any message type not supported explicitly elsewhere.
+							The type must always be &#39;unknown&#39;. If the source of the message is actually known, (e.g. trollbox chats), this can be indicated in the <code>tag</code> field.
+						Any context-rich information can be extracted into the <code>extra</code> field, and the original message should be attached to the <code>origin</code> field as usual.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -89,9 +98,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.unknownmessage.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.unknownmessage.html#extra" class="tsd-kind-icon">extra</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.unknownmessage.html#origin" class="tsd-kind-icon">origin</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.unknownmessage.html#productid" class="tsd-kind-icon">product<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.unknownmessage.html#sequence" class="tsd-kind-icon">sequence</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.unknownmessage.html#tag" class="tsd-kind-icon">tag</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.unknownmessage.html#time" class="tsd-kind-icon">time</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.unknownmessage.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
@@ -102,12 +113,23 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="message" class="tsd-anchor"></a>
-					<h3>message</h3>
-					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="extra" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> extra</h3>
+					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L44">src/core/Messages.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L54">src/core/Messages.ts:54</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="origin" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
+					<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#origin">origin</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L28">src/core/Messages.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -117,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">product<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L43">src/core/Messages.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L52">src/core/Messages.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -127,7 +149,17 @@
 					<div class="tsd-signature tsd-kind-icon">sequence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L42">src/core/Messages.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L51">src/core/Messages.ts:51</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="tag" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> tag</h3>
+					<div class="tsd-signature tsd-kind-icon">tag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L53">src/core/Messages.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -138,7 +170,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#time">time</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L25">src/core/Messages.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L27">src/core/Messages.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -149,7 +181,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L24">src/core/Messages.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L26">src/core/Messages.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,13 +254,19 @@
 						<a href="_src_core_messages_.unknownmessage.html" class="tsd-kind-icon">Unknown<wbr>Message</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_core_messages_.unknownmessage.html#message" class="tsd-kind-icon">message</a>
+								<a href="_src_core_messages_.unknownmessage.html#extra" class="tsd-kind-icon">extra</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_core_messages_.unknownmessage.html#origin" class="tsd-kind-icon">origin</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_src_core_messages_.unknownmessage.html#productid" class="tsd-kind-icon">product<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_src_core_messages_.unknownmessage.html#sequence" class="tsd-kind-icon">sequence</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_core_messages_.unknownmessage.html#tag" class="tsd-kind-icon">tag</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_core_messages_.unknownmessage.html#time" class="tsd-kind-icon">time</a>

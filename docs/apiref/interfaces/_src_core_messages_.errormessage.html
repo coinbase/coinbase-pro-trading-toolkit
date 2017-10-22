@@ -91,8 +91,9 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.errormessage.html#details" class="tsd-kind-icon">details</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_core_messages_.errormessage.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.errormessage.html#origin" class="tsd-kind-icon">origin</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.errormessage.html#time" class="tsd-kind-icon">time</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_core_messages_.errormessage.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="_src_core_messages_.errormessage.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,7 +107,7 @@
 					<div class="tsd-signature tsd-kind-icon">details<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L34">src/core/Messages.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L38">src/core/Messages.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -116,7 +117,18 @@
 					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L33">src/core/Messages.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L37">src/core/Messages.ts:37</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="origin" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
+					<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#origin">origin</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L28">src/core/Messages.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -127,18 +139,18 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#time">time</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L25">src/core/Messages.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L27">src/core/Messages.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
 					<a name="type" class="tsd-anchor"></a>
 					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"error"</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#type">type</a></p>
+						<p>Overrides <a href="_src_core_messages_.streammessage.html">StreamMessage</a>.<a href="_src_core_messages_.streammessage.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/a3d18bb/src/core/Messages.ts#L24">src/core/Messages.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L36">src/core/Messages.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,9 +190,12 @@
 								<a href="_src_core_messages_.errormessage.html#message" class="tsd-kind-icon">message</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="_src_core_messages_.errormessage.html#time" class="tsd-kind-icon">time</a>
+								<a href="_src_core_messages_.errormessage.html#origin" class="tsd-kind-icon">origin</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_core_messages_.errormessage.html#time" class="tsd-kind-icon">time</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
 								<a href="_src_core_messages_.errormessage.html#type" class="tsd-kind-icon">type</a>
 							</li>
 						</ul>
