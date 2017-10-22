@@ -84,7 +84,8 @@ export class Trader extends Writable {
 
     placeOrder(req: PlaceOrderMessage): Promise<LiveOrder> {
         if (this.fitOrders) {
-            req.size = Big(req.size).round(this.sizePrecision, 1).toString();
+            req.size = req.size ? Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
+            req.funds = req.funds ? Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
             req.price = Big(req.price).round(this.pricePrecision, 2).toString();
         }
         return this.api.placeOrder(req).then((order: LiveOrder) => {
