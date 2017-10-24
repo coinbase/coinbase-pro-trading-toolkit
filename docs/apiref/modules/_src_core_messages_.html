@@ -100,6 +100,7 @@
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_core_messages_.html#isorderbookmessage" class="tsd-kind-icon">is<wbr>Orderbook<wbr>Message</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_core_messages_.html#isstreammessage" class="tsd-kind-icon">is<wbr>Stream<wbr>Message</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_core_messages_.html#isunknownmessage" class="tsd-kind-icon">is<wbr>Unknown<wbr>Message</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_core_messages_.html#sanitizemessage" class="tsd-kind-icon">sanitize<wbr>Message</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,7 +118,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L41">src/core/Messages.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L41">src/core/Messages.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -140,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L85">src/core/Messages.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L85">src/core/Messages.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -163,7 +164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L71">src/core/Messages.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L71">src/core/Messages.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -186,7 +187,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L31">src/core/Messages.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L31">src/core/Messages.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -209,7 +210,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/2438119/src/core/Messages.ts#L57">src/core/Messages.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L57">src/core/Messages.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -219,6 +220,44 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="sanitizemessage" class="tsd-anchor"></a>
+					<h3>sanitize<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">sanitize<wbr>Message<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span>, sensitiveKeys<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1ef9678/src/core/Messages.ts#L215">src/core/Messages.ts:215</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sanitises a message by replacing any keys in the msg object with &#39;<em>*</em>&#39;.
+										Keys are searched recursively.
+									The original message is not modified.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msg: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>sensitiveKeys: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -302,6 +341,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_src_core_messages_.html#isunknownmessage" class="tsd-kind-icon">is<wbr>Unknown<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_src_core_messages_.html#sanitizemessage" class="tsd-kind-icon">sanitize<wbr>Message</a>
 					</li>
 				</ul>
 			</nav>
