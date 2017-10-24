@@ -92,6 +92,7 @@ export class GDAXFeed extends ExchangeFeed {
             this.channels.push('heartbeat');
         }
         this.gdaxAPI = new GDAXExchangeAPI(config);
+        this.sensitiveKeys.push('passphrase');
         this.connect();
     }
 

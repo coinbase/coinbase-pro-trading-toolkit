@@ -206,3 +206,24 @@ export interface MyOrderPlacedMessage extends StreamMessage {
     size: string;
     sequence: number;
 }
+
+/**
+ * Sanitises a message by replacing any keys in the msg object with '***'.
+ * Keys are searched recursively.
+ * The original message is not modified.
+ */
+export function sanitizeMessage(msg: { [index: string]: any }, sensitiveKeys: string[]) {
+    const clean: any = {};
+    for (const key in msg) {
+        if (msg.hasOwnProperty(key)) {
+            if (sensitiveKeys.includes(key)) {
+                clean[key] = '***';
+            } else if (typeof msg[key] === 'object') {
+                clean[key] = sanitizeMessage(msg[key], sensitiveKeys);
+            } else {
+                clean[key] = msg[key];
+            }
+        }
+    }
+    return clean;
+}

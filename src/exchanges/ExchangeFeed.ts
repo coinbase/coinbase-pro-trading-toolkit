@@ -18,6 +18,7 @@ import { ExchangeAuthConfig } from './AuthConfig';
 import { createHmac } from 'crypto';
 import WebSocket = require('ws');
 import Timer = NodeJS.Timer;
+import { sanitizeMessage } from '../core/Messages';
 
 export class ExchangeFeedConfig {
     wsUrl: string;
@@ -34,6 +35,8 @@ export abstract class ExchangeFeed extends Readable {
     protected auth: ExchangeAuthConfig;
     protected url: string;
     protected _isConnecting: boolean;
+    // keys in this list will be sanitised in log messages
+    protected sensitiveKeys: string[];
     private lastHeartBeat: number = -1;
     private connectionChecker: Timer = null;
     private socket: WebSocket;
@@ -45,6 +48,7 @@ export abstract class ExchangeFeed extends Readable {
         this.url = config.wsUrl;
         this._isConnecting = false;
         this.auth = this.validateAuth(config.auth);
+        this.sensitiveKeys = ['key', 'secret', 'signature'];
     }
 
     get logger(): Logger {
@@ -54,6 +58,9 @@ export abstract class ExchangeFeed extends Readable {
     log(level: string, message: string, meta?: any) {
         if (!this._logger) {
             return;
+        }
+        if (meta && typeof meta === 'object') {
+            meta = sanitizeMessage(meta, this.sensitiveKeys);
         }
         this._logger.log(level, message, meta);
     }
@@ -194,7 +201,7 @@ export abstract class ExchangeFeed extends Readable {
     protected send(msg: any, cb?: (err: Error) => void): void {
         try {
             const msgString = typeof(msg) === 'string' ? msg : JSON.stringify(msg);
-            this.log('debug', `Sending ${msgString} message to WS server`);
+            this.log('debug', `Sending message to WS server`, { message: msg });
             this.socket.send(msgString, cb);
         } catch (err) {
             // If there's an error just log and carry on
