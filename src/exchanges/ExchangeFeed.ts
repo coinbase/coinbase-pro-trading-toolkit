@@ -142,6 +142,10 @@ export abstract class ExchangeFeed extends Readable {
     }
 
     protected close() {
+        if (this.connectionChecker) {
+            clearInterval(this.connectionChecker);
+            this.connectionChecker = null;
+        }
         // We're initiating the socket closure, so don't reconnect
         this.socket.removeAllListeners('close');
         this.socket.removeAllListeners('message');
@@ -172,6 +176,7 @@ export abstract class ExchangeFeed extends Readable {
                 `No heartbeat has been received from ${this.url} ${this.auth ? '(authenticated)' : ''} in ${diff} ms. Assuming the connection is dead and reconnecting`
             );
             clearInterval(this.connectionChecker);
+            this.connectionChecker = null;
             this.reconnect(2500);
         }
     }
