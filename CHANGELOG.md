@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.21
+* Bugfixes (#64)
+* Don't leak API keys in logs (see `Messages.sanitizeMessage`)
+* Update some package indices
+* CCXT Historical Data Retrieval Methods (thanks @Ameobea)
+
 ## 0.1.20
 
 * Add BitMex live feed
