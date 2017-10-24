@@ -12,6 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
 
+///<reference path="../../../types/ccxt.d.ts"/>
+
 import * as ccxt from 'ccxt';
 import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';

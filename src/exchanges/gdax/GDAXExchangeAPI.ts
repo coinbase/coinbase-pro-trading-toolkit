@@ -12,6 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
+///<reference path="../../../types/gdax.d.ts"/>
+
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { BookBuilder } from '../../lib/BookBuilder';

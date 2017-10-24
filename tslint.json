@@ -17,6 +17,7 @@
       "object-literal-shorthand": false,
       "object-literal-sort-keys": false,
       "ordered-imports": false,
+      "no-reference": false,
       "no-var-requires": false,
       "prefer-const": [true, {"destructuring": "all"}],
       "trailing-comma": false,
