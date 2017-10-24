@@ -1,3 +1,5 @@
+///<reference path="../../types/pushbullet.d.ts"/>
+
 export * from './Logger';
 export * from './printers';
 

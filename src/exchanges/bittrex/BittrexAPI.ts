@@ -11,6 +11,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
+
+///<reference path="../../../types/node.bittrex.api.d.ts"/>
+
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import * as Bittrex from 'node.bittrex.api';
 import { ExchangeAuthConfig } from '../AuthConfig';
