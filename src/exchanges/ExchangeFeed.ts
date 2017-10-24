@@ -55,11 +55,11 @@ export abstract class ExchangeFeed extends Readable {
         return this._logger;
     }
 
-    log(level: string, message: string, meta?: any, sanitize: boolean = true) {
+    log(level: string, message: string, meta?: any) {
         if (!this._logger) {
             return;
         }
-        if (sanitize && meta && typeof meta === 'object') {
+        if (meta && typeof meta === 'object') {
             meta = sanitizeMessage(meta, this.sensitiveKeys);
         }
         this._logger.log(level, message, meta);
@@ -195,9 +195,8 @@ export abstract class ExchangeFeed extends Readable {
 
     protected send(msg: any, cb?: (err: Error) => void): void {
         try {
-            const cleanMsg = typeof msg === 'object' ? JSON.stringify(sanitizeMessage(msg, this.sensitiveKeys)) : msg;
             const msgString = typeof(msg) === 'string' ? msg : JSON.stringify(msg);
-            this.log('debug', `Sending ${cleanMsg} message to WS server`);
+            this.log('debug', `Sending message to WS server`, { message: msg });
             this.socket.send(msgString, cb);
         } catch (err) {
             // If there's an error just log and carry on
