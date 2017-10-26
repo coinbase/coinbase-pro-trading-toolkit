@@ -15,5 +15,10 @@
 import { CurrencyPair, FXObject } from './FXProvider';
 
 export abstract class FXRateCalculator {
+    /**
+     * Makes a request for the calculator to calculate and return the most recent exchange rate for the given currency pairs.
+     * If the Calculator is unable to complete a request for any of the pairs, it should return `null` for that pair and the other rates
+     * will still be accepted. However, it can also reject the entire Promise if it is unable to calculate rates for any of the given pairs
+     */
     abstract calculateRatesFor(pairs: CurrencyPair[]): Promise<FXObject[]>;
 }

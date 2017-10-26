@@ -35,13 +35,7 @@ export default class SimpleRateCalculator extends FXRateCalculator {
             return this.provider.fetchCurrentRate(pair)
                 .catch((err: Error) => {
                 this.logger.log('warn', err.message, (err as any).details || null);
-                return Promise.resolve({
-                    from: pair.from,
-                    to: pair.to,
-                    rate: null,
-                    change: null,
-                    time: new Date()
-                });
+                return null;
             });
         });
         // Wait for all promises to resolve before sending results back
