@@ -11,54 +11,48 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                 *
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
-import { CurrencyPair, FXObject, FXProvider, FXProviderConfig, pairAsString } from '../FXProvider';
-import { Product, PublicExchangeAPI } from '../../exchanges/PublicExchangeAPI';
-import { BigJS } from '../../lib/types';
+import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig, pairAsString } from '../FXProvider';
+import { tryUntil } from '../../utils/promises';
 
-export interface CryptoProviderConfig extends FXProviderConfig {
-    exchange: PublicExchangeAPI;
+export interface FailoverProviderConfig extends FXProviderConfig {
+    // An array of providers to use in priority order
+    providers: FXProvider[];
 }
 
-export class CryptoProvider extends FXProvider {
-    private exchange: PublicExchangeAPI;
-    private products: string[];
+/**
+ * Provider that proxies an array of Providers. It returns the result from the first in the list, unless the request fails, in which case it tries the second, and
+ * son on.
+ */
+export class FailoverProvider extends FXProvider {
+    private providers: FXProvider[];
 
-    constructor(config: CryptoProviderConfig) {
+    constructor(config: FailoverProviderConfig) {
         super(config);
-        this.exchange = config.exchange;
+        this.providers = config.providers;
     }
 
-    get name(): string {
-        return `CryptoProvider (${this.exchange.owner})`;
+    get name() {
+        return 'Failover Provider';
     }
 
     supportsPair(pair: CurrencyPair): Promise<boolean> {
-        const getProducts = this.products ?
-            Promise.resolve(this.products) :
-            this.exchange.loadProducts().then((products: Product[]) => {
-                this.products = products.map((p) => p.id);
-                return this.products;
-            }).catch((err: Error) => {
-                this.log('warn', 'CryptoProvider could not load a list of products', err);
-                return [];
-            });
-        return getProducts.then((products: string[]) => {
-            const product = pairAsString(pair);
-            return products.includes(product);
+        return tryUntil<FXProvider, boolean>(this.providers, (provider: FXProvider) => {
+            return provider.supportsPair(pair);
         });
     }
 
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {
-        const product: string = pairAsString(pair);
-        return this.exchange.loadMidMarketPrice(product).then((price: BigJS) => {
-            const result: FXObject = {
-                time: new Date(),
-                from: pair.from,
-                to: pair.to,
-                rate: price
-            };
-            return result;
+        return tryUntil<FXProvider, FXObject>(this.providers, (provider: FXProvider) => {
+            return provider.fetchCurrentRate(pair).then((result: FXObject) => {
+                return result && result.rate && result.rate.isFinite() ? result : false;
+            }).catch(() => {
+                return false;
+            });
+        }).then((result: boolean | FXObject) => {
+            if (result === false) {
+                return Promise.reject(new EFXRateUnavailable(`None of the providers could offer a rate for ${pairAsString(pair)}`, this.name));
+            }
+            return Promise.resolve(result as FXObject);
         });
     }
-
 }
