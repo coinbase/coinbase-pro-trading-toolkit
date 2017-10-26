@@ -22,7 +22,7 @@ import { EFXRateUnavailable, FXObject } from '../../src/FXService/FXProvider';
 const assert = require('assert');
 const nock = require('nock');
 
-describe('CryptoProvider', () => {
+describe('FailoverProvider', () => {
     let provider: FailoverProvider;
 
     before(() => {
@@ -55,15 +55,7 @@ describe('CryptoProvider', () => {
     it('supports currencies from 2nd provider if first does not', () => {
         nock('https://api.bitfinex.com:443')
             .get('/v1/symbols_details')
-            .reply(200, [{
-                pair: 'ethusd',
-                price_precision: 5,
-                initial_margin: '30.0',
-                minimum_margin: '15.0',
-                maximum_order_size: '2000.0',
-                minimum_order_size: '0.004',
-                expiration: 'NA'
-            }]);
+            .reply(200, [{ pair: 'ethusd' }, { pair: 'btcusd' }]);
         return provider.supportsPair({ from: 'ETH', to: 'USD' }).then((result: boolean) => {
             assert.equal(result, true);
         });
@@ -124,7 +116,7 @@ describe('CryptoProvider', () => {
                 mid: '500.00',
                 bid: '499.00',
                 ask: '501.00',
-                last_price: '495.49',
+                last_price: '495.49'
             });
         return provider.fetchCurrentRate({ from: 'ETH', to: 'USD' }).then((result: FXObject) => {
             assert.equal(result.rate.toNumber(), 500);
@@ -140,7 +132,7 @@ describe('CryptoProvider', () => {
                 mid: '500.00',
                 bid: '499.00',
                 ask: '501.00',
-                last_price: '495.49',
+                last_price: '495.49'
             });
         return provider.fetchCurrentRate({ from: 'USD', to: 'ETH' }).then((result: FXObject) => {
             assert.equal(result.rate.toNumber(), 1 / 500);
@@ -157,6 +149,24 @@ describe('CryptoProvider', () => {
             throw new Error('should reject this promise');
         }).catch((err: Error) => {
             assert.ok(err instanceof EFXRateUnavailable);
+        });
+    });
+
+    it('returns spot rate from 2nd provider is first is returning errors', () => {
+        nock('https://api.gdax.com:443')
+            .get('/products/BTC-USD/ticker')
+            .reply(500);
+        nock('https://api.bitfinex.com:443')
+            .get('/v1/pubticker/btcusd')
+            .reply(200, {
+                bid: '10400.00',
+                ask: '10500.00',
+                last_price: '10480.0'
+            });
+        return provider.fetchCurrentRate({ from: 'BTC', to: 'USD' }).then((result: FXObject) => {
+            assert.equal(result.rate.toNumber(), 10450);
+            assert.equal(result.from, 'BTC');
+            assert.equal(result.to, 'USD');
         });
     });
 });
