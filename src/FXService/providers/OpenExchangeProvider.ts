@@ -37,6 +37,19 @@ export default class OpenExchangeProvider extends FXProvider {
         return 'Open Exchange Rates';
     }
 
+    supportsPair(pair: CurrencyPair): Promise<boolean> {
+        if (supportedCurrencies) {
+            return Promise.resolve(isSupported(pair));
+        }
+        return request.get(API_URL + '/currencies.json')
+            .accept('application/json')
+            .then((res: Response) => {
+                const curs: { [cur: string]: string } = res.body;
+                supportedCurrencies = Object.keys(curs);
+                return Promise.resolve(isSupported(pair));
+            });
+    }
+
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {
         const query = {
             base: pair.from,
@@ -59,19 +72,6 @@ export default class OpenExchangeProvider extends FXProvider {
                     rate: new Big(rate),
                     time: new Date()
                 });
-            });
-    }
-
-    protected supportsPair(pair: CurrencyPair): Promise<boolean> {
-        if (supportedCurrencies) {
-            return Promise.resolve(isSupported(pair));
-        }
-        return request.get(API_URL + '/currencies.json')
-            .accept('application/json')
-            .then((res: Response) => {
-                const curs: { [cur: string]: string } = res.body;
-                supportedCurrencies = Object.keys(curs);
-                return Promise.resolve(isSupported(pair));
             });
     }
 }

@@ -52,3 +52,26 @@ export function eachParallelAndFinish<T, U>(arr: T[], iteratorFn: (arg: T) => Pr
         });
     });
 }
+
+/**
+ * Applies iteratorFn to each element in arr until a 'true' result is returned. Rejected promises are swallowed. A false result is returned only
+ * if every iteratorFn(i) returns false or an Error
+ */
+export function tryUntil<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U | boolean>, index: number = 0): Promise<U | boolean> {
+    if (arr.length < 1) {
+        return Promise.resolve(false);
+    }
+    return iteratorFn(arr[index]).then((result: U | boolean) => {
+       if (result !== false) {
+           return Promise.resolve(result);
+       }
+       if (++index >= arr.length) {
+           return Promise.resolve(false);
+       }
+       return tryUntil(arr, iteratorFn, index);
+    }).catch(() => {
+        // Swallow the error and continue
+        const clone: T[] = arr.slice();
+        return tryUntil(clone.splice(0,1), iteratorFn);
+    });
+}

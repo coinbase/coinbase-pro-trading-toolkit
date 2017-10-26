@@ -104,6 +104,8 @@ export abstract class FXProvider {
         });
     }
 
+    abstract supportsPair(pair: CurrencyPair): Promise<boolean>;
+
     /**
      * Returns a promise for the current rate. IsSupported must be true, and is not checked here. The method returns a
      * promise for the current network request, or generates a new one.
@@ -132,6 +134,4 @@ export abstract class FXProvider {
      * @param pair
      */
     protected abstract downloadCurrentRate(pair: CurrencyPair): Promise<FXObject>;
-
-    protected abstract supportsPair(pair: CurrencyPair): Promise<boolean>;
 }

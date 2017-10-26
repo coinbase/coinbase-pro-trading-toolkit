@@ -27,6 +27,29 @@ export default class YahooFinanceFXProvider extends FXProvider {
         return 'Yahoo Finance';
     }
 
+    supportsPair(pair: CurrencyPair): Promise<boolean> {
+        if (SUPPORTED_PAIRS.length > 0) {
+            return Promise.resolve(this.isSupportedPair(pair));
+        }
+        return request('http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote')
+            .accept('application/json')
+            .query({ format: 'json' })
+            .then<boolean>((response: Response) => {
+                if (response.status !== 200 || !response.body || !response.body.list || !response.body.list.resources) {
+                    return Promise.reject(new Error('Could not get list of supported currencies from Yahoo Finance'));
+                }
+                const currencyList: any[] = response.body.list.resources;
+                SUPPORTED_PAIRS = [];
+                currencyList.forEach((obj: any) => {
+                    const tag = obj.resource && obj.resource.fields && obj.resource.fields.symbol;
+                    if (tag.endsWith('=X')) {
+                        SUPPORTED_PAIRS.push(tag.slice(0, tag.length - 2));
+                    }
+                });
+                return Promise.resolve(this.isSupportedPair(pair));
+            }, (err: Error) => Promise.reject(err));
+    }
+
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {
         const query = {
             q: `select Rate from yahoo.finance.xchange where pair in ("${pair.from}${pair.to}")`,
@@ -65,29 +88,6 @@ export default class YahooFinanceFXProvider extends FXProvider {
                 err.details = details;
                 return Promise.reject(err);
             });
-    }
-
-    protected supportsPair(pair: CurrencyPair): Promise<boolean> {
-        if (SUPPORTED_PAIRS.length > 0) {
-            return Promise.resolve(this.isSupportedPair(pair));
-        }
-        return request('http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote')
-            .accept('application/json')
-            .query({ format: 'json' })
-            .then<boolean>((response: Response) => {
-                if (response.status !== 200 || !response.body || !response.body.list || !response.body.list.resources) {
-                    return Promise.reject(new Error('Could not get list of supported currencies from Yahoo Finance'));
-                }
-                const currencyList: any[] = response.body.list.resources;
-                SUPPORTED_PAIRS = [];
-                currencyList.forEach((obj: any) => {
-                    const tag = obj.resource && obj.resource.fields && obj.resource.fields.symbol;
-                    if (tag.endsWith('=X')) {
-                        SUPPORTED_PAIRS.push(tag.slice(0, tag.length - 2));
-                    }
-                });
-                return Promise.resolve(this.isSupportedPair(pair));
-            }, (err: Error) => Promise.reject(err));
     }
 
     private isSupportedPair(pair: CurrencyPair): boolean {
