@@ -107,4 +107,19 @@ describe('OpenExchangeProvider', () => {
             assert.ok(err instanceof EFXRateUnavailable);
         });
     });
+
+    it('busts cache for base changes', () => {
+        nock('https://openexchangerates.org/api')
+            .get('/latest.json')
+            .query({ app_id: 'key', base: 'GBP' })
+            .reply(200, {
+                base: 'GBP',
+                rates: { USD: 1.25 }
+            });
+        return provider.fetchCurrentRate({ from: 'GBP', to: 'USD' }).then((result: FXObject) => {
+            assert.equal(result.rate.toNumber(), 1.25);
+            assert.equal(result.from, 'GBP');
+            assert.equal(result.to, 'USD');
+        });
+    });
 });

@@ -32,6 +32,7 @@ export default class OpenExchangeProvider extends FXProvider {
     private pending: Promise<Response> = null;
     private cacheDuration: number;
     private cacheTimer: Timer = null;
+    private base: string = null;
 
     constructor(config: OpenExchangeConfig) {
         super(config);
@@ -71,10 +72,11 @@ export default class OpenExchangeProvider extends FXProvider {
             base: pair.from,
             app_id: this.apiKey
         };
-        if (this.pending === null) {
+        if (this.needsRequest(pair.from)) {
             this.pending = request.get(API_URL + '/latest.json')
                 .accept('application/json')
                 .query(query);
+            this.base = pair.from;
         }
         return this.pending.then((res: Response) => {
             const result = res.body;
@@ -95,6 +97,12 @@ export default class OpenExchangeProvider extends FXProvider {
                 time: new Date()
             });
         });
+    }
+
+    private needsRequest(from: string): boolean {
+        return (this.pending === null) ||
+            (this.base === null) ||
+            (this.base !== from);
     }
 }
 
