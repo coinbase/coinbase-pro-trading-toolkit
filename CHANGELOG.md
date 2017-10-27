@@ -1,4 +1,7 @@
 # Change Log
+## 0.1.28
+* Lots of bugfixes
+* Added `RobustCalculator`, `FailoverCalculator` and `FailoverProvider` to FXService
 
 ## 0.1.21
 * Bugfixes (#64)
