@@ -55,5 +55,5 @@ const fxService: FXService = new FXService({
 fxService.on('FXRateUpdate', (rates: FXRates) => {
     if (rates['BTC-USD'].rate) { logger.log('info', `BTC price: ${rates['BTC-USD'].rate.toFixed(5)}`); }
     if (rates['ETH-BTC'].rate) { logger.log('info', `ETH price: ${rates['ETH-BTC'].rate.toFixed(5)}`); }
-    logger.log('debug', 'RobustRate report', robustCalculator.lastReport);
+    logger.log('debug', 'RobustRate report', robustCalculator.getLastRequestInfo());
 });

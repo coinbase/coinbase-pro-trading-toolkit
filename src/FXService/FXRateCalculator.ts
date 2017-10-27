@@ -21,4 +21,8 @@ export abstract class FXRateCalculator {
      * will still be accepted. However, it can also reject the entire Promise if it is unable to calculate rates for any of the given pairs
      */
     abstract calculateRatesFor(pairs: CurrencyPair[]): Promise<FXObject[]>;
+
+    getLastRequestInfo(): any {
+        return {};
+    }
 }

@@ -11,7 +11,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                 *
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
-import { CurrencyPair, FXObject, FXProvider, FXProviderConfig, pairAsString } from '../FXProvider';
+import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig, pairAsString } from '../FXProvider';
 import { Product, PublicExchangeAPI } from '../../exchanges/PublicExchangeAPI';
 import { BigJS } from '../../lib/types';
 
@@ -58,6 +58,9 @@ export class CryptoProvider extends FXProvider {
                 rate: price
             };
             return result;
+        }).catch((err: Error) => {
+            this.log('warn', `${this.name} failed to download the ${pairAsString(pair)} rate`, err.message);
+            return Promise.reject(new EFXRateUnavailable(err.message, this.name));
         });
     }
 

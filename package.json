@@ -50,7 +50,7 @@
     "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
-    "ccxt": "^1.9.186",
+    "ccxt": "1.9.275",
     "commander": "2.9.0",
     "crypto": "0.0.3",
     "gdax": "0.3.1",
