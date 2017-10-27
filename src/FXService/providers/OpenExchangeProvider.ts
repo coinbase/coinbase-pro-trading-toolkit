@@ -13,8 +13,9 @@
  ***************************************************************************************************************************/
 
 import request = require('superagent');
-import { FXProvider, FXObject, EFXRateUnavailable, FXProviderConfig, CurrencyPair } from '../FXProvider';
 import Response = request.Response;
+import Timer = NodeJS.Timer;
+import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig } from '../FXProvider';
 import * as Big from 'bignumber.js';
 
 const API_URL = 'https://openexchangerates.org/api';
@@ -23,18 +24,33 @@ let supportedCurrencies: string[] = null;
 
 export interface OpenExchangeConfig extends FXProviderConfig {
     apiKey: string;
+    cacheDuration?: number;
 }
 
 export default class OpenExchangeProvider extends FXProvider {
     private apiKey: string;
+    private pending: Promise<Response> = null;
+    private cacheDuration: number;
+    private cacheTimer: Timer = null;
 
     constructor(config: OpenExchangeConfig) {
         super(config);
         this.apiKey = config.apiKey || process.env.OPENEXCHANGE_API_KEY;
+        this.cacheDuration = config.cacheDuration || 5 * 50 * 1000;
     }
 
     get name() {
         return 'Open Exchange Rates';
+    }
+
+    /**
+     * Clears the request cache, forcing the next download request to hit the server
+     */
+    clearCache() {
+        if (this.cacheTimer) {
+            clearTimeout(this.cacheTimer);
+        }
+        this.pending = null;
     }
 
     supportsPair(pair: CurrencyPair): Promise<boolean> {
@@ -53,26 +69,32 @@ export default class OpenExchangeProvider extends FXProvider {
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {
         const query = {
             base: pair.from,
-            symbols: pair.to,
             app_id: this.apiKey
         };
-        return request.get(API_URL + '/latest.json')
-            .accept('application/json')
-            .query(query)
-            .then((res: Response) => {
-                const result = JSON.parse(res.body);
-                const rate = result && result.rates && result.rates[pair.to];
-                if (!rate || !isFinite(rate)) {
-                    const error = new EFXRateUnavailable('We got a response, but the FX rates weren\'t present', this.name);
-                    return Promise.reject(error);
-                }
-                return Promise.resolve({
-                    from: pair.from,
-                    to: pair.to,
-                    rate: new Big(rate),
-                    time: new Date()
-                });
+        if (this.pending === null) {
+            this.pending = request.get(API_URL + '/latest.json')
+                .accept('application/json')
+                .query(query);
+        }
+        return this.pending.then((res: Response) => {
+            const result = res.body;
+            const rate = result && result.rates && result.rates[pair.to];
+            if (!rate || !isFinite(rate)) {
+                const error = new EFXRateUnavailable('We got a response, but the FX rates weren\'t present', this.name);
+                return Promise.reject(error);
+            }
+            // Clear the pending request after a timeout -- reducing request load on OER
+            this.cacheTimer = setTimeout(() => {
+                this.pending = null;
+                this.cacheTimer = null;
+            }, this.cacheDuration);
+            return Promise.resolve({
+                from: pair.from,
+                to: pair.to,
+                rate: new Big(rate),
+                time: new Date()
             });
+        });
     }
 }
 
