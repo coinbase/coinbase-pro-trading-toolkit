@@ -84,7 +84,7 @@ export class RobustCalculator extends FXRateCalculator {
         this.report.sources = this.sources.map((source: FXProvider) => source.name);
     }
 
-    get lastReport(): RobustCalculatorReport {
+    getLastRequestInfo(): RobustCalculatorReport {
         return this.report;
     }
 
@@ -124,7 +124,7 @@ export class RobustCalculator extends FXRateCalculator {
         const update: QueryStatus = { deltas: [], prices: [], rejectReason: [], errors: [], time: new Date(), valid: [], lastPrice: null };
         update.lastPrice = this.report.data[_pair] ? this.report.data[_pair].prices : [];
         rates.forEach((rate: FXObject | Error, i: number) => {
-            if (rate instanceof Error || !rate.rate.isFinite()) {
+            if (rate instanceof Error || !rate || !rate.rate || !rate.rate.isFinite()) {
                 update.errors[i] = rate instanceof Error ? rate : null;
                 update.rejectReason[i] = NO_CURRENT_PRICE_ERROR;
                 this.report.data[_pair] = update;

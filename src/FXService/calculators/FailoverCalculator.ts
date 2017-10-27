@@ -29,11 +29,16 @@ export interface FailoverCalculatorConfig {
 export default class FailoverCalculator extends FXRateCalculator {
     logger: Logger;
     calculators: FXRateCalculator[];
+    private lastCalculatorUsed: FXRateCalculator = null;
 
     constructor(config: FailoverCalculatorConfig) {
         super();
         this.calculators = config.calculators;
         this.logger = config.logger || ConsoleLoggerFactory();
+    }
+
+    getLastRequestInfo(): any {
+        return { calculator: this.lastCalculatorUsed };
     }
 
     calculateRatesFor(pairs: CurrencyPair[]): Promise<FXObject[]> {
@@ -46,6 +51,7 @@ export default class FailoverCalculator extends FXRateCalculator {
 
     private requestRateFor(pair: CurrencyPair): Promise<FXObject> {
         return tryUntil<FXRateCalculator, FXObject>(this.calculators, (calculator: FXRateCalculator) => {
+            this.lastCalculatorUsed = calculator;
             return calculator.calculateRatesFor([pair])
                 .then((result: FXObject[]) => {
                     if (result[0] === null || result[0].rate === null) {

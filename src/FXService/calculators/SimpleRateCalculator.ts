@@ -41,4 +41,8 @@ export default class SimpleRateCalculator extends FXRateCalculator {
         // Wait for all promises to resolve before sending results back
         return Promise.all(promises);
     }
+
+    getLastRequestInfo(): any {
+        return { provider: this.provider };
+    }
 }
