@@ -86,10 +86,12 @@ export default class OpenExchangeProvider extends FXProvider {
                 return Promise.reject(error);
             }
             // Clear the pending request after a timeout -- reducing request load on OER
-            this.cacheTimer = setTimeout(() => {
-                this.pending = null;
-                this.cacheTimer = null;
-            }, this.cacheDuration);
+            if (this.cacheTimer === null) {
+                this.cacheTimer = setTimeout(() => {
+                    this.pending = null;
+                    this.cacheTimer = null;
+                }, this.cacheDuration);
+            }
             return Promise.resolve({
                 from: pair.from,
                 to: pair.to,
