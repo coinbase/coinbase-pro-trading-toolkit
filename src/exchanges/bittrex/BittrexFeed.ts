@@ -19,6 +19,7 @@ import { BittrexAPI } from './BittrexAPI';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
+import * as _ from "lodash";
 
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
@@ -46,26 +47,53 @@ export class BittrexFeed extends ExchangeFeed {
         return 'Bittrex';
     }
 
-    subscribe(products: string[]): boolean {
+    subscribe(products: string[]): Promise<any> {
         if (!this.connection) {
-            return false;
+            return new Promise((resolve, reject) => resolve(false));
         }
-        products.forEach((product: string) => {
-            this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
-                if (err) {
-                    return console.error(err);
-                }
+        return Promise.all(products.map((product: string) => {
+            return Promise.all([
+                new Promise((resolve, reject) => {
+                    this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
+                        if (err) {
+                            return reject(err);
+                        }
 
-                if (result === true) {
-                    this.log('info', `Subscribed to ${product} on ${this.owner}`);
-                }
-            });
-            this.client.call('CoreHub', 'queryExchangeState', product).done((err: Error, data: any) => {
-                const snapshot: SnapshotMessage = this.processSnapshot(product, data);
-                this.push(snapshot);
-            });
-        });
-        return true;
+                        if (result === true) {
+                            this.log('info', `Subscribed to ${product} on ${this.owner}`);
+                            resolve(true);
+                        }
+                        resolve(false);
+                    })
+                }),
+                new Promise((resolve, reject) => {
+                    this.client.call('CoreHub', 'queryExchangeState', product).done((err: Error, data: any) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        if (!data) {
+                            this.log("error", `failed to subscribe to ${product} on ${this.owner}`);
+                            return resolve(false);
+                        }
+                        const snapshot: SnapshotMessage = this.processSnapshot(product, data);
+                        this.push(snapshot);
+                        resolve(true);
+                    });
+                })
+            ])
+        }))
+
+
+        //     .then((values) => {
+        //     this.log("debug", "Subscribe Promises array: " + JSON.stringify(values));
+        //     const v = _.flatten(values);
+        //     const flag = v.reduce((acc, cur) => {
+        //         return acc && cur;
+        //     });
+        //     return Promise.resolve(flag);
+        // }).catch((err) => {
+        //     return Promise.reject(err);
+        // });
     }
 
     protected connect() {
