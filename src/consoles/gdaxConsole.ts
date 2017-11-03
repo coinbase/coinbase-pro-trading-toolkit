@@ -33,7 +33,7 @@ program
     .option('-O --orders', 'Retrieve all my open orders (if product is provided, limited to that book)')
     .option('-x --cancelAllOrders', 'Cancel all open orders (if product is provided, limited to that book)')
     .option('-W --crypto_withdraw [amount,cur,address]', 'Withdraw to a crypto address')
-    .option('--transfer [type,amount,cur,coinbase_id]', 'deposit or withdraw from/to coinbase')
+    .option('--transfer [type,amount,coinbase_id]', 'deposit or withdraw from/to coinbase')
     .option('-X --method [method]', 'method for general request')
     .option('-U --url [url]', 'request url')
     .option('-P --body [body]', 'request body')
@@ -119,17 +119,13 @@ if (program.ticker) {
 }
 
 if (program.transfer) {
-    if (!requiredOptions(['product'])) {
-        process.exit(1);
-    }
-    let {type, amount, cur, coinbase_id} = program.transfer.split(',');
-    type = type.lowerCase().startsWith('dep') ? 'deposits' : 'withdrawals';
+    let [type, amount, coinbaseId] = program.transfer.split(',');
+    type = type.toLowerCase().startsWith('dep') ? 'deposit' : 'withdraw';
     const options = {
         amount: String(+amount),
-        currency: cur,
-        coinbase_account_id: coinbase_id
+        coinbase_account_id: coinbaseId
     };
-    makeGenericRequest('POST', `${type}/coinbase-account`, JSON.stringify(options)).then((res) => {
+    makeGenericRequest('POST', `/transfers`, JSON.stringify(options)).then((res) => {
         console.log(printSeparator());
         console.log(res);
     }).catch(logError);
