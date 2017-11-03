@@ -125,6 +125,9 @@ export abstract class FXProvider {
         return pending.then((result: FXObject) => {
             this._pending[index] = undefined;
             return result;
+        }).catch((err) => {
+            this._pending[index] = undefined;
+            return Promise.reject(err);
         });
     }
 
