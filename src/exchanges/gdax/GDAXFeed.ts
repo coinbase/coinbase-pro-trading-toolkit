@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AuthHeaders, GDAXAuthConfig, GDAXExchangeAPI } from './GDAXExchangeAPI';
+import { GDAXExchangeAPI } from './GDAXExchangeAPI';
 import { Big } from '../../lib/types';
 import {
     ChangedOrderMessage,
@@ -47,6 +47,7 @@ import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { AuthHeaders, GDAXAuthConfig } from './GDAXInterfaces';
 
 export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
 

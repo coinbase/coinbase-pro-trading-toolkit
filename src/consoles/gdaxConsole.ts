@@ -14,7 +14,7 @@
  ***************************************************************************************************************************/
 
 import program  = require('commander');
-import { GDAXExchangeAPI, GDAXConfig, GDAXAuthConfig, AuthCallOptions } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { printTicker, printSeparator, padfloat } from '../utils/printers';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { Balances } from '../exchanges/AuthenticatedExchangeAPI';
@@ -22,6 +22,7 @@ import { PlaceOrderMessage } from '../core/Messages';
 import { LiveOrder } from '../lib/Orderbook';
 import request = require('superagent');
 import Response = request.Response;
+import { AuthCallOptions, GDAXAuthConfig, GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
 
 program
     .option('--api [value]', 'API url')

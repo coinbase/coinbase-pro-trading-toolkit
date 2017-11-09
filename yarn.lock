@@ -907,9 +907,9 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-gdax@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/gdax/-/gdax-0.3.1.tgz#b3d671317c579e29db835996faa4c9da2c87f714"
+gdax@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/gdax/-/gdax-0.4.2.tgz#8e8d06222ed97e5e34975d56f51ebf49a56fa872"
   dependencies:
     async "1.5.0"
     bintrees "1.0.0"
@@ -920,6 +920,15 @@ gdax@0.3.1:
     num "0.2.1"
     request "2.74.0"
     ws "1.1.1"
+
+"gdax@https://github.com/coinbase/gdax-node.git#v0.5.0":
+  version "0.5.0"
+  resolved "https://github.com/coinbase/gdax-node.git#4d74a7fe39a33ac12d1b9046d199df1c1f753927"
+  dependencies:
+    bintrees "1.0.1"
+    num "0.3.0"
+    request "2.81.0"
+    ws "3.0.0"
 
 generate-function@^2.0.0:
   version "2.0.0"
@@ -1162,6 +1171,10 @@ ini@^1.3.4:
 int@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/int/-/int-0.1.1.tgz#d7c79f2f83cff505d35e86980f81fa14f3387a4c"
+
+int@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/int/-/int-0.2.0.tgz#589f05b03b8d8c08c918c8884784cb62a94ef47e"
 
 interpret@^1.0.0:
   version "1.0.3"
@@ -1934,6 +1947,12 @@ num@0.2.1:
   dependencies:
     int "0.1.1"
 
+num@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/num/-/num-0.3.0.tgz#a82e2a9b1fc52fbab313358cdf92905e6f03f287"
+  dependencies:
+    int "0.2.0"
+
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
@@ -2341,7 +2360,7 @@ request@2.74.0, "request@>= 2.35.0":
     tough-cookie "~2.3.0"
     tunnel-agent "~0.4.1"
 
-request@^2.79.0:
+request@2.81.0, request@^2.79.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -2409,6 +2428,10 @@ rimraf@^2.3.3, rimraf@^2.5.4, rimraf@^2.6.1:
 safe-buffer@^5.0.1, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
+
+safe-buffer@~5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
 
 "semver@2 || 3 || 4 || 5", semver@^5.3.0:
   version "5.4.1"
@@ -2849,6 +2872,10 @@ ultron@1.0.x:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.0.2.tgz#ace116ab557cd197386a4e88f4685378c8b2e4fa"
 
+ultron@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.0.tgz#b07a2e6a541a815fc6a34ccd4533baec307ca864"
+
 underscore.string@~2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-2.4.0.tgz#8cdd8fbac4e2d2ea1e7e2e8097c42f442280f85b"
@@ -2968,6 +2995,13 @@ ws@1.1.1:
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
+
+ws@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-3.0.0.tgz#98ddb00056c8390cb751e7788788497f99103b6c"
+  dependencies:
+    safe-buffer "~5.0.1"
+    ultron "~1.1.0"
 
 xtend@^4.0.0, xtend@~4.0.0:
   version "4.0.1"
