@@ -14,14 +14,17 @@
  ***************************************************************************************************************************/
 
 import program  = require('commander');
-import { GDAXExchangeAPI, GDAXConfig, GDAXAuthConfig, AuthCallOptions } from '../exchanges/gdax/GDAXExchangeAPI';
-import { printTicker, printSeparator, padfloat } from '../utils/printers';
+import request = require('superagent');
+import Response = request.Response;
+import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { padfloat, printSeparator, printTicker } from '../utils/printers';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { PlaceOrderMessage } from '../core/Messages';
 import { LiveOrder } from '../lib/Orderbook';
-import request = require('superagent');
-import Response = request.Response;
+import { AuthCallOptions, GDAXAuthConfig, GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
+import { TransferRequest, TransferResult } from '../exchanges/ExchangeTransferAPI';
+import { Big } from '../lib/types';
 
 program
     .option('--api [value]', 'API url')
@@ -33,7 +36,7 @@ program
     .option('-O --orders', 'Retrieve all my open orders (if product is provided, limited to that book)')
     .option('-x --cancelAllOrders', 'Cancel all open orders (if product is provided, limited to that book)')
     .option('-W --crypto_withdraw [amount,cur,address]', 'Withdraw to a crypto address')
-    .option('--transfer [type,amount,coinbase_id]', 'deposit or withdraw from/to coinbase')
+    .option('--transfer [type,amount,cur]', 'deposit or withdraw from/to coinbase')
     .option('-X --method [method]', 'method for general request')
     .option('-U --url [url]', 'request url')
     .option('-P --body [body]', 'request body')
@@ -46,7 +49,7 @@ const auth: GDAXAuthConfig = {
 };
 const gdaxConfig: GDAXConfig = {
     logger: null,
-    apiUrl: program.api || process.env.API_URL || 'https://api.gdax.com',
+    apiUrl: program.api || process.env.API_URL || 'https://api.gdax.com'
 };
 
 if (auth.key && auth.secret && auth.passphrase) {
@@ -119,15 +122,17 @@ if (program.ticker) {
 }
 
 if (program.transfer) {
-    let [type, amount, coinbaseId] = program.transfer.split(',');
-    type = type.toLowerCase().startsWith('dep') ? 'deposit' : 'withdraw';
-    const options = {
-        amount: String(+amount),
-        coinbase_account_id: coinbaseId
+    const [type, amount, currency] = program.transfer.split(',');
+    const isDeposit: boolean = type.toLowerCase().startsWith('dep');
+    const params: TransferRequest = {
+        amount: Big(amount),
+        currency: currency,
+        walletIdFrom: isDeposit ? 'coinbase' : 'gdax',
+        walletIdTo: isDeposit ? 'gdax' : 'coinbase'
     };
-    makeGenericRequest('POST', `/transfers`, JSON.stringify(options)).then((res) => {
-        console.log(printSeparator());
-        console.log(res);
+    gdaxApi.requestTransfer(params).then((result: TransferResult) => {
+        console.log('Transfer successful: ', result.success);
+        console.log('Details: ', result.details);
     }).catch(logError);
 }
 

@@ -53,7 +53,7 @@
     "ccxt": "1.9.275",
     "commander": "2.9.0",
     "crypto": "0.0.3",
-    "gdax": "0.3.1",
+    "gdax": "https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77",
     "limiter": "git://github.com/jhurliman/node-rate-limiter.git#58ce2fda6b5c2bc4ccb81ba3768c5b1bc06c91a5",
     "node.bittrex.api": "0.5.1",
     "pushbullet": "2.0.0",
