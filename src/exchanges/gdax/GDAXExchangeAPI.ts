@@ -371,12 +371,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         if (!this.authClient) {
             return Promise.reject(new Error('No authentication details were given for this API'));
         }
-        const params = {
-            amount: req.amount.toString(),
-            currency: req.currency,
-            coinbase_account_id: req.walletIdTo
-        };
-        return this.authClient.withdraw(params);
+        if (req.walletIdFrom.toLowerCase() === 'coinbase') {
+            return this.coinbaseTransfer(true, req.amount, req.currency);
+        }
+        if (req.walletIdTo.toLowerCase() === 'coinbase') {
+            return this.coinbaseTransfer(false, req.amount, req.currency);
+        }
+        return Promise.reject('GDAX does not support multiple accounts.');
     }
 
     requestWithdrawal(req: WithdrawalRequest): Promise<TransferResult> {
@@ -391,10 +392,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.authClient.withdrawCrypto(params);
     }
 
-    transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
-        return undefined;
-    }
-
     // ------------------------------ GDAX-specific public Methods ------------------------------------------------//
 
     loadCoinbaseAccounts(force: boolean): Promise<CoinbaseAccount[]> {
@@ -407,6 +404,22 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.authClient.getCoinbaseAccounts().then((accounts: CoinbaseAccount[]) => {
             this.coinbaseAccounts = accounts;
             return Promise.resolve(accounts);
+        });
+    }
+
+    coinbaseTransfer(isDeposit: boolean, amount: BigJS, currency: string): Promise<TransferResult> {
+        return this.loadCoinbaseAccount(currency, false).then((account: CoinbaseAccount) => {
+            const params: any = {
+                coinbase_account_id: account.id,
+                currency: currency,
+                amount: amount.toString()
+            };
+            return isDeposit ? this.authClient.deposit(params) : this.authClient.withdraw(params);
+        }).then((result: any) => {
+            return {
+                success: !!result.id,
+                details: result
+            };
         });
     }
 

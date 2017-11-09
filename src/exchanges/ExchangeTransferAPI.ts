@@ -26,7 +26,7 @@ export interface ExchangeTransferAPI {
     requestCryptoAddress(cur: string): Promise<CryptoAddress>;
 
     /**
-     * Request a transfer to another wallet or account on the same exchange. This operation should resolve near-instantaeously.
+     * Request a transfer to another wallet or account on the same exchange. This operation should resolve near-instantaneously.
      * If the exchange does not support this operation, the promise is rejected, but there are ways of implementing
      * pseudo-wallets so that this operation can be emulated on exchanges that don't formally support multiple wallets.
      * @param request
@@ -37,17 +37,6 @@ export interface ExchangeTransferAPI {
      * Request a crypto-currency transfer of [amount] cur to the given crypto address
      */
     requestWithdrawal(request: WithdrawalRequest): Promise<TransferResult>;
-
-    /**
-     * Transfer currency from one wallet *on the same exchange (or the dummy staging wallet)* to another. This should
-     * be a near-instantaneous transaction
-     * @param cur {string} The currency to transfer
-     * @param amount {BigJS} The amount to transfer
-     * @param from {string} the source wallet name
-     * @param to {string} the destination wallet
-     * @param options {*} Any additional options to pass onto the underlying API
-     */
-    transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult>;
 
 }
 
