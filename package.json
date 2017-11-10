@@ -15,8 +15,7 @@
     "clean": "rm -fr build coverage .nyc_output",
     "doc": "yarn run readme && ./node_modules/.bin/typedoc --options typedoc.json .",
     "readme": "node generate-md.js",
-    "prepublishOnly": "yarn run build",
-    "preinstall": "node check_build"
+    "prepublishOnly": "yarn run build"
   },
   "bin": {
     "gdaxConsole": "./build/src/consoles/gdaxConsole.js"
