@@ -16,7 +16,7 @@
     "doc": "yarn run readme && ./node_modules/.bin/typedoc --options typedoc.json .",
     "readme": "node generate-md.js",
     "prepublishOnly": "yarn run build",
-    "postInstall": "node check_build"
+    "preinstall": "node check_build"
   },
   "bin": {
     "gdaxConsole": "./build/src/consoles/gdaxConsole.js"
