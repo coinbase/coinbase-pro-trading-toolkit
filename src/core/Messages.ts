@@ -35,7 +35,14 @@ export function isStreamMessage(msg: any): boolean {
 export interface ErrorMessage extends StreamMessage {
     type: 'error';
     message: string;
-    details?: any;
+    cause: any;
+}
+
+export interface HTTPErrorMessage extends ErrorMessage {
+    cause: {
+        status: number;
+        body: any;
+    };
 }
 
 export function isErrorMessage(msg: any): boolean {
