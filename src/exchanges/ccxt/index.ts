@@ -12,8 +12,6 @@
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
 
-///<reference path="../../../types/ccxt.d.ts"/>
-
 import * as ccxt from 'ccxt';
 import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
@@ -26,7 +24,7 @@ import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { Logger } from '../../utils/Logger';
 
-type ExchangeDefinition = [string, (opts: any) => ccxt.Exchange];
+type ExchangeDefinition = [string, new (opts: any) => ccxt.Exchange];
 // Supported exchanges, minus those with native support
 const exchanges: { [index: string]: ExchangeDefinition } = {
     _1broker: ['1 Broker', ccxt._1broker],
@@ -117,7 +115,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const password = opts.passphrase || process.env[`${upName}_PASSPHRASE`];
         const uid = opts.uid || process.env[`${upName}_UID`];
         const options = Object.assign(opts, { apiKey: key, secret: secret, uid: uid, password: password });
-        const ccxtInstance = exchange(options);
+        const ccxtInstance = new exchange(options);
         return new CCXTExchangeWrapper(owner, options, ccxtInstance, logger);
     }
 

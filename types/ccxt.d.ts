@@ -81,158 +81,159 @@ declare module 'ccxt' {
 
         request(path: string, api: string, method: string, params?: any, headers?: any, body?: any): Promise<any>;
     }
+    /* tslint:disable */
+    export class _1broker extends Exchange {}
 
-    export function _1broker(options: any): Exchange;
+    export class _1btcxe extends Exchange {}
 
-    export function _1btcxe(options: any): Exchange;
+    export class anxpro extends Exchange {}
 
-    export function anxpro(options: any): Exchange;
+    export class binance extends Exchange {}
 
-    export function binance(options: any): Exchange;
+    export class bit2c extends Exchange {}
 
-    export function bit2c(options: any): Exchange;
+    export class bitbay extends Exchange {}
 
-    export function bitbay(options: any): Exchange;
+    export class bitbays extends Exchange {}
 
-    export function bitbays(options: any): Exchange;
+    export class bitcoincoid extends Exchange {}
 
-    export function bitcoincoid(options: any): Exchange;
+    export class bitfinex extends Exchange {}
 
-    export function bitfinex(options: any): Exchange;
+    export class bitfinex2 extends Exchange {}
 
-    export function bitfinex2(options: any): Exchange;
+    export class bitflyer extends Exchange {}
 
-    export function bitflyer(options: any): Exchange;
+    export class bitlish extends Exchange {}
 
-    export function bitlish(options: any): Exchange;
+    export class bitmarket extends Exchange {}
 
-    export function bitmarket(options: any): Exchange;
+    export class bitmex extends Exchange {}
 
-    export function bitmex(options: any): Exchange;
+    export class bitso extends Exchange {}
 
-    export function bitso(options: any): Exchange;
+    export class bitstamp extends Exchange {}
 
-    export function bitstamp(options: any): Exchange;
+    export class bittrex extends Exchange {}
 
-    export function bittrex(options: any): Exchange;
+    export class bl3p extends Exchange {}
 
-    export function bl3p(options: any): Exchange;
+    export class btcchina extends Exchange {}
 
-    export function btcchina(options: any): Exchange;
+    export class btce extends Exchange {}
 
-    export function btce(options: any): Exchange;
+    export class btcexchange extends Exchange {}
 
-    export function btcexchange(options: any): Exchange;
+    export class btcmarkets extends Exchange {}
 
-    export function btcmarkets(options: any): Exchange;
+    export class btctradeua extends Exchange {}
 
-    export function btctradeua(options: any): Exchange;
+    export class btcturk extends Exchange {}
 
-    export function btcturk(options: any): Exchange;
+    export class btcx extends Exchange {}
 
-    export function btcx(options: any): Exchange;
+    export class bter extends Exchange {}
 
-    export function bter(options: any): Exchange;
+    export class bxinth extends Exchange {}
 
-    export function bxinth(options: any): Exchange;
+    export class ccex extends Exchange {}
 
-    export function ccex(options: any): Exchange;
+    export class cex extends Exchange {}
 
-    export function cex(options: any): Exchange;
+    export class chbtc extends Exchange {}
 
-    export function chbtc(options: any): Exchange;
+    export class chilebit extends Exchange {}
 
-    export function chilebit(options: any): Exchange;
+    export class coincheck extends Exchange {}
 
-    export function coincheck(options: any): Exchange;
+    export class coinfloor extends Exchange {}
 
-    export function coinfloor(options: any): Exchange;
+    export class coingi extends Exchange {}
 
-    export function coingi(options: any): Exchange;
+    export class coinmarketcap extends Exchange {}
 
-    export function coinmarketcap(options: any): Exchange;
+    export class coinmate extends Exchange {}
 
-    export function coinmate(options: any): Exchange;
+    export class coinsecure extends Exchange {}
 
-    export function coinsecure(options: any): Exchange;
+    export class coinspot extends Exchange {}
 
-    export function coinspot(options: any): Exchange;
+    export class cryptopia extends Exchange {}
 
-    export function cryptopia(options: any): Exchange;
+    export class dsx extends Exchange {}
 
-    export function dsx(options: any): Exchange;
+    export class exmo extends Exchange {}
 
-    export function exmo(options: any): Exchange;
+    export class flowbtc extends Exchange {}
 
-    export function flowbtc(options: any): Exchange;
+    export class foxbit extends Exchange {}
 
-    export function foxbit(options: any): Exchange;
+    export class fybse extends Exchange {}
 
-    export function fybse(options: any): Exchange;
+    export class fybsg extends Exchange {}
 
-    export function fybsg(options: any): Exchange;
+    export class gatecoin extends Exchange {}
 
-    export function gatecoin(options: any): Exchange;
+    export class gdax extends Exchange {}
 
-    export function gdax(options: any): Exchange;
+    export class gemini extends Exchange {}
 
-    export function gemini(options: any): Exchange;
+    export class hitbtc extends Exchange {}
 
-    export function hitbtc(options: any): Exchange;
+    export class hitbtc2 extends Exchange {}
 
-    export function hitbtc2(options: any): Exchange;
+    export class huobi extends Exchange {}
 
-    export function huobi(options: any): Exchange;
+    export class itbit extends Exchange {}
 
-    export function itbit(options: any): Exchange;
+    export class jubi extends Exchange {}
 
-    export function jubi(options: any): Exchange;
+    export class kraken extends Exchange {}
 
-    export function kraken(options: any): Exchange;
+    export class lakebtc extends Exchange {}
 
-    export function lakebtc(options: any): Exchange;
+    export class livecoin extends Exchange {}
 
-    export function livecoin(options: any): Exchange;
+    export class liqui extends Exchange {}
 
-    export function liqui(options: any): Exchange;
+    export class luno extends Exchange {}
 
-    export function luno(options: any): Exchange;
+    export class mercado extends Exchange {}
 
-    export function mercado(options: any): Exchange;
+    export class okcoincny extends Exchange {}
 
-    export function okcoincny(options: any): Exchange;
+    export class okcoinusd extends Exchange {}
 
-    export function okcoinusd(options: any): Exchange;
+    export class okex extends Exchange {}
 
-    export function okex(options: any): Exchange;
+    export class paymium extends Exchange {}
 
-    export function paymium(options: any): Exchange;
+    export class poloniex extends Exchange {}
 
-    export function poloniex(options: any): Exchange;
+    export class quadrigacx extends Exchange {}
 
-    export function quadrigacx(options: any): Exchange;
+    export class quoine extends Exchange {}
 
-    export function quoine(options: any): Exchange;
+    export class southxchange extends Exchange {}
 
-    export function southxchange(options: any): Exchange;
+    export class surbitcoin extends Exchange {}
 
-    export function surbitcoin(options: any): Exchange;
+    export class therock extends Exchange {}
 
-    export function therock(options: any): Exchange;
+    export class urdubit extends Exchange {}
 
-    export function urdubit(options: any): Exchange;
+    export class vaultoro extends Exchange {}
 
-    export function vaultoro(options: any): Exchange;
+    export class vbtc extends Exchange {}
 
-    export function vbtc(options: any): Exchange;
+    export class virwox extends Exchange {}
 
-    export function virwox(options: any): Exchange;
+    export class xbtce extends Exchange {}
 
-    export function xbtce(options: any): Exchange;
+    export class yobit extends Exchange {}
 
-    export function yobit(options: any): Exchange;
+    export class yunbi extends Exchange {}
 
-    export function yunbi(options: any): Exchange;
-
-    export function zaif(options: any): Exchange;
+    export class zaif extends Exchange {}
+    /* tslint:enable */
 }
