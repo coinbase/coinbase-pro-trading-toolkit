@@ -1,4 +1,9 @@
 # Change Log
+## 0.1.29
+* Use official gdax node package
+* GDAXExchangeAPI fully implemented
+* gdaxConsole nearing feature complete
+
 ## 0.1.28
 * Lots of bugfixes
 * Added `RobustCalculator`, `FailoverCalculator` and `FailoverProvider` to FXService
