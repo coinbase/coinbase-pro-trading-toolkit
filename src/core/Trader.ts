@@ -142,7 +142,8 @@ export class Trader extends Writable {
         if (this.fitOrders) {
             req.size = req.size ? Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
             req.funds = req.funds ? Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
-            req.price = Big(req.price).round(this.pricePrecision, 2).toString();
+            const rm = req.side === 'buy' ? 1 : 0; // round down for buys, round up for sells
+            req.price = Big(req.price).round(this.pricePrecision, rm).toString();
         }
         return this.removeToken<LiveOrder>(() => {
             this.log('debug', 'Placing new order request', req);

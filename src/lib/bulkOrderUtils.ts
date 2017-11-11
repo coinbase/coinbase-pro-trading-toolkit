@@ -13,7 +13,7 @@
  **********************************************************************************************************************/
 
 import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI';
-import { delayPromise, eachSeries } from '../utils/promises';
+import { delay, eachSeries } from '../utils/promises';
 
 /**
  * Send cancellation commands for the array of order ids with limited to 'limit' requests per second
@@ -33,8 +33,8 @@ export function bulkCancelWithRateLimit(api: AuthenticatedExchangeAPI, ids: stri
     return eachSeries(ids, (id: string) => {
         const desiredElapsed = (requestsSent + 1) * secondsPerRequest;
         const actualElapsed = (Date.now() - start) * 0.001;
-        const delay = Math.max(0, desiredElapsed - actualElapsed);
-        return delayPromise<void>(delay, () => {
+        const interval = Math.max(0, desiredElapsed - actualElapsed);
+        return delay(interval).then(() => {
             return api.cancelOrder(id).then((result: string) => {
                 requestsSent++;
                 cancelled.push(result);

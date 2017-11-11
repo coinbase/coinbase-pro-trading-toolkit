@@ -15,8 +15,9 @@ import { Trader, TraderConfig } from '../../src/core/Trader';
 import { NullLogger } from '../../src/utils/Logger';
 import { CancelOrderRequestMessage, PlaceOrderMessage } from '../../src/core/Messages';
 import { LiveOrder } from '../../src/lib/Orderbook';
-import { GDAXConfig, GDAXExchangeAPI } from '../../src/exchanges/gdax/GDAXExchangeAPI';
+import { GDAXExchangeAPI } from '../../src/exchanges/gdax/GDAXExchangeAPI';
 import { BulkCancelResult } from '../../src/lib/bulkOrderUtils';
+import { GDAXConfig } from '../../src/exchanges/gdax/GDAXInterfaces';
 
 const assert = require('assert');
 const nock = require('nock');
@@ -66,12 +67,18 @@ describe('Trader', () => {
                 product_id: 'ABC-BTC',
                 side: 'buy',
                 type: 'limit'
-            }).reply(200, { id: '100', price: '100.1234', size: '10.12', side: 'buy' });
+            })
+            .reply(200, {
+                id: '100',
+                price: '100.1234',
+                size: '10.12',
+                side: 'buy'
+            });
         const onError = (err: Error) => {
             throw err;
         };
         trader.on('Trader.place-order-failed', onError);
-        trader.on('Trader.order-placed', (msg: any) => {
+        trader.once('Trader.order-placed', (msg: any) => {
             assert.equal(msg.id, '100');
             trader.removeListener('Trader.place-order-failed', onError);
             assert.equal(trader.orderBook.numAsks, 0);
@@ -148,7 +155,6 @@ describe('Trader', () => {
             })
             .times(3)
             .reply(200, (url: string, req: any) => {
-                req = JSON.parse(req);
                 return { id: id++, price: req.price, size: req.size, side: req.side };
             });
         nock('http://127.0.0.1', { encodedQueryParams: true })
