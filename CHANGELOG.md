@@ -1,4 +1,11 @@
 # Change Log
+
+## 0.2.0
+* Error API - Underlying exchange errors get propagated properly
+* FX service handles null results from calculator
+* GDAX API and console is complete (and uses official library)
+* BittrexAPI deprecated in favour of CCXT implementation
+
 ## 0.1.28
 * Lots of bugfixes
 * Added `RobustCalculator`, `FailoverCalculator` and `FailoverProvider` to FXService
