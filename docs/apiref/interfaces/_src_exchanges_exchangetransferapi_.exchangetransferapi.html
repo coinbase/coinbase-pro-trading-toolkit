@@ -89,7 +89,9 @@
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
 					<li><a href="../classes/_src_exchanges_bitfinex_bitfinexexchangeapi_.bitfinexexchangeapi.html" class="tsd-signature-type">BitfinexExchangeAPI</a></li>
+					<li><a href="../classes/_src_exchanges_bittrex_bittrexapi_.bittrexapi.html" class="tsd-signature-type">BittrexAPI</a></li>
 					<li><a href="../classes/_src_exchanges_ccxt_index_.ccxtexchangewrapper.html" class="tsd-signature-type">CCXTExchangeWrapper</a></li>
+					<li><a href="../classes/_src_exchanges_gdax_gdaxexchangeapi_.gdaxexchangeapi.html" class="tsd-signature-type">GDAXExchangeAPI</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -102,7 +104,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#requestcryptoaddress" class="tsd-kind-icon">request<wbr>Crypto<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#requesttransfer" class="tsd-kind-icon">request<wbr>Transfer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#requestwithdrawal" class="tsd-kind-icon">request<wbr>Withdrawal</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#transfer" class="tsd-kind-icon">transfer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,7 +121,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/ExchangeTransferAPI.ts#L26">src/exchanges/ExchangeTransferAPI.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/ExchangeTransferAPI.ts#L26">src/exchanges/ExchangeTransferAPI.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -151,12 +152,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/ExchangeTransferAPI.ts#L34">src/exchanges/ExchangeTransferAPI.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/ExchangeTransferAPI.ts#L34">src/exchanges/ExchangeTransferAPI.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Request a transfer to another wallet or account on the same exchange. This operation should resolve near-instantaeously.
+									<p>Request a transfer to another wallet or account on the same exchange. This operation should resolve near-instantaneously.
 										If the exchange does not support this operation, the promise is rejected, but there are ways of implementing
 									pseudo-wallets so that this operation can be emulated on exchanges that don&#39;t formally support multiple wallets.</p>
 								</div>
@@ -183,7 +184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/ExchangeTransferAPI.ts#L39">src/exchanges/ExchangeTransferAPI.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/ExchangeTransferAPI.ts#L39">src/exchanges/ExchangeTransferAPI.ts:39</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -195,62 +196,6 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>request: <a href="_src_exchanges_exchangetransferapi_.withdrawalrequest.html" class="tsd-signature-type">WithdrawalRequest</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_src_exchanges_exchangetransferapi_.transferresult.html" class="tsd-signature-type">TransferResult</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="transfer" class="tsd-anchor"></a>
-					<h3>transfer</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">transfer<span class="tsd-signature-symbol">(</span>cur<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><a href="../modules/_src_lib_types_.html#bigjs" class="tsd-signature-type">BigJS</a>, from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_src_exchanges_exchangetransferapi_.transferresult.html" class="tsd-signature-type">TransferResult</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/ExchangeTransferAPI.ts#L50">src/exchanges/ExchangeTransferAPI.ts:50</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Transfer currency from one wallet <em>on the same exchange (or the dummy staging wallet)</em> to another. This should
-									be a near-instantaneous transaction</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>cur: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The currency to transfer</p>
-									</div>
-								</li>
-								<li>
-									<h5>amount: <a href="../modules/_src_lib_types_.html#bigjs" class="tsd-signature-type">BigJS</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The amount to transfer</p>
-									</div>
-								</li>
-								<li>
-									<h5>from: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the source wallet name</p>
-									</div>
-								</li>
-								<li>
-									<h5>to: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the destination wallet</p>
-									</div>
-								</li>
-								<li>
-									<h5>options: <span class="tsd-signature-type">any</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Any additional options to pass onto the underlying API</p>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_src_exchanges_exchangetransferapi_.transferresult.html" class="tsd-signature-type">TransferResult</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -288,9 +233,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#requestwithdrawal" class="tsd-kind-icon">request<wbr>Withdrawal</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_src_exchanges_exchangetransferapi_.exchangetransferapi.html#transfer" class="tsd-kind-icon">transfer</a>
 							</li>
 						</ul>
 					</li>
