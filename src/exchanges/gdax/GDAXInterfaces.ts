@@ -60,3 +60,8 @@ export interface GDAXAPIProduct {
     quote_increment: string;
     display_name: string;
 }
+
+export interface GDAXHTTPError {
+    message: string;
+    response: any;
+}
