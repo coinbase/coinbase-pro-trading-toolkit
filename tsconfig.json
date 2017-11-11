@@ -11,7 +11,8 @@
     "experimentalDecorators": true,
     "outDir": "build",
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   },
   "include": [
     "types/*.d.ts",

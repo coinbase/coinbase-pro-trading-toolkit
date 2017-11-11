@@ -18,6 +18,7 @@ import { ExchangeAuthConfig } from './AuthConfig';
 import { createHmac } from 'crypto';
 import WebSocket = require('ws');
 import Timer = NodeJS.Timer;
+import { sanitizeMessage } from '../core/Messages';
 
 export class ExchangeFeedConfig {
     wsUrl: string;
@@ -33,7 +34,9 @@ export const hooks = {
 export abstract class ExchangeFeed extends Readable {
     protected auth: ExchangeAuthConfig;
     protected url: string;
-    protected isConnecting: boolean;
+    protected _isConnecting: boolean;
+    // keys in this list will be sanitised in log messages
+    protected sensitiveKeys: string[];
     private lastHeartBeat: number = -1;
     private connectionChecker: Timer = null;
     private socket: WebSocket;
@@ -43,8 +46,9 @@ export abstract class ExchangeFeed extends Readable {
         super({ objectMode: true, highWaterMark: 1024 });
         this._logger = config.logger;
         this.url = config.wsUrl;
-        this.isConnecting = false;
+        this._isConnecting = false;
         this.auth = this.validateAuth(config.auth);
+        this.sensitiveKeys = ['key', 'secret', 'signature'];
     }
 
     get logger(): Logger {
@@ -55,11 +59,18 @@ export abstract class ExchangeFeed extends Readable {
         if (!this._logger) {
             return;
         }
+        if (meta && typeof meta === 'object') {
+            meta = sanitizeMessage(meta, this.sensitiveKeys);
+        }
         this._logger.log(level, message, meta);
     }
 
     isConnected(): boolean {
         return this.socket && this.socket.readyState === 1;
+    }
+
+    isConnecting(): boolean {
+        return this._isConnecting;
     }
 
     reconnect(delay: number) {
@@ -71,7 +82,7 @@ export abstract class ExchangeFeed extends Readable {
         }
         setTimeout(() => {
             // Force a reconnect
-            this.isConnecting = false;
+            this._isConnecting = false;
             this.connect();
         }, delay);
     }
@@ -83,17 +94,24 @@ export abstract class ExchangeFeed extends Readable {
         this.close();
     }
 
+    _read(size: number) {
+        // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
+        // in from the websocket, so there's nothing to do here.
+    }
+
     protected connect() {
-        if (this.isConnecting || this.isConnected()) {
+        if (this._isConnecting || this.isConnected()) {
             return;
         }
-        this.isConnecting = true;
+        this._isConnecting = true;
         const socket = new hooks.WebSocket(this.url);
         socket.on('message', (msg: any) => this.handleMessage(msg));
         socket.on('open', () => this.onNewConnection());
         socket.on('close', (code: number, reason: string) => this.onClose(code, reason));
         socket.on('error', (err: Error) => this.onError(err));
-        socket.on('connection', () => { this.emit('websocket-connection'); });
+        socket.on('connection', () => {
+            this.emit('websocket-connection');
+        });
         this.socket = socket;
         this.lastHeartBeat = -1;
         this.connectionChecker = setInterval(() => this.checkConnection(30 * 1000), 5 * 1000);
@@ -131,13 +149,21 @@ export abstract class ExchangeFeed extends Readable {
     }
 
     protected close() {
+        if (this.connectionChecker) {
+            clearInterval(this.connectionChecker);
+            this.connectionChecker = null;
+        }
         // We're initiating the socket closure, so don't reconnect
         this.socket.removeAllListeners('close');
+        this.socket.removeAllListeners('message');
+        this.socket.removeAllListeners('open');
+        this.socket.removeAllListeners('close');
+        this.socket.removeAllListeners('connection');
         this.socket.close();
     }
 
     protected onNewConnection() {
-        this.isConnecting = false;
+        this._isConnecting = false;
         this.log('debug', `Connection to ${this.url} ${this.auth ? '(authenticated)' : ''} has been established.`);
         this.onOpen();
         this.emit('websocket-open');
@@ -157,6 +183,7 @@ export abstract class ExchangeFeed extends Readable {
                 `No heartbeat has been received from ${this.url} ${this.auth ? '(authenticated)' : ''} in ${diff} ms. Assuming the connection is dead and reconnecting`
             );
             clearInterval(this.connectionChecker);
+            this.connectionChecker = null;
             this.reconnect(2500);
         }
     }
@@ -174,18 +201,13 @@ export abstract class ExchangeFeed extends Readable {
     protected send(msg: any, cb?: (err: Error) => void): void {
         try {
             const msgString = typeof(msg) === 'string' ? msg : JSON.stringify(msg);
-            this.log('debug', `Sending ${msgString} message to WS server`);
+            this.log('debug', `Sending message to WS server`, { message: msg });
             this.socket.send(msgString, cb);
         } catch (err) {
             // If there's an error just log and carry on
             this.log('error', 'Could not send message to GDAX WS server because the message was invalid',
                 { error: err, message: msg });
         }
-    }
-
-    protected _read(size: number) {
-        // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
-        // in from the websocket, so there's nothing to do here.
     }
 }
 

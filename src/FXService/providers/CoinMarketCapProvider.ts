@@ -62,6 +62,36 @@ export default class CoinMarketCapProvider extends FXProvider {
         return 'Coinmarketcap.com';
     }
 
+    /**
+     * Valid quote currencies are USD, BTC, or one of the valid fiat currencies given in [[SUPPORTED_QUOTE_CURRENCIES]]
+     * The list of currently supported base currencies will be constructed when this is first called.
+     */
+    supportsPair(pair: CurrencyPair): Promise<boolean> {
+        if (!SUPPORTED_QUOTE_CURRENCIES.includes(pair.to)) {
+            return Promise.resolve(false);
+        }
+        let initCodeMap = this.initializing;
+        if (!this.initializing) {
+            CODE_MAP = {};
+            REVERSE_MAP = {};
+            initCodeMap = request.get(URL)
+                .accept('application/json')
+                .then((res: Response) => {
+                    const result: CMCCurrencyData[] = res.body as CMCCurrencyData[];
+                    result.forEach((currency: CMCCurrencyData) => {
+                        CODE_MAP[currency.symbol] = currency.id;
+                        REVERSE_MAP[currency.id] = currency.symbol;
+                        SUPPORTED_BASE_CURRENCIES.push(currency.symbol);
+                    });
+                    return Promise.resolve();
+                });
+            this.initializing = initCodeMap;
+        }
+        return initCodeMap.then(() => {
+            return Promise.resolve(SUPPORTED_BASE_CURRENCIES.includes(pair.from));
+        });
+    }
+
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {
         const id = CODE_MAP[pair.from];
         if (!id) {
@@ -105,36 +135,6 @@ export default class CoinMarketCapProvider extends FXProvider {
                 value: rate.rate
             };
             return Promise.resolve(rate);
-        });
-    }
-
-    /**
-     * Valid quote currencies are USD, BTC, or one of the valid fiat currencies given in [[SUPPORTED_QUOTE_CURRENCIES]]
-     * The list of currently supported base currencies will be constructed when this is first called.
-     */
-    protected supportsPair(pair: CurrencyPair): Promise<boolean> {
-        if (!SUPPORTED_QUOTE_CURRENCIES.includes(pair.to)) {
-            return Promise.resolve(false);
-        }
-        let initCodeMap = this.initializing;
-        if (!this.initializing) {
-            CODE_MAP = {};
-            REVERSE_MAP = {};
-            initCodeMap = request.get(URL)
-                .accept('application/json')
-                .then((res: Response) => {
-                    const result: CMCCurrencyData[] = res.body as CMCCurrencyData[];
-                    result.forEach((currency: CMCCurrencyData) => {
-                        CODE_MAP[currency.symbol] = currency.id;
-                        REVERSE_MAP[currency.id] = currency.symbol;
-                        SUPPORTED_BASE_CURRENCIES.push(currency.symbol);
-                    });
-                    return Promise.resolve();
-                });
-            this.initializing = initCodeMap;
-        }
-        return initCodeMap.then(() => {
-            return Promise.resolve(SUPPORTED_BASE_CURRENCIES.includes(pair.from));
         });
     }
 }

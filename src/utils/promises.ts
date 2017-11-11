@@ -12,27 +12,9 @@
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
 
-export type PromiseFactory<T> = () => Promise<T>;
-
-/**
- * Execute an array of promises, waiting for one to complete before starting the next. For this reason, the argument is an array of Promise factories
- * since a promise starts executing as soon as it is created.
- * @param {Promise<T>} tasks
- * @returns {Promise<T[]>}
- */
-export function series<T>(taskFactories: PromiseFactory<T>[]): Promise<T[]> {
-    const results: T[] = [];
-    const last = taskFactories.reduce((prevPromise: Promise<T>, factory: PromiseFactory<T>, i: number) => {
-        return prevPromise.then((result: T) => {
-            if (i > 0) {
-                results.push(result);
-            }
-            return factory();
-        });
-    }, Promise.resolve(null));
-    return last.then((result: T) => {
-        results.push(result);
-        return results;
+export function delay(time: number): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
     });
 }
 
@@ -47,12 +29,49 @@ export function eachSeries<T>(arr: T[], iteratorFn: (arg: T) => Promise<any>) {
     }, Promise.resolve());
 }
 
-export function delayPromise<T>(delay: number, fn: () => Promise<T>): Promise<T> {
+/**
+ * Apply each argument in arr to iteratorFn in parallel, and return all results. If any of the
+ * promises reject, the process will continue, with the promises that failed returning an Error.
+ */
+export function eachParallelAndFinish<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U>): Promise<(U | Error)[]> {
+    const result: (U | Error)[] = [];
+    let itemsLeft = arr.length;
     return new Promise((resolve) => {
-        setTimeout(() => {
-            return fn().then((result: T) => {
-                return resolve(result);
+        arr.forEach((item: T, i: number) => {
+            iteratorFn(item).then((val: U) => {
+                result[i] = val;
+                if (--itemsLeft === 0) {
+                    return resolve(result);
+                }
+            }).catch((err: Error) => {
+                result[i] = err;
+                if (--itemsLeft === 0) {
+                    return resolve(result);
+                }
             });
-        }, delay);
+        });
+    });
+}
+
+/**
+ * Applies iteratorFn to each element in arr until a 'true' result is returned. Rejected promises are swallowed. A false result is returned only
+ * if every iteratorFn(i) returns false or an Error
+ */
+export function tryUntil<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U | boolean>, index: number = 0): Promise<U | boolean> {
+    if (arr.length < 1) {
+        return Promise.resolve(false);
+    }
+    return iteratorFn(arr[index]).then((result: U | boolean) => {
+       if (result !== false) {
+           return Promise.resolve(result);
+       }
+       if (++index >= arr.length) {
+           return Promise.resolve(false);
+       }
+       return tryUntil(arr, iteratorFn, index);
+    }).catch(() => {
+        // Swallow the error and continue
+        const clone: T[] = arr.slice();
+        return tryUntil(clone.splice(0,1), iteratorFn);
     });
 }

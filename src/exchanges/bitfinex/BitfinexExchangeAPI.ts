@@ -28,6 +28,7 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder } from '../../lib/Orderbook';
 import request = require('superagent');
 import Response = request.Response;
+import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
 
 const API_V1 = 'https://api.bitfinex.com/v1';
 
@@ -110,7 +111,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
             .accept('application/json')
             .then((res: Response) => {
                 if (res.status !== 200) {
-                    throw new Error('loadProducts did not get the expected response from the server. ' + res.body);
+                    return Promise.reject(new HTTPError('Error loading products from Bitfinex', extractResponse(res)));
                 }
                 const bfProducts: BitfinexProduct[] = res.body;
                 const products: Product[] = bfProducts.map((prod: BitfinexProduct) => {
@@ -127,7 +128,9 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                         sourceData: prod
                     };
                 });
-                return products;
+                return Promise.resolve(products);
+            }).catch((err: Error) => {
+                return Promise.reject(new GTTError('Error loading products from Bitfinex', err));
             });
     }
 
@@ -144,9 +147,11 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
             .accept('application/json')
             .then((res: Response) => {
                 if (res.status !== 200) {
-                    throw new Error('loadOrderbook did not get the expected response from the server. ' + res.body);
+                    return Promise.reject(new HTTPError('Error loading order book from Bitfinex', extractResponse(res)));
                 }
-                return this.convertBitfinexBookToGdaxBook(res.body as BitfinexOrderbook);
+                return Promise.resolve(this.convertBitfinexBookToGdaxBook(res.body as BitfinexOrderbook));
+            }).catch((err: Error) => {
+                return Promise.reject(new GTTError(`Error loading ${gdaxProduct} order book from Bitfinex`, err));
             });
     }
 
@@ -156,24 +161,26 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
             .accept('application/json')
             .then((res: Response) => {
                 if (res.status !== 200) {
-                    throw new Error('loadTicker did not get the expected response from the server. ' + res.body);
+                    return Promise.reject(new HTTPError('Error loading ticker from Bitfinex', extractResponse(res)));
                 }
                 const ticker: any = res.body;
-                return {
+                return Promise.resolve({
                     productId: gdaxProduct,
                     ask: ticker.ask ? Big(ticker.ask) : null,
                     bid: ticker.bid ? Big(ticker.bid) : null,
                     price: Big(ticker.last_price || 0),
                     volume: Big(ticker.volume || 0),
                     time: new Date(+ticker.timestamp * 1000)
-                };
+                });
+            }).catch((err: Error) => {
+                return Promise.reject(new GTTError(`Error loading ${gdaxProduct} ticker from Bitfinex`, err));
             });
     }
 
     checkAuth(): Promise<ExchangeAuthConfig> {
         return new Promise((resolve, reject) => {
             if (this.auth === null) {
-                return reject(new Error('You cannot make authenticated requests if a ExchangeAuthConfig object was not provided to the BitfinexExchangeAPI constructor'));
+                return reject(new GTTError('You cannot make authenticated requests if a ExchangeAuthConfig object was not provided to the BitfinexExchangeAPI constructor'));
             }
             return resolve(this.auth);
         });
@@ -267,7 +274,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     // -------------------------- Transfer methods -------------------------------------------------
 
     requestCryptoAddress(cur: string): Promise<CryptoAddress> {
-        return undefined;
+        return Promise.reject(new GTTError('Not implemented'));
     }
 
     requestTransfer(req: TransferRequest): Promise<TransferResult> {
@@ -300,11 +307,11 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     }
 
     requestWithdrawal(req: WithdrawalRequest): Promise<TransferResult> {
-        return undefined;
+        return Promise.reject(new GTTError('Not implemented'));
     }
 
     transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
-        return undefined;
+        return Promise.reject(new GTTError('Not implemented'));
     }
 
     // -------------------------- Helper methods -------------------------------------------------

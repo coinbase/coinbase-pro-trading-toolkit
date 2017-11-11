@@ -135,11 +135,20 @@ export class MessageQueue extends Duplex {
         });
     }
 
+    _write(inputMessage: any, encoding: string, callback: (err: Error) => void): void {
+        if (this.defaultMessageHandler(inputMessage)) {
+            setImmediate(() => {
+                this._read();
+            });
+        }
+        callback(null);
+    }
+
     /**
      * Will provide the next message, in the correct order
      * @private
      */
-    protected _read() {
+    _read() {
         /* The rules regarding readable streams are:
          - You have to call `push` to keep the stream alive.
          - Pushing 'null' ends the stream
@@ -198,15 +207,6 @@ export class MessageQueue extends Duplex {
             }
         }
         return node;
-    }
-
-    protected _write(inputMessage: any, encoding: string, callback: (err: Error) => void): void {
-        if (this.defaultMessageHandler(inputMessage)) {
-            setImmediate(() => {
-                this._read();
-            });
-        }
-        callback(null);
     }
 
     private defaultMessageHandler(msg: any): boolean {

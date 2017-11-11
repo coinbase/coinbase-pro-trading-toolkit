@@ -12,8 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { ONE, ZERO, Big } from '../lib/types';
-import { Logger, ConsoleLoggerFactory } from '../utils/Logger';
+import { Big, ONE, ZERO } from '../lib/types';
+import { Logger } from '../utils/Logger';
 import { BigNumber as BigJS } from 'bignumber.js';
 
 export interface CurrencyPair {
@@ -43,6 +43,7 @@ function makeFXObject(pair: CurrencyPair, value: string | number): FXObject {
 
 export class EFXRateUnavailable extends Error {
     readonly provider: string;
+
     constructor(msg: string, provider: string) {
         super(msg);
         this.provider = provider;
@@ -58,10 +59,17 @@ export abstract class FXProvider {
     private _pending: { [pair: string]: Promise<FXObject> } = {};
 
     constructor(config: FXProviderConfig) {
-        this.logger = config.logger || ConsoleLoggerFactory();
+        this.logger = config.logger;
     }
 
     abstract get name(): string;
+
+    log(level: string, message: string, meta?: any) {
+        if (!this.logger) {
+            return;
+        }
+        this.logger.log(level, message, meta);
+    }
 
     fetchCurrentRate(pair: CurrencyPair): Promise<FXObject> {
         // Special case immediately return 1.0
@@ -96,6 +104,8 @@ export abstract class FXProvider {
         });
     }
 
+    abstract supportsPair(pair: CurrencyPair): Promise<boolean>;
+
     /**
      * Returns a promise for the current rate. IsSupported must be true, and is not checked here. The method returns a
      * promise for the current network request, or generates a new one.
@@ -109,12 +119,15 @@ export abstract class FXProvider {
         if (pending) {
             return pending;
         }
-        this.logger.log('debug', `Downloading current ${pair.from}-${pair.to} exchange rate from ${this.name}`);
+        this.log('debug', `Downloading current ${pair.from}-${pair.to} exchange rate from ${this.name}`);
         pending = this.downloadCurrentRate(pair);
         this._pending[index] = pending;
         return pending.then((result: FXObject) => {
             this._pending[index] = undefined;
             return result;
+        }).catch((err) => {
+            this._pending[index] = undefined;
+            return Promise.reject(err);
         });
     }
 
@@ -124,5 +137,4 @@ export abstract class FXProvider {
      * @param pair
      */
     protected abstract downloadCurrentRate(pair: CurrencyPair): Promise<FXObject>;
-    protected abstract supportsPair(pair: CurrencyPair): Promise<boolean>;
 }

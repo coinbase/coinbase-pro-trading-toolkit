@@ -55,12 +55,12 @@ export class FXService extends EventEmitter {
 
     constructor(config: FXServiceConfig) {
         super();
+        this._rates = {};
         this.setLogger(config.logger || ConsoleLoggerFactory())
             .setCalculator(config.calculator)
             .setRefreshInterval(config.refreshInterval || 1000 * 60 * 5) // 5 minutes
             .setActivePairs(config.activePairs || []);
         this.errorState = false;
-        this._rates = {};
     }
 
     /**
@@ -194,7 +194,7 @@ export class FXService extends EventEmitter {
     /**
      * Returns the last set of exchange rate data that was returned by the RateCalculator
      */
-    get rates() {
+    get rates(): FXRates {
         return this._rates;
     }
 
@@ -212,6 +212,11 @@ export class FXService extends EventEmitter {
         return this.calculator.calculateRatesFor(this.currencyPairs).then((rates: FXObject[]) => {
             assert(Array.isArray(rates));
             rates.forEach((rate: FXObject) => {
+                if (!rate) {
+                    this.log('warn', 'The FX calculator returned null for latest FX query');
+                    this.errorState = true;
+                    return;
+                }
                 const index: string = pairAsString(rate);
                 const oldRate: FXObject = this.rates[index];
                 assert.equal(oldRate.from, rate.from, `The provided exchange rate has a base currency of ${rate.from} instead of ${oldRate.from}`);

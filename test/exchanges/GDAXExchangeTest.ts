@@ -13,6 +13,8 @@
  ***************************************************************************************************************************/
 
 import { GDAXExchangeAPI } from '../../src/exchanges/gdax/GDAXExchangeAPI';
+import { CryptoAddress } from '../../src/exchanges/ExchangeTransferAPI';
+
 const assert = require('assert');
 const nock = require('nock');
 
@@ -69,6 +71,31 @@ describe('GDAX Exchange API', () => {
             assert(book.asksTotal.eq(4.15));
             assert(book.bidsTotal.eq(9));
             done();
+        });
+    });
+});
+
+describe('GDAX Authenticated Exchange API', () => {
+    let gdax: GDAXExchangeAPI;
+    before(() => {
+        gdax = new GDAXExchangeAPI({ logger: null, auth: { key: 'key', secret: 'secret', passphrase: 'pass' } });
+    });
+
+    it('returns a crypto address', () => {
+        nock('https://api.gdax.com', { encodedQueryParams: true })
+            .get('/coinbase-accounts')
+            .reply(200, [{
+                id: '12345-6789',
+                currency: 'BTC',
+            }])
+            .post('/coinbase-accounts/12345-6789/addresses')
+            .reply(200, {
+                address: '13yAboqhttssm85emFHQ6jSQBdxJ7crnS6',
+                exchange_deposit_address: true
+            });
+        return gdax.requestCryptoAddress('BTC').then((result: CryptoAddress) => {
+            assert.equal(result.currency, 'BTC');
+            assert.equal(result.address, '13yAboqhttssm85emFHQ6jSQBdxJ7crnS6');
         });
     });
 });

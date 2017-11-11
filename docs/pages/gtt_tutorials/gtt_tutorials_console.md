@@ -83,10 +83,10 @@ TODO
 
 ### The console doesn't support all the features of the API
 
-Sorry about that, it's been crazy. Why not submit a PR for the feature that you want? Check out [our contribution guidelines]() for more details.
+Sorry about that, it's been crazy. Why not submit a PR for the feature that you want? Check out [our contribution guidelines](gtt_contributing.html) for more details.
 
 ### Why isn't \[my favorite exchange\] supported?
 
 We're adding support for new features and exchanges all the time. If you're impatient, why not write the API interface yourself and contribute to the project?
-Check out [our contribution guidelines]() for more details.
+Check out [our contribution guidelines](gtt_contributing.html) for more details.
 

@@ -26,7 +26,7 @@ const product: string = 'BTC-ETH';
 const config: ExchangeFeedConfig = {
     logger: logger,
     auth: null,
-    wsUrl: null
+    wsUrl: null,
 };
 
 const feed: BittrexFeed = new BittrexFeed(config);

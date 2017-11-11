@@ -31,6 +31,7 @@ export class StaticCommandSet extends Readable {
             this.push(msg);
         });
         this.messages = [];
+        this.push(null);
     }
 
     sendOne(msg?: StreamMessage) {
@@ -44,6 +45,5 @@ export class StaticCommandSet extends Readable {
         this.push(null);
     }
 
-    protected _read(size: number): void { /* no-op */
-    }
+    _read(size: number): void { /* no-op */ }
 }

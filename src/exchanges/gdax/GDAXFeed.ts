@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AuthHeaders, GDAXAuthConfig, GDAXExchangeAPI } from './GDAXExchangeAPI';
+import { GDAXExchangeAPI } from './GDAXExchangeAPI';
 import { Big } from '../../lib/types';
 import {
     ChangedOrderMessage,
@@ -47,6 +47,7 @@ import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { AuthHeaders, GDAXAuthConfig } from './GDAXInterfaces';
 
 export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
 
@@ -92,6 +93,7 @@ export class GDAXFeed extends ExchangeFeed {
             this.channels.push('heartbeat');
         }
         this.gdaxAPI = new GDAXExchangeAPI(config);
+        this.sensitiveKeys.push('passphrase');
         this.connect();
     }
 
@@ -186,6 +188,7 @@ export class GDAXFeed extends ExchangeFeed {
                 if ((feedMessage as any).sequence) {
                     (message as any).sourceSequence = (feedMessage as any).sequence;
                 }
+                message.origin = feedMessage;
                 this.pushMessage(message);
             }
         } catch (err) {
@@ -294,7 +297,8 @@ export class GDAXFeed extends ExchangeFeed {
                 count: 1,
                 sequence: this.getSequence(product),
                 productId: update.product_id,
-                side: side
+                side: side,
+                origin: update
             };
             this.pushMessage(message);
         });
@@ -385,7 +389,7 @@ export class GDAXFeed extends ExchangeFeed {
                     type: 'error',
                     time: new Date(),
                     message: error.message,
-                    details: { reason: error.reason }
+                    cause: error.reason
                 } as ErrorMessage;
                 this.emit('feed-error', msg);
                 return msg;
@@ -445,6 +449,7 @@ export class GDAXFeed extends ExchangeFeed {
                     orderId: isTaker ? (feedMessage as GDAXMatchMessage).taker_order_id : (feedMessage as GDAXMatchMessage).maker_order_id,
                     orderType: isTaker ? 'market' : 'limit',
                     side: side,
+                    price: (feedMessage as GDAXMatchMessage).price,
                     tradeSize: (feedMessage as GDAXMatchMessage).size,
                     remainingSize: null
                 } as TradeExecutedMessage;
@@ -456,6 +461,7 @@ export class GDAXFeed extends ExchangeFeed {
                     orderId: (feedMessage as GDAXDoneMessage).order_id,
                     reason: (feedMessage as GDAXDoneMessage).reason,
                     side: (feedMessage as GDAXDoneMessage).side,
+                    price: (feedMessage as GDAXMatchMessage).price,
                     filledSize: (feedMessage as GDAXMatchMessage).size,
                     remainingSize: (feedMessage as GDAXDoneMessage).remaining_size
                 } as TradeFinalizedMessage;
@@ -474,7 +480,7 @@ export class GDAXFeed extends ExchangeFeed {
             default:
                 return {
                     type: 'unknown',
-                    message: feedMessage
+                    productId: (feedMessage as any).product_id
                 } as UnknownMessage;
         }
     }

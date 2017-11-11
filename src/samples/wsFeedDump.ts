@@ -15,8 +15,8 @@
 import program  = require('commander');
 import { getSubscribedFeeds } from '../factories/gdaxFactories';
 import { ConsoleLoggerFactory } from '../utils/Logger';
-import { GDAXAuthConfig } from '../exchanges/gdax/GDAXExchangeAPI';
 import { GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
+import { GDAXAuthConfig } from '../exchanges/gdax/GDAXInterfaces';
 
 program
     .option('--api [value]', 'API url', 'https://api.gdax.com')
