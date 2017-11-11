@@ -44,6 +44,8 @@ declare module 'ccxt' {
         public hasFetchTickers: boolean;
         public name: string;
 
+        constructor(options?: any);
+
         fetch(url: string, method: string, headers?: any, body?: any): Promise<any>;
 
         handleResponse(url: string, method: string, headers?: any, body?: any): any;
@@ -82,159 +84,238 @@ declare module 'ccxt' {
 
         request(path: string, api: string, method: string, params?: any, headers?: any, body?: any): Promise<any>;
     }
+
     /* tslint:disable */
-    export class _1broker extends Exchange {}
+    export class _1broker extends Exchange {
+    }
 
-    export class _1btcxe extends Exchange {}
+    export class _1btcxe extends Exchange {
+    }
 
-    export class anxpro extends Exchange {}
+    export class anxpro extends Exchange {
+    }
 
-    export class binance extends Exchange {}
+    export class binance extends Exchange {
+    }
 
-    export class bit2c extends Exchange {}
+    export class bit2c extends Exchange {
+    }
 
-    export class bitbay extends Exchange {}
+    export class bitbay extends Exchange {
+    }
 
-    export class bitbays extends Exchange {}
+    export class bitbays extends Exchange {
+    }
 
-    export class bitcoincoid extends Exchange {}
+    export class bitcoincoid extends Exchange {
+    }
 
-    export class bitfinex extends Exchange {}
+    export class bitfinex extends Exchange {
+    }
 
-    export class bitfinex2 extends Exchange {}
+    export class bitfinex2 extends Exchange {
+    }
 
-    export class bitflyer extends Exchange {}
+    export class bitflyer extends Exchange {
+    }
 
-    export class bitlish extends Exchange {}
+    export class bitlish extends Exchange {
+    }
 
-    export class bitmarket extends Exchange {}
+    export class bitmarket extends Exchange {
+    }
 
-    export class bitmex extends Exchange {}
+    export class bitmex extends Exchange {
+    }
 
-    export class bitso extends Exchange {}
+    export class bitso extends Exchange {
+    }
 
-    export class bitstamp extends Exchange {}
+    export class bitstamp extends Exchange {
+    }
 
-    export class bittrex extends Exchange {}
+    export class bittrex extends Exchange {
+    }
 
-    export class bl3p extends Exchange {}
+    export class bl3p extends Exchange {
+    }
 
-    export class btcchina extends Exchange {}
+    export class btcchina extends Exchange {
+    }
 
-    export class btce extends Exchange {}
+    export class btce extends Exchange {
+    }
 
-    export class btcexchange extends Exchange {}
+    export class btcexchange extends Exchange {
+    }
 
-    export class btcmarkets extends Exchange {}
+    export class btcmarkets extends Exchange {
+    }
 
-    export class btctradeua extends Exchange {}
+    export class btctradeua extends Exchange {
+    }
 
-    export class btcturk extends Exchange {}
+    export class btcturk extends Exchange {
+    }
 
-    export class btcx extends Exchange {}
+    export class btcx extends Exchange {
+    }
 
-    export class bter extends Exchange {}
+    export class bter extends Exchange {
+    }
 
-    export class bxinth extends Exchange {}
+    export class bxinth extends Exchange {
+    }
 
-    export class ccex extends Exchange {}
+    export class ccex extends Exchange {
+    }
 
-    export class cex extends Exchange {}
+    export class cex extends Exchange {
+    }
 
-    export class chbtc extends Exchange {}
+    export class chbtc extends Exchange {
+    }
 
-    export class chilebit extends Exchange {}
+    export class chilebit extends Exchange {
+    }
 
-    export class coincheck extends Exchange {}
+    export class coincheck extends Exchange {
+    }
 
-    export class coinfloor extends Exchange {}
+    export class coinfloor extends Exchange {
+    }
 
-    export class coingi extends Exchange {}
+    export class coingi extends Exchange {
+    }
 
-    export class coinmarketcap extends Exchange {}
+    export class coinmarketcap extends Exchange {
+    }
 
-    export class coinmate extends Exchange {}
+    export class coinmate extends Exchange {
+    }
 
-    export class coinsecure extends Exchange {}
+    export class coinsecure extends Exchange {
+    }
 
-    export class coinspot extends Exchange {}
+    export class coinspot extends Exchange {
+    }
 
-    export class cryptopia extends Exchange {}
+    export class cryptopia extends Exchange {
+    }
 
-    export class dsx extends Exchange {}
+    export class dsx extends Exchange {
+    }
 
-    export class exmo extends Exchange {}
+    export class exmo extends Exchange {
+    }
 
-    export class flowbtc extends Exchange {}
+    export class flowbtc extends Exchange {
+    }
 
-    export class foxbit extends Exchange {}
+    export class foxbit extends Exchange {
+    }
 
-    export class fybse extends Exchange {}
+    export class fybse extends Exchange {
+    }
 
-    export class fybsg extends Exchange {}
+    export class fybsg extends Exchange {
+    }
 
-    export class gatecoin extends Exchange {}
+    export class gatecoin extends Exchange {
+    }
 
-    export class gdax extends Exchange {}
+    export class gdax extends Exchange {
+    }
 
-    export class gemini extends Exchange {}
+    export class gemini extends Exchange {
+    }
 
-    export class hitbtc extends Exchange {}
+    export class hitbtc extends Exchange {
+    }
 
-    export class hitbtc2 extends Exchange {}
+    export class hitbtc2 extends Exchange {
+    }
 
-    export class huobi extends Exchange {}
+    export class huobi extends Exchange {
+    }
 
-    export class itbit extends Exchange {}
+    export class itbit extends Exchange {
+    }
 
-    export class jubi extends Exchange {}
+    export class jubi extends Exchange {
+    }
 
-    export class kraken extends Exchange {}
+    export class kraken extends Exchange {
+    }
 
-    export class lakebtc extends Exchange {}
+    export class lakebtc extends Exchange {
+    }
 
-    export class livecoin extends Exchange {}
+    export class livecoin extends Exchange {
+    }
 
-    export class liqui extends Exchange {}
+    export class liqui extends Exchange {
+    }
 
-    export class luno extends Exchange {}
+    export class luno extends Exchange {
+    }
 
-    export class mercado extends Exchange {}
+    export class mercado extends Exchange {
+    }
 
-    export class okcoincny extends Exchange {}
+    export class okcoincny extends Exchange {
+    }
 
-    export class okcoinusd extends Exchange {}
+    export class okcoinusd extends Exchange {
+    }
 
-    export class okex extends Exchange {}
+    export class okex extends Exchange {
+    }
 
-    export class paymium extends Exchange {}
+    export class paymium extends Exchange {
+    }
 
-    export class poloniex extends Exchange {}
+    export class poloniex extends Exchange {
+    }
 
-    export class quadrigacx extends Exchange {}
+    export class quadrigacx extends Exchange {
+    }
 
-    export class quoine extends Exchange {}
+    export class quoine extends Exchange {
+    }
 
-    export class southxchange extends Exchange {}
+    export class southxchange extends Exchange {
+    }
 
-    export class surbitcoin extends Exchange {}
+    export class surbitcoin extends Exchange {
+    }
 
-    export class therock extends Exchange {}
+    export class therock extends Exchange {
+    }
 
-    export class urdubit extends Exchange {}
+    export class urdubit extends Exchange {
+    }
 
-    export class vaultoro extends Exchange {}
+    export class vaultoro extends Exchange {
+    }
 
-    export class vbtc extends Exchange {}
+    export class vbtc extends Exchange {
+    }
 
-    export class virwox extends Exchange {}
+    export class virwox extends Exchange {
+    }
 
-    export class xbtce extends Exchange {}
+    export class xbtce extends Exchange {
+    }
 
-    export class yobit extends Exchange {}
+    export class yobit extends Exchange {
+    }
 
-    export class yunbi extends Exchange {}
+    export class yunbi extends Exchange {
+    }
 
-    export class zaif extends Exchange {}
+    export class zaif extends Exchange {
+    }
+
     /* tslint:enable */
 }
