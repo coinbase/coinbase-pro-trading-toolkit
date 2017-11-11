@@ -42,6 +42,7 @@ declare module 'ccxt' {
         public verbose: boolean;
         public substituteCommonCurrencyCodes: boolean;
         public hasFetchTickers: boolean;
+        public name: string;
 
         fetch(url: string, method: string, headers?: any, body?: any): Promise<any>;
 

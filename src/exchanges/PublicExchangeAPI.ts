@@ -28,22 +28,22 @@ export interface PublicExchangeAPI {
     readonly owner: string;
 
     /**
-     * Load the list of supported products on this exchange
+     * Load the list of supported products on this exchange. Resolves with a list of products, or otherwise rejects the Promise with an HTTPError
      */
     loadProducts(): Promise<Product[]>;
 
     /**
-     * Load the mid-market price from the exchange's ticker
+     * Load the mid-market price from the exchange's ticker. Resolves with the latest midmarket price, or else rejects with an HTTPError
      */
     loadMidMarketPrice(gdaxProduct: string): Promise<BigJS>;
 
     /**
-     * Load the order book from the REST API and return an aggregated book as a #{../core/BookBuilder} object
+     * Load the order book from the REST API and resolves as an aggregated book as a #{../core/BookBuilder} object, otherwise the promise is rejected with an HTTPError
      */
     loadOrderbook(gdaxProduct: string): Promise<BookBuilder>;
 
     /**
-     * Load the ticker for the configured product from the REST API
+     * Load the ticker for the configured product from the REST API, Resolves with the latest ticker object, or else rejects with an HTTPError
      */
     loadTicker(gdaxProduct: string): Promise<Ticker>;
 }

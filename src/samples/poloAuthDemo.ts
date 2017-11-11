@@ -15,6 +15,7 @@ import * as Polo from '../factories/poloniexFactories';
 import { Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { Product } from '../exchanges/PublicExchangeAPI';
+import { StreamError } from '../lib/errors';
 
 const logger = ConsoleLoggerFactory({ level: 'info' });
 const polo = Polo.DefaultAPI(logger);
@@ -30,6 +31,6 @@ polo.loadBalances()
     .then((balances: Balances) => {
         logger.log('info', JSON.stringify(balances));
     })
-    .catch((err: Error) => {
-        logger.log('error', err.message, err);
+    .catch((err: StreamError) => {
+        logger.log('error', 'Poloniex Error', err.asMessage());
     });

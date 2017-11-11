@@ -93,3 +93,16 @@ export class HTTPError extends Error implements StreamError {
         };
     }
 }
+
+export function extractResponse(res: ResponseLike): ResponseLike {
+    if (!res) {
+        return {
+            status: undefined,
+            body: undefined
+        };
+    }
+    return {
+        status: res.status,
+        body: res.body
+    };
+}

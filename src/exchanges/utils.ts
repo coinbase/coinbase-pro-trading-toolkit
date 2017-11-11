@@ -16,6 +16,7 @@ import request = require('superagent');
 import crypto = require('crypto');
 import Response = request.Response;
 import { ExchangeAuthConfig } from './AuthConfig';
+import { extractResponse, HTTPError } from '../lib/errors';
 
 /**
  * A generic API response handler.
@@ -28,14 +29,9 @@ export function handleResponse<T>(req: Promise<Response>, meta: any): Promise<T>
         if (res.status >= 200 && res.status < 300) {
             return Promise.resolve<T>(res.body as T);
         }
-        const err: any = new Error(res.body.message);
-        err.details = res.body;
-        return Promise.reject(err);
+        return Promise.reject(new HTTPError('Error in Bitfinex request', extractResponse(res)));
     }).catch((err) => {
-        const reason: any = err.response.body;
-        const error: any = Object.assign(new Error('An API request failed. ' + reason.message), meta);
-        error.reason = reason;
-        return Promise.reject(error);
+        return Promise.reject(new HTTPError('Error in Bitfinex request', extractResponse(err.response)));
     });
 }
 
