@@ -212,6 +212,11 @@ export class FXService extends EventEmitter {
         return this.calculator.calculateRatesFor(this.currencyPairs).then((rates: FXObject[]) => {
             assert(Array.isArray(rates));
             rates.forEach((rate: FXObject) => {
+                if (!rate) {
+                    this.log('warn', 'The FX calculator returned null for latest FX query');
+                    this.errorState = true;
+                    return;
+                }
                 const index: string = pairAsString(rate);
                 const oldRate: FXObject = this.rates[index];
                 assert.equal(oldRate.from, rate.from, `The provided exchange rate has a base currency of ${rate.from} instead of ${oldRate.from}`);

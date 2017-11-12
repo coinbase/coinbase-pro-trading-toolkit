@@ -18,13 +18,14 @@
  */
 import { BitfinexConfig, BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
-import { GDAXConfig, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { PublicExchangeAPI, Ticker } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { printOrderbook, printTicker } from '../utils/printers';
 import { AuthenticatedExchangeAPI, Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { LiveOrder } from '../lib/Orderbook';
 import { DefaultAPI } from '../factories/bittrexFactories';
+import { GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
 
 const logger: Logger = ConsoleLoggerFactory({ level: 'info' });
 

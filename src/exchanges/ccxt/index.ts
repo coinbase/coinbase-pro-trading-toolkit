@@ -12,8 +12,6 @@
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
 
-///<reference path="../../../types/ccxt.d.ts"/>
-
 import * as ccxt from 'ccxt';
 import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
@@ -25,8 +23,9 @@ import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { Logger } from '../../utils/Logger';
+import { GTTError, HTTPError } from '../../lib/errors';
 
-type ExchangeDefinition = [string, (opts: any) => ccxt.Exchange];
+type ExchangeDefinition = [string, new (opts: any) => ccxt.Exchange];
 // Supported exchanges, minus those with native support
 const exchanges: { [index: string]: ExchangeDefinition } = {
     _1broker: ['1 Broker', ccxt._1broker],
@@ -37,15 +36,15 @@ const exchanges: { [index: string]: ExchangeDefinition } = {
     bitbay: ['Bitbay', ccxt.bitbay],
     bitbays: ['Bitbays', ccxt.bitbays],
     bitcoincoid: ['Bitcoincoid', ccxt.bitcoincoid],
-    // bitfinex: ['bitfinex', ccxt.bitfinex],
-    // bitfinex2: ['bitfinex2', ccxt.bitfinex2],
+    bitfinex: ['bitfinex', ccxt.bitfinex],
+    bitfinex2: ['bitfinex2', ccxt.bitfinex2],
     bitflyer: ['Bitflyer', ccxt.bitflyer],
     bitlish: ['Bitlish', ccxt.bitlish],
     bitmarket: ['Bitmarket', ccxt.bitmarket],
     bitmex: ['Bitmex', ccxt.bitmex],
     bitso: ['Bitso', ccxt.bitso],
     bitstamp: ['Bitstamp', ccxt.bitstamp],
-    // bittRex: ['bittrex', ccxt.bittrex],
+    bittrex: ['bittrex', ccxt.bittrex],
     bl3p: ['BL3P', ccxt.bl3p],
     btcchina: ['BTCchina', ccxt.btcchina],
     btce: ['BTC-e', ccxt.btce],
@@ -117,7 +116,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const password = opts.passphrase || process.env[`${upName}_PASSPHRASE`];
         const uid = opts.uid || process.env[`${upName}_UID`];
         const options = Object.assign(opts, { apiKey: key, secret: secret, uid: uid, password: password });
-        const ccxtInstance = exchange(options);
+        const ccxtInstance = new exchange(options);
         return new CCXTExchangeWrapper(owner, options, ccxtInstance, logger);
     }
 
@@ -166,7 +165,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 }
             }
             return Promise.resolve(null);
-        });
+        }).catch((err: Error) => rejectWithError(`Error loading symbols for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     loadProducts(): Promise<Product[]> {
@@ -190,16 +189,13 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 result.push(product);
             }
             return Promise.resolve(result);
-        }).catch((err) => {
-            this.log('error', `Could not load products for ${this.owner}`, err);
-            return Promise.resolve([]);
-        });
+        }).catch((err: Error) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
     }
 
     loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
         return this.loadTicker(gdaxProduct).then((t: Ticker) => {
             if (!(t && t.ask && t.bid)) {
-                return Promise.resolve(null);
+                return Promise.reject(new HTTPError(`Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`, { status: 200, body: t}));
             }
             return Promise.resolve(t.bid.plus(t.ask).div(2));
         });
@@ -227,10 +223,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             addSide('buy', ccxtBook.bids);
             addSide('sell', ccxtBook.asks);
             return Promise.resolve(book);
-        }).catch((err) => {
-            this.log('error', `Could not load orderbook for ${gdaxProduct} on ${this.owner}`, err);
-            return Promise.resolve(null);
-        });
+        }).catch((err: Error) => rejectWithError(`Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     loadTicker(gdaxProduct: string): Promise<Ticker> {
@@ -249,10 +242,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 volume: Big(ticker.baseVolume)
             };
             return Promise.resolve(t);
-        }).catch((err) => {
-            this.log('error', `Could not load ticker for ${gdaxProduct} on ${this.owner}`, err);
-            return Promise.resolve(null);
-        });
+        }).catch((err: Error) => rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
@@ -273,10 +263,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                     status: 'active'
                 };
                 return Promise.resolve(result);
-            }).catch((err) => {
-                this.log('error', `Could not place order on ${this.owner}`, {error: err, order: order});
-                return Promise.resolve(null);
-            });
+            }).catch((err: Error) => rejectWithError(`Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`, err));
         });
 
     }
@@ -318,10 +305,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 };
             }
             return Promise.resolve(result);
-        }).catch((err) => {
-            this.log('error', `Could not load balances from ${this.owner}`, err);
-            return Promise.resolve(null);
-        });
+        }).catch((err: Error) => rejectWithError(`Error loading balances on ${this.instance.name} (CCXT)`, err));
     }
 
     requestCryptoAddress(cur: string): Promise<CryptoAddress> {
@@ -345,24 +329,36 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
      */
     async fetchHistTrades(symbol: string, params?: {}): Promise<TradeMessage[]> {
         const sourceSymbol = await this.getSourceSymbol(symbol);
-        const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
-        return rawTrades.map(({ info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount }) => ({
-            type: 'trade' as 'trade',
-            time: new Date(timestamp),
-            productId: _symbol,
-            side,
-            tradeId: id,
-            price: price.toString(),
-            size: amount.toString(),
-        }));
+        try {
+            const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
+            return rawTrades.map(({ info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount }) => ({
+                type: 'trade' as 'trade',
+                time: new Date(timestamp),
+                productId: _symbol,
+                side,
+                tradeId: id,
+                price: price.toString(),
+                size: amount.toString(),
+            }));
+        } catch (err) {
+            return rejectWithError(`Error trade history for ${symbol} on ${this.instance.name} (CCXT)`, err);
+        }
     }
 
     async fetchOHLCV(symbol: string, params?: {}): Promise<CCXTOHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
-            return null;
-        } else {
-            const sourceSymbol = await this.getSourceSymbol(symbol);
+            return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
+        }
+        const sourceSymbol = await this.getSourceSymbol(symbol);
+        try {
             return await this.instance.fetchOHLCV(sourceSymbol, params);
+        } catch (err) {
+            return rejectWithError(`Error loading candles for ${symbol} on ${this.instance.name} (CCXT)`, err);
         }
     }
+}
+
+function rejectWithError(msg: string, error: any): Promise<never> {
+    const err = new GTTError(`${error.constructor.name}: ${msg}`, error);
+    return Promise.reject(err);
 }

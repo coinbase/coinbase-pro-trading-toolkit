@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AuthHeaders | GDAX Trading Toolkit API Reference</title>
+	<title>GDAXAccountResponse | GDAX Trading Toolkit API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_exchanges_gdax_gdaxexchangeapi_.html">&quot;src/exchanges/gdax/GDAXExchangeAPI&quot;</a>
+					<a href="../modules/_src_exchanges_gdax_gdaxinterfaces_.html">&quot;src/exchanges/gdax/GDAXInterfaces&quot;</a>
 				</li>
 				<li>
-					<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html">AuthHeaders</a>
+					<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html">GDAXAccountResponse</a>
 				</li>
 			</ul>
-			<h1>Interface AuthHeaders</h1>
+			<h1>Interface GDAXAccountResponse</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AuthHeaders</span>
+						<span class="target">GDAXAccountResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -84,10 +84,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_key" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>KEY</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_passphrase" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>PASSPHRASE</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_sign" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>SIGN</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_timestamp" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>TIMESTAMP</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#available" class="tsd-kind-icon">available</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#balance" class="tsd-kind-icon">balance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#currency" class="tsd-kind-icon">currency</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#hold" class="tsd-kind-icon">hold</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#profile_id" class="tsd-kind-icon">profile_<wbr>id</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,42 +98,62 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cb_access_key" class="tsd-anchor"></a>
-					<h3>CB-<wbr>ACCESS-<wbr>KEY</h3>
-					<div class="tsd-signature tsd-kind-icon">CB-<wbr>ACCESS-<wbr>KEY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="available" class="tsd-anchor"></a>
+					<h3>available</h3>
+					<div class="tsd-signature tsd-kind-icon">available<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/gdax/GDAXExchangeAPI.ts#L44">src/exchanges/gdax/GDAXExchangeAPI.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L38">src/exchanges/gdax/GDAXInterfaces.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cb_access_passphrase" class="tsd-anchor"></a>
-					<h3>CB-<wbr>ACCESS-<wbr>PASSPHRASE</h3>
-					<div class="tsd-signature tsd-kind-icon">CB-<wbr>ACCESS-<wbr>PASSPHRASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="balance" class="tsd-anchor"></a>
+					<h3>balance</h3>
+					<div class="tsd-signature tsd-kind-icon">balance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/gdax/GDAXExchangeAPI.ts#L47">src/exchanges/gdax/GDAXExchangeAPI.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L37">src/exchanges/gdax/GDAXInterfaces.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cb_access_sign" class="tsd-anchor"></a>
-					<h3>CB-<wbr>ACCESS-<wbr>SIGN</h3>
-					<div class="tsd-signature tsd-kind-icon">CB-<wbr>ACCESS-<wbr>SIGN<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="currency" class="tsd-anchor"></a>
+					<h3>currency</h3>
+					<div class="tsd-signature tsd-kind-icon">currency<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/gdax/GDAXExchangeAPI.ts#L45">src/exchanges/gdax/GDAXExchangeAPI.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L36">src/exchanges/gdax/GDAXInterfaces.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cb_access_timestamp" class="tsd-anchor"></a>
-					<h3>CB-<wbr>ACCESS-<wbr>TIMESTAMP</h3>
-					<div class="tsd-signature tsd-kind-icon">CB-<wbr>ACCESS-<wbr>TIMESTAMP<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="hold" class="tsd-anchor"></a>
+					<h3>hold</h3>
+					<div class="tsd-signature tsd-kind-icon">hold<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/9776c0a/src/exchanges/gdax/GDAXExchangeAPI.ts#L46">src/exchanges/gdax/GDAXExchangeAPI.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L39">src/exchanges/gdax/GDAXInterfaces.ts:39</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L35">src/exchanges/gdax/GDAXInterfaces.ts:35</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="profile_id" class="tsd-anchor"></a>
+					<h3>profile_<wbr>id</h3>
+					<div class="tsd-signature tsd-kind-icon">profile_<wbr>id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/exchanges/gdax/GDAXInterfaces.ts#L40">src/exchanges/gdax/GDAXInterfaces.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -144,62 +166,59 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_src_exchanges_gdax_gdaxexchangeapi_.html">"src/exchanges/gdax/GDAXExchangeAPI"</a>
+						<a href="../modules/_src_exchanges_gdax_gdaxinterfaces_.html">"src/exchanges/gdax/GDAXInterfaces"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_src_exchanges_gdax_gdaxexchangeapi_.gdaxexchangeapi.html" class="tsd-kind-icon">GDAXExchangeAPI</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.authcalloptions.html" class="tsd-kind-icon">Auth<wbr>Call<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.authcalloptions.html" class="tsd-kind-icon">Auth<wbr>Call<wbr>Options</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.authheaders.html" class="tsd-kind-icon">Auth<wbr>Headers</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxapiproduct.html" class="tsd-kind-icon">GDAXAPIProduct</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html" class="tsd-kind-icon">Auth<wbr>Headers</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html" class="tsd-kind-icon">GDAXAccount<wbr>Response</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_key" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>KEY</a>
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#available" class="tsd-kind-icon">available</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_passphrase" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>PASSPHRASE</a>
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#balance" class="tsd-kind-icon">balance</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_sign" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>SIGN</a>
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#currency" class="tsd-kind-icon">currency</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxexchangeapi_.authheaders.html#cb_access_timestamp" class="tsd-kind-icon">CB-<wbr>ACCESS-<wbr>TIMESTAMP</a>
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#hold" class="tsd-kind-icon">hold</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxaccountresponse.html#profile_id" class="tsd-kind-icon">profile_<wbr>id</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.gdaxapiproduct.html" class="tsd-kind-icon">GDAXAPIProduct</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxauthconfig.html" class="tsd-kind-icon">GDAXAuth<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.gdaxaccountresponse.html" class="tsd-kind-icon">GDAXAccount<wbr>Response</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxconfig.html" class="tsd-kind-icon">GDAXConfig</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.gdaxauthconfig.html" class="tsd-kind-icon">GDAXAuth<wbr>Config</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxhttperror.html" class="tsd-kind-icon">GDAXHTTPError</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.gdaxconfig.html" class="tsd-kind-icon">GDAXConfig</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.orderpage.html" class="tsd-kind-icon">Order<wbr>Page</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxexchangeapi_.orderbookendpointparams.html" class="tsd-kind-icon">Orderbook<wbr>Endpoint<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_src_exchanges_gdax_gdaxexchangeapi_.html#gdax_api_url" class="tsd-kind-icon">GDAX_<wbr>API_<wbr>URL</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_src_exchanges_gdax_gdaxexchangeapi_.html#gdaxordertoorder" class="tsd-kind-icon">GDAXOrder<wbr>ToOrder</a>
+						<a href="_src_exchanges_gdax_gdaxinterfaces_.orderbookendpointparams.html" class="tsd-kind-icon">Orderbook<wbr>Endpoint<wbr>Params</a>
 					</li>
 				</ul>
 			</nav>

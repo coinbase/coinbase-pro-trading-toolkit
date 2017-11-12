@@ -13,10 +13,11 @@
  ***************************************************************************************************************************/
 
 import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
-import { GDAX_API_URL, GDAXAuthConfig, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
+import { GDAXAuthConfig } from '../exchanges/gdax/GDAXInterfaces';
 
 let publicAPIInstance: GDAXExchangeAPI;
 
