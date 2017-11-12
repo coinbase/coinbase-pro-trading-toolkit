@@ -13,13 +13,13 @@
  ***************************************************************************************************************************/
 
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
-import * as Bittrex from 'node.bittrex.api';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { BittrexAPI } from './BittrexAPI';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
-import * as _ from "lodash";
+import * as _ from 'lodash';
+var Bittrex = require("node-bittrex-api");
 
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
@@ -64,7 +64,7 @@ export class BittrexFeed extends ExchangeFeed {
                             resolve(true);
                         }
                         resolve(false);
-                    })
+                    });
                 }),
                 new Promise((resolve, reject) => {
                     this.client.call('CoreHub', 'queryExchangeState', product).done((err: Error, data: any) => {
@@ -72,7 +72,7 @@ export class BittrexFeed extends ExchangeFeed {
                             return reject(err);
                         }
                         if (!data) {
-                            this.log("error", `failed to subscribe to ${product} on ${this.owner}`);
+                            this.log('error', `failed to subscribe to ${product} on ${this.owner}`);
                             return resolve(false);
                         }
                         const snapshot: SnapshotMessage = this.processSnapshot(product, data);
@@ -80,20 +80,17 @@ export class BittrexFeed extends ExchangeFeed {
                         resolve(true);
                     });
                 })
-            ])
-        }))
-
-
-        //     .then((values) => {
-        //     this.log("debug", "Subscribe Promises array: " + JSON.stringify(values));
-        //     const v = _.flatten(values);
-        //     const flag = v.reduce((acc, cur) => {
-        //         return acc && cur;
-        //     });
-        //     return Promise.resolve(flag);
-        // }).catch((err) => {
-        //     return Promise.reject(err);
-        // });
+            ]);
+        })).then((values) => {
+            this.log('debug', 'Subscribe Promises array: ' + JSON.stringify(values));
+            const v = _.flatten(values);
+            const flag = v.reduce((acc, cur) => {
+                return acc && cur;
+            });
+            return Promise.resolve(flag);
+        }).catch((err) => {
+            return Promise.reject(err);
+        });
     }
 
     protected connect() {
