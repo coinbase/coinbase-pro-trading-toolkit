@@ -67,8 +67,6 @@ export class BittrexFeed extends ExchangeFeed {
                         if (queryErr) {
                             return reject(queryErr);
                         }
-                        console.log('debug', 'Data: ' + JSON.stringify(data));
-                        console.log('debug', `Data + ${data}`);
                         if (!data) {
                             this.log('error', `failed to queryExchangeState to ${product} on ${this.owner}`);
                             return resolve(false);
