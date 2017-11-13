@@ -19,7 +19,7 @@ import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import * as _ from 'lodash';
-var Bittrex = require("node-bittrex-api");
+const Bittrex = require('node-bittrex-api');
 
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
@@ -52,41 +52,41 @@ export class BittrexFeed extends ExchangeFeed {
             return new Promise((resolve, reject) => resolve(false));
         }
         return Promise.all(products.map((product: string) => {
-            return Promise.all([
-                new Promise((resolve, reject) => {
-                    this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
-                        if (err) {
-                            return reject(err);
-                        }
+            return new Promise((resolve, reject) => {
+                this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                        if (result === true) {
-                            this.log('info', `Subscribed to ${product} on ${this.owner}`);
-                            resolve(true);
-                        }
+                    if (!result) {
+                        this.log('info', `failed to subscribeExchangeDeltas to ${product} on ${this.owner}`);
                         resolve(false);
-                    });
-                }),
-                new Promise((resolve, reject) => {
-                    this.client.call('CoreHub', 'queryExchangeState', product).done((err: Error, data: any) => {
-                        if (err) {
-                            return reject(err);
+                    }
+
+                    this.client.call('CoreHub', 'queryExchangeState', product).done((queryErr: Error, data: any) => {
+                        if (queryErr) {
+                            return reject(queryErr);
                         }
+                        console.log('debug', 'Data: ' + JSON.stringify(data));
+                        console.log('debug', `Data + ${data}`);
                         if (!data) {
-                            this.log('error', `failed to subscribe to ${product} on ${this.owner}`);
+                            this.log('error', `failed to queryExchangeState to ${product} on ${this.owner}`);
                             return resolve(false);
                         }
                         const snapshot: SnapshotMessage = this.processSnapshot(product, data);
                         this.push(snapshot);
                         resolve(true);
                     });
-                })
-            ]);
+                });
+            });
         })).then((values) => {
             this.log('debug', 'Subscribe Promises array: ' + JSON.stringify(values));
             const v = _.flatten(values);
+            this.log('debug', 'v: ' + JSON.stringify(v));
             const flag = v.reduce((acc, cur) => {
                 return acc && cur;
             });
+            this.log('debug', `flag: ${flag}`);
             return Promise.resolve(flag);
         }).catch((err) => {
             return Promise.reject(err);
@@ -94,15 +94,19 @@ export class BittrexFeed extends ExchangeFeed {
     }
 
     protected connect() {
-        const client = this.client = this.client = Bittrex.websockets.client();
-        client.serviceHandlers.messageReceived = (msg: any) => this.handleMessage(msg);
-        client.serviceHandlers.bound = () => this.onNewConnection();
-        client.serviceHandlers.disconnected = (code: number, reason: string) => this.onClose(code, reason);
-        client.serviceHandlers.onerror = (err: Error) => this.onError(err);
-        client.serviceHandlers.connected = (connection: any) => {
-            this.connection = connection;
-            this.emit('websocket-connection');
-        };
+        Bittrex.websockets.client(
+            (client: any) => {
+                this.client = client;
+                client.serviceHandlers.messageReceived = (msg: any) => this.handleMessage(msg);
+                client.serviceHandlers.bound = () => this.onNewConnection();
+                client.serviceHandlers.disconnected = (code: number, reason: string) => this.onClose(code, reason);
+                client.serviceHandlers.onerror = (err: Error) => this.onError(err);
+                client.serviceHandlers.connected = (connection: any) => {
+                    this.connection = connection;
+                    this.emit('websocket-connection');
+                };
+            }
+        );
     }
 
     protected handleMessage(msg: any): void {
