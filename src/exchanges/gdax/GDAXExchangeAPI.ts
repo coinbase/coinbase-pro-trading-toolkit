@@ -263,11 +263,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 }
             });
         };
-        return new Promise((resolve, reject) => {
-            return loop(null).then((orders) => {
-                return resolve(orders);
-            }, reject);
-        });
+        return loop(null);
     }
 
     loadBalances(): Promise<Balances> {
