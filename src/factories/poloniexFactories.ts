@@ -48,7 +48,7 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<Po
         const feed = getFeed<PoloniexFeed, ExchangeFeedConfig>(PoloniexFeed, config);
         if (!feed.isConnected()) {
             feed.reconnect(0);
-            feed.on('websocket-open', () => {
+            feed.once('websocket-open', () => {
                 subscribeToAll(products, feed, info);
             });
         } else {
