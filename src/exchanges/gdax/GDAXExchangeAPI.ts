@@ -200,7 +200,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 };
                 break;
             case 'market':
-            case 'stop':
                 gdaxOrder = {
                     type: 'market',
                     product_id: order.productId,
@@ -208,6 +207,18 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                     size: order.size,
                     client_oid: order.clientId,
                     funds: order.funds,
+                    stp: order.extra && order.extra.stp
+                };
+                break;
+            case 'stop':
+                gdaxOrder = {
+                    type: 'stop',
+                    product_id: order.productId,
+                    side: side,
+                    size: order.size,
+                    price: order.price,
+                    funds: order.funds,
+                    client_oid: order.clientId,
                     stp: order.extra && order.extra.stp
                 };
                 break;
