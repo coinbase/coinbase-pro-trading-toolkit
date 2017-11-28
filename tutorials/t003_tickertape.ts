@@ -17,7 +17,8 @@ import {
     BitfinexConfig,
     BitfinexExchangeAPI
 } from "gdax-trading-toolkit/build/src/exchanges/bitfinex/BitfinexExchangeAPI";
-import { GDAXConfig, GDAXExchangeAPI } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXExchangeAPI";
+import { GDAXConfig } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXInterfaces";
+import { GDAXExchangeAPI } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXExchangeAPI";
 import { PublicExchangeAPI, Ticker } from "gdax-trading-toolkit/build/src/exchanges/PublicExchangeAPI";
 
 const padfloat = GTT.utils.padfloat;
