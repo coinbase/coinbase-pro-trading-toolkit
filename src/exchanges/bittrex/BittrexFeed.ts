@@ -18,7 +18,6 @@ import { BittrexAPI } from './BittrexAPI';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
-import * as _ from 'lodash';
 const Bittrex = require('node-bittrex-api');
 
 export class BittrexFeed extends ExchangeFeed {
@@ -47,20 +46,21 @@ export class BittrexFeed extends ExchangeFeed {
         return 'Bittrex';
     }
 
-    subscribe(products: string[]): Promise<any> {
+    subscribe(products: string[]): Promise<boolean> {
         if (!this.connection) {
-            return new Promise((resolve, reject) => resolve(false));
+            return Promise.reject(false);
         }
         return Promise.all(products.map((product: string) => {
-            return new Promise((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
                 this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
                     if (err) {
                         return reject(err);
                     }
 
                     if (!result) {
-                        this.log('info', `failed to subscribeExchangeDeltas to ${product} on ${this.owner}`);
-                        resolve(false);
+                        const msg = `Failed to subscribeExchangeDeltas to ${product} on ${this.owner}`;
+                        this.log('info', msg);
+                        return reject(new Error(msg));
                     }
 
                     this.client.call('CoreHub', 'queryExchangeState', product).done((queryErr: Error, data: any) => {
@@ -68,24 +68,19 @@ export class BittrexFeed extends ExchangeFeed {
                             return reject(queryErr);
                         }
                         if (!data) {
-                            this.log('error', `failed to queryExchangeState to ${product} on ${this.owner}`);
-                            return resolve(false);
+                            const msg = `failed to queryExchangeState to ${product} on ${this.owner}`;
+                            this.log('error', msg);
+                            return reject(new Error(msg));
                         }
                         const snapshot: SnapshotMessage = this.processSnapshot(product, data);
                         this.push(snapshot);
-                        resolve(true);
+                        return resolve(true);
                     });
                 });
             });
-        })).then((values) => {
-            this.log('debug', 'Subscribe Promises array: ' + JSON.stringify(values));
-            const v = _.flatten(values);
-            this.log('debug', 'v: ' + JSON.stringify(v));
-            const flag = v.reduce((acc, cur) => {
-                return acc && cur;
-            });
-            this.log('debug', `flag: ${flag}`);
-            return Promise.resolve(flag);
+        })).then(() => {
+            // Every result is guaranteed to be true
+            return Promise.resolve(true);
         }).catch((err) => {
             return Promise.reject(err);
         });
