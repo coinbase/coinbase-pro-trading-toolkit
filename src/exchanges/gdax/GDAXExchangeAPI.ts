@@ -496,7 +496,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             return this.publicClients.default;
         }
         if (!this.publicClients[product]) {
-            this.publicClients[product] = new PublicClient(product);
+            this.publicClients[product] = new PublicClient(product, this._apiURL);
         }
         return this.publicClients[product];
     }
