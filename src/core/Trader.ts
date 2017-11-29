@@ -58,7 +58,7 @@ export class Trader extends Writable {
     private _fitOrders: boolean = true;
     private sizePrecision: number;
     private pricePrecision: number;
-    private unconfirmedMarketOrders: Set<string>;
+    private unfilledMarketOrders: Set<string>;
 
     constructor(config: TraderConfig) {
         super({ objectMode: true });
@@ -68,7 +68,7 @@ export class Trader extends Writable {
         this._productId = config.productId;
         this.sizePrecision = config.sizePrecision || 2;
         this.pricePrecision = config.pricePrecision || 2;
-        this.unconfirmedMarketOrders = new Set();
+        this.unfilledMarketOrders = new Set();
         if (!this.api) {
             throw new Error('Trader cannot work without an exchange interface using valid credentials. Have you set the necessary ENVARS?');
         }
@@ -96,7 +96,7 @@ export class Trader extends Writable {
             if (req.orderType !== 'market') {
                 this.myBook.add(order);
             } else {
-                this.unconfirmedMarketOrders.add(order.id);
+                this.unfilledMarketOrders.add(order.id);
             }
             return order;
         }).catch((err: StreamError) => {
@@ -218,10 +218,13 @@ export class Trader extends Writable {
     }
 
     private handleTradeExecutedMessage(msg: TradeExecutedMessage) {
-        this.emit('Trader.trade-executed', msg);
-        if (msg.orderType !== 'limit') {
+        if (msg.orderType === 'market') {
+            if (this.unfilledMarketOrders.has(msg.orderId)) {
+                this.emit('Trader.trade-executed', msg);
+            }
             return;
         }
+        this.emit('Trader.trade-executed', msg);
         const order: Level3Order = this.myBook.getOrder(msg.orderId);
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
@@ -241,10 +244,10 @@ export class Trader extends Writable {
         const id: string = msg.orderId;
         const order: Level3Order = this.myBook.remove(id);
         if (!order) {
-            if (!this.unconfirmedMarketOrders.has(id)) {
+            if (!this.unfilledMarketOrders.has(id)) {
                 return;
             }
-            this.unconfirmedMarketOrders.delete(id);
+            this.unfilledMarketOrders.delete(id);
         }
         this.emit('Trader.trade-finalized', msg);
     }
