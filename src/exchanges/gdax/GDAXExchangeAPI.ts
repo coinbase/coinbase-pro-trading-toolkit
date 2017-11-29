@@ -23,7 +23,7 @@ import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, Wi
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
 import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, ProductInfo, ProductTicker, PublicClient } from 'gdax';
 import * as assert from 'assert';
-import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
+import { APIError, extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
 import querystring = require('querystring');
 import crypto = require('crypto');
@@ -227,9 +227,14 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         }
         const clientMethod = side === 'buy' ? this.authClient.buy.bind(this.authClient) : this.authClient.sell.bind(this.authClient);
         return clientMethod(gdaxOrder).then((result: OrderInfo) => {
+            // Check for error
+            if ((result as any).message) {
+                return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, result));
+            }
             return GDAXOrderToOrder(result);
-        }).catch((err: GDAXHTTPError) => {
-            return Promise.reject(new HTTPError(`Placing order on ${order.productId} failed`, extractResponse(err.response)));
+        }, (err: GDAXHTTPError) => {
+            const errMsg: any = err.response ? new HTTPError(`Placing order on ${order.productId} failed`, extractResponse(err.response)) : err;
+            return Promise.reject(errMsg);
         });
     }
 
