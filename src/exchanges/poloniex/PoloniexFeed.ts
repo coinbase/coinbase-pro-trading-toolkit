@@ -137,7 +137,7 @@ export class PoloniexFeed extends ExchangeFeed {
         this.subscriptions = {};
         for (const key in oldSubscriptions) {
             const channel = oldSubscriptions[key];
-            this.subscribe(channel.id);
+            this.resubscribe(channel.id);
         }
         this.pinger = setInterval(() => {
             if (!this.isConnected()) {

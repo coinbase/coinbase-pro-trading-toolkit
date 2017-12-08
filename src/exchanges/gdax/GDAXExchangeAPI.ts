@@ -21,7 +21,7 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
-import { AuthenticatedClient, CoinbaseAccount, ProductInfo, ProductTicker, PublicClient, OrderParams, OrderResult, OrderInfo, Account } from 'gdax';
+import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, ProductInfo, ProductTicker, PublicClient } from 'gdax';
 import * as assert from 'assert';
 import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
@@ -33,7 +33,7 @@ export const GDAX_API_URL = 'https://api.gdax.com';
 
 interface OrderPage {
     after: string;
-    orders: OrderResult[];
+    orders: BaseOrderInfo[];
 }
 
 interface PublicClients {
@@ -200,7 +200,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 };
                 break;
             case 'market':
-            case 'stop':
                 gdaxOrder = {
                     type: 'market',
                     product_id: order.productId,
@@ -211,12 +210,24 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                     stp: order.extra && order.extra.stp
                 };
                 break;
+            case 'stop':
+                gdaxOrder = {
+                    type: 'stop',
+                    product_id: order.productId,
+                    side: side,
+                    size: order.size,
+                    price: order.price,
+                    funds: order.funds,
+                    client_oid: order.clientId,
+                    stp: order.extra && order.extra.stp
+                };
+                break;
             default:
                 return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
         }
         const clientMethod = side === 'buy' ? this.authClient.buy.bind(this.authClient) : this.authClient.sell.bind(this.authClient);
-        return clientMethod(gdaxOrder).then((result: OrderResult) => {
-            return OrderResultToOrder(result);
+        return clientMethod(gdaxOrder).then((result: OrderInfo) => {
+            return GDAXOrderToOrder(result);
         }).catch((err: GDAXHTTPError) => {
             return Promise.reject(new HTTPError(`Placing order on ${order.productId} failed`, extractResponse(err.response)));
         });
@@ -243,7 +254,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             return Promise.reject(new GTTError('No authentication details were given for this API'));
         }
         return this.authClient.getOrder(id).then((order: OrderInfo) => {
-            return OrderInfoToLiveOrder(order);
+            return GDAXOrderToOrder(order);
         }).catch((err: GDAXHTTPError) => {
             return Promise.reject(new HTTPError('Error loading order details on GDAX', extractResponse(err.response)));
         });
@@ -253,21 +264,17 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         const self = this;
         let allOrders: LiveOrder[] = [];
         const loop: (after: string) => Promise<LiveOrder[]> = (after: string) => {
-            return self.loadNextOrders(product, after).then((page: OrderPage) => {
-                const liveOrders: LiveOrder[] = page.orders.map(OrderResultToOrder);
+            return self.loadNextOrders(product, after).then((result) => {
+                const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderToOrder);
                 allOrders = allOrders.concat(liveOrders);
-                if (page.after) {
-                    return loop(page.after);
+                if (result.after) {
+                    return loop(result.after);
                 } else {
                     return allOrders;
                 }
             });
         };
-        return new Promise((resolve, reject) => {
-            return loop(null).then((orders) => {
-                return resolve(orders);
-            }, reject);
-        });
+        return loop(null);
     }
 
     loadBalances(): Promise<Balances> {
@@ -502,27 +509,18 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 }
 
-function OrderInfoToLiveOrder(order: OrderInfo): LiveOrder {
-    return {
-        price: Big(order.price),
-        size: Big(order.size),
-        side: order.side,
-        id: order.id,
-        time: new Date(order.created_at),
-        productId: order.product_id,
-        status: order.status,
-        extra: order
-    };
-}
-
-function OrderResultToOrder(order: OrderResult): LiveOrder {
-    const size = Big(order.size);
-    // this is actually the average price, since an order can me matched multiple times if it was a market order
-    let price: BigJS = null;
-    if (order.price) {
+function GDAXOrderToOrder(order: OrderInfo): LiveOrder {
+    let size: BigJS;
+    let price: BigJS;
+    if (+order.size > 0) {
+        size = Big(order.size);
+    } else if (+order.funds > 0 && +order.price > 0) {
+        size = Big(order.funds).div(order.price);
+    }
+    if (+order.price > 0) {
         price = Big(order.price);
-    } else if (+order.executed_value > 0) {
-        price = Big(order.executed_value).div(size);
+    } else {
+        price = +order.executed_value > 0 ? Big(order.executed_value).div(size) : null;
     }
     return {
         price: price,
