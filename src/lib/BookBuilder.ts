@@ -16,7 +16,8 @@ import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState, PriceComp
 import { Big, BigJS, Biglike, ZERO } from './types';
 import { RBTree } from 'bintrees';
 import { EventEmitter } from 'events';
-import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
+import { ConsoleLoggerFactory } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import assert = require('assert');
 
 export function AggregatedLevelFactory(totalSize: Biglike, price: Biglike, side: string): AggregatedLevelWithOrders {
@@ -150,9 +151,9 @@ export class BookBuilder extends EventEmitter implements Orderbook {
     protected _asksTotal: BigJS = ZERO;
     protected _asksValueTotal: BigJS = ZERO;
     private _orderPool: OrderPool = {};
-    private logger: Logger;
+    private logger: LoggerInstance;
 
-    constructor(logger: Logger) {
+    constructor(logger: LoggerInstance) {
         super();
         this.logger = logger || ConsoleLoggerFactory();
         this.clear();

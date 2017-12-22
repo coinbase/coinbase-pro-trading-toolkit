@@ -13,7 +13,7 @@
  ***************************************************************************************************************************/
 
 import { BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { BitfinexFeed, BitfinexFeedConfig } from '../exchanges/bitfinex/BitfinexFeed';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import { BITFINEX_WS_FEED, PRODUCT_MAP } from '../exchanges/bitfinex/BitfinexCommon';
@@ -26,7 +26,7 @@ let publicAPIInstance: BitfinexExchangeAPI;
  * key details are found in the BITFINEX_KEY etc. envars, they will be used
  * @returns {PublicExchangeAPI}
  */
-export function DefaultAPI(logger: Logger): BitfinexExchangeAPI {
+export function DefaultAPI(logger: LoggerInstance): BitfinexExchangeAPI {
     if (!publicAPIInstance) {
         publicAPIInstance = new BitfinexExchangeAPI({
             logger: logger,
@@ -46,7 +46,7 @@ export function DefaultAPI(logger: Logger): BitfinexExchangeAPI {
  * @param auth
  * @param logger
  */
-export function getSubscribedFeeds(wsUrl: string, products: string[], auth?: ExchangeAuthConfig, logger?: Logger, bookDepth?: number): Promise<BitfinexFeed> {
+export function getSubscribedFeeds(wsUrl: string, products: string[], auth?: ExchangeAuthConfig, logger?: LoggerInstance, bookDepth?: number): Promise<BitfinexFeed> {
     return new Promise((resolve) => {
         const config: BitfinexFeedConfig = {
             wsUrl: wsUrl,
@@ -74,7 +74,7 @@ export function getSubscribedFeeds(wsUrl: string, products: string[], auth?: Exc
  *
  * It is assumed that your API keys are stored in the BITFINEX_KEY and BITFINEX_SECRET envars
  */
-export function FeedFactory(logger: Logger, productIDs?: string[]): Promise<BitfinexFeed> {
+export function FeedFactory(logger: LoggerInstance, productIDs?: string[]): Promise<BitfinexFeed> {
     const auth: ExchangeAuthConfig = {
         key: process.env.BITFINEX_KEY,
         secret: process.env.BITFINEX_SECRET

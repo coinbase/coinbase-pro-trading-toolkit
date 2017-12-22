@@ -4,6 +4,8 @@
 
 declare module 's3-streamlogger' {
     namespace S3StreamLogger {
+        // would prefer to figure out what to inherit from GenericTransportOptions, but couldn't get that working
+        // export interface S3TransportOptions extends GenericTransportOptions {
         export interface S3TransportOptions {
             bucket: string;
             folder?: string;
@@ -18,6 +20,11 @@ declare module 's3-streamlogger' {
             server_side_encryption?: boolean;
             acl?: boolean;
             compress?: boolean;
+            // "inheritted" through copy-paste
+            level?: string;
+            json?: boolean;
+            formatter?(options?: any): string;
+
         }
     }
     declare class S3StreamLogger {

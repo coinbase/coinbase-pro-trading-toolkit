@@ -14,10 +14,10 @@
 
 import stream = require('stream');
 import { isStreamMessage, StreamMessage } from '../core/Messages';
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 
 export interface MessageTransformConfig {
-    logger?: Logger;
+    logger?: LoggerInstance;
 }
 
 /**
@@ -26,7 +26,7 @@ export interface MessageTransformConfig {
  * will implement.
  */
 export abstract class AbstractMessageTransform extends stream.Transform {
-    protected logger: Logger;
+    protected logger: LoggerInstance;
 
     constructor(config: MessageTransformConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });

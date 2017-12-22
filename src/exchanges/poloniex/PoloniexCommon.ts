@@ -15,7 +15,7 @@
 import { Product } from '../PublicExchangeAPI';
 import { Big } from '../../lib/types';
 import { DefaultAPI } from '../../factories/poloniexFactories';
-import { Logger } from '../../utils/Logger';
+import { LoggerInstance } from 'winston';
 
 export const POLONIEX_WS_FEED = 'wss://api2.poloniex.com';
 export const POLONIEX_API_URL = 'https://poloniex.com';
@@ -68,7 +68,7 @@ export function gdaxifyProduct(poloProduct: string): Product {
 export interface PoloniexProducts { [id: number]: Product; }
 let productInfo: PoloniexProducts  = {};
 
-export function getProductInfo(id: number, refresh: boolean, logger?: Logger): Promise<Product> {
+export function getProductInfo(id: number, refresh: boolean, logger?: LoggerInstance): Promise<Product> {
     if (!refresh && productInfo[id]) {
         return Promise.resolve(productInfo[id]);
     }
@@ -82,7 +82,7 @@ export function getProductInfo(id: number, refresh: boolean, logger?: Logger): P
     });
 }
 
-export function getAllProductInfo(refresh: boolean, logger?: Logger): Promise<PoloniexProducts> {
+export function getAllProductInfo(refresh: boolean, logger?: LoggerInstance): Promise<PoloniexProducts> {
     return getProductInfo(0, refresh, logger).then(() => {
         return Promise.resolve(productInfo);
     });

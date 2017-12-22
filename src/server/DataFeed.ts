@@ -18,7 +18,8 @@ import Server = WebSocket.Server;
 import { LiveBookConfig, LiveOrderbook } from '../core/LiveOrderbook';
 import * as Commands from './WSCommands';
 import { Command, newError, ResponseMessage, wrapMessage } from './WSCommands';
-import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
+import { ConsoleLoggerFactory } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { ExchangeFeed } from '../exchanges/ExchangeFeed';
 import { FeedFactory as gdaxFeedFactory } from '../factories/gdaxFactories';
 import { FeedFactory as bitfinexFeedFactory } from '../factories/bitfinexFactories';
@@ -27,7 +28,7 @@ import { SnapshotMessage, TickerMessage } from '../core/Messages';
 import { createTickerTrigger, Trigger } from '../core/Triggers';
 
 let server: Server;
-const logger: Logger = ConsoleLoggerFactory();
+const logger: LoggerInstance = ConsoleLoggerFactory();
 
 export const serverOptions: IServerOptions = {
     host: 'localhost',

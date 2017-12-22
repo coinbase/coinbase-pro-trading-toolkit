@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { BittrexAPI } from '../exchanges/bittrex/BittrexAPI';
 import { BittrexFeed } from '../exchanges/bittrex/BittrexFeed';
 import { ExchangeFeedConfig } from '../exchanges/ExchangeFeed';
@@ -24,7 +24,7 @@ let publicAPIInstance: BittrexAPI;
  * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
  * key details are found in the GDAX_KEY etc. envars, they will be used
  */
-export function DefaultAPI(logger: Logger): BittrexAPI {
+export function DefaultAPI(logger: LoggerInstance): BittrexAPI {
     if (!publicAPIInstance) {
         publicAPIInstance = new BittrexAPI({
             key: process.env.BITTREX_KEY,
@@ -59,7 +59,7 @@ export function getSubscribedFeeds(options: ExchangeFeedConfig, products: string
  *
  * It is assumed that your API keys are stored in the BITTREX_KEY and BITTREX_SECRET envars
  */
-export function FeedFactory(logger: Logger, productIds: string[], auth?: ExchangeAuthConfig): Promise<BittrexFeed> {
+export function FeedFactory(logger: LoggerInstance, productIds: string[], auth?: ExchangeAuthConfig): Promise<BittrexFeed> {
     auth = auth || {
         key: process.env.BITTREX_KEY,
         secret: process.env.BITTREX_SECRET

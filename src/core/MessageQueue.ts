@@ -12,7 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Logger, ConsoleLoggerFactory } from '../utils/Logger';
+import { ConsoleLoggerFactory } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { OrderbookMessage, BaseOrderMessage } from './Messages';
 import { RBTree } from 'bintrees';
 import assert = require('assert');
@@ -21,7 +22,7 @@ import { Duplex } from 'stream';
 /**
  * Configuration interface for A MessageQueue
  *
- * @param logger {Logger} An optional logging interface
+ * @param logger {LoggerInstance} An optional logging interface
  *
  * @param product {string} A product to filter for. A single feed might be producing messages form multiple products (each with their own
  * sequence numbers). This selects for the product so that all messages can be emitted in strictly increasing sequence number.
@@ -35,7 +36,7 @@ import { Duplex } from 'stream';
  */
 export interface MessageQueueConfig {
     product: string;
-    logger?: Logger;
+    logger?: LoggerInstance;
     targetQueueLength?: number;
     waitForSnapshot: boolean;
 }
@@ -69,7 +70,7 @@ export interface MessageQueueConfig {
  * Emitted if a message is about to be sent out, out of sequence and waiting would violate the `targetQueueLength` constraint
  */
 export class MessageQueue extends Duplex {
-    private logger: Logger;
+    private logger: LoggerInstance;
     private messages: RBTree<OrderbookMessage>;
     private targetQueueLength: number;
     private lastSequence: number;

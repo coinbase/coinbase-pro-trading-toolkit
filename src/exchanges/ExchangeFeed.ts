@@ -13,7 +13,7 @@
  ***************************************************************************************************************************/
 
 import { Readable } from 'stream';
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { ExchangeAuthConfig } from './AuthConfig';
 import { createHmac } from 'crypto';
 import WebSocket = require('ws');
@@ -22,7 +22,7 @@ import { sanitizeMessage } from '../core/Messages';
 
 export class ExchangeFeedConfig {
     wsUrl: string;
-    logger: Logger;
+    logger: LoggerInstance;
     auth: ExchangeAuthConfig;
 }
 
@@ -40,7 +40,7 @@ export abstract class ExchangeFeed extends Readable {
     private lastHeartBeat: number = -1;
     private connectionChecker: Timer = null;
     private socket: WebSocket;
-    private _logger: Logger;
+    private _logger: LoggerInstance;
 
     constructor(config: ExchangeFeedConfig) {
         super({ objectMode: true, highWaterMark: 1024 });
@@ -51,7 +51,7 @@ export abstract class ExchangeFeed extends Readable {
         this.sensitiveKeys = ['key', 'secret', 'signature'];
     }
 
-    get logger(): Logger {
+    get logger(): LoggerInstance {
         return this._logger;
     }
 

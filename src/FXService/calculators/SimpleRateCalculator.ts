@@ -14,17 +14,18 @@
 
 import { FXRateCalculator } from '../FXRateCalculator';
 import { CurrencyPair, FXObject, FXProvider } from '../FXProvider';
-import { ConsoleLoggerFactory, Logger } from '../../utils/Logger';
+import { ConsoleLoggerFactory } from '../../utils/Logger';
+import { LoggerInstance } from 'winston';
 
 /**
  * A simple FX rate calculator that uses a single FXProvider and return the current exchange rate from it directly.
  * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
  */
 export default class SimpleRateCalculator extends FXRateCalculator {
-    logger: Logger;
+    logger: LoggerInstance;
     provider: FXProvider;
 
-    constructor(provider: FXProvider, logger?: Logger) {
+    constructor(provider: FXProvider, logger?: LoggerInstance) {
         super();
         this.provider = provider;
         this.logger = logger || ConsoleLoggerFactory();

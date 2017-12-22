@@ -13,7 +13,7 @@
  ***************************************************************************************************************************/
 
 import { Writable } from 'stream';
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
@@ -22,7 +22,7 @@ import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
 
 export interface TraderConfig {
-    logger: Logger;
+    logger: LoggerInstance;
     exchangeAPI: AuthenticatedExchangeAPI;
     productId: string;
     fitOrders: boolean;
@@ -50,7 +50,7 @@ export interface TraderConfig {
  */
 export class Trader extends Writable {
     private _productId: string;
-    private logger: Logger;
+    private logger: LoggerInstance;
     private myBook: BookBuilder;
     private api: AuthenticatedExchangeAPI;
     private _fitOrders: boolean = true;

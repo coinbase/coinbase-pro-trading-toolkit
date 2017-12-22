@@ -13,13 +13,13 @@
  ***************************************************************************************************************************/
 
 import { ExchangeAuthConfig } from '../AuthConfig';
-import { Logger } from '../../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { ExchangeFeedConfig } from '../ExchangeFeed';
 
 export interface GeminiConfig {
     apiUrl?: string;
     auth?: ExchangeAuthConfig;
-    logger: Logger;
+    logger: LoggerInstance;
 }
 
 export interface GeminiMarketFeedConfig extends ExchangeFeedConfig {

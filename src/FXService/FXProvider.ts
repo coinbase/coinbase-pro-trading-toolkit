@@ -13,7 +13,7 @@
  ***************************************************************************************************************************/
 
 import { Big, ONE, ZERO } from '../lib/types';
-import { Logger } from '../utils/Logger';
+import { LoggerInstance } from 'winston';
 import { BigNumber as BigJS } from 'bignumber.js';
 
 export interface CurrencyPair {
@@ -51,11 +51,11 @@ export class EFXRateUnavailable extends Error {
 }
 
 export interface FXProviderConfig {
-    logger?: Logger;
+    logger?: LoggerInstance;
 }
 
 export abstract class FXProvider {
-    private logger: Logger;
+    private logger: LoggerInstance;
     private _pending: { [pair: string]: Promise<FXObject> } = {};
 
     constructor(config: FXProviderConfig) {

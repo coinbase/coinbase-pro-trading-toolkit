@@ -15,7 +15,7 @@
 import CCXTExchangeWrapper from '../ccxt/index';
 import { ExchangeAuthConfig } from '../AuthConfig';
 import { bittrex } from 'ccxt';
-import { Logger } from '../../utils/Logger';
+import { LoggerInstance } from 'winston';
 
 export class BittrexAPI extends CCXTExchangeWrapper {
     static normalizeProduct(gdaxProduct: string): string {
@@ -23,7 +23,7 @@ export class BittrexAPI extends CCXTExchangeWrapper {
         return `${quote}-${base}`;
     }
 
-    constructor(auth: ExchangeAuthConfig, logger: Logger) {
+    constructor(auth: ExchangeAuthConfig, logger: LoggerInstance) {
         const options = { apiKey: auth.key, secret: auth.secret };
         const ccxtInstance = new bittrex(options);
         super('Bittrex', options, ccxtInstance, logger);
