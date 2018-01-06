@@ -162,7 +162,6 @@ export class PoloniexFeed extends ExchangeFeed {
     protected onClose(code: number, reason: string) {
         super.onClose(code, reason);
         this.clear_pinger();
-        this.reconnect(1000);
     }
 
     private handle_user_message(msg: any[]) {
