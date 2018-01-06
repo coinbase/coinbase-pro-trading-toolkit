@@ -13,12 +13,12 @@
  ***************************************************************************************************************************/
 
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
-import * as Bittrex from 'node.bittrex.api';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { BittrexAPI } from './BittrexAPI';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
+const Bittrex = require('node-bittrex-api');
 
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
@@ -46,38 +46,60 @@ export class BittrexFeed extends ExchangeFeed {
         return 'Bittrex';
     }
 
-    subscribe(products: string[]): boolean {
+    subscribe(products: string[]): Promise<boolean> {
         if (!this.connection) {
-            return false;
+            return Promise.reject(false);
         }
-        products.forEach((product: string) => {
-            this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
-                if (err) {
-                    return console.error(err);
-                }
+        return Promise.all(products.map((product: string) => {
+            return new Promise<boolean>((resolve, reject) => {
+                this.client.call('CoreHub', 'SubscribeToExchangeDeltas', product).done((err: Error, result: boolean) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                if (result === true) {
-                    this.log('info', `Subscribed to ${product} on ${this.owner}`);
-                }
+                    if (!result) {
+                        const msg = `Failed to subscribeExchangeDeltas to ${product} on ${this.owner}`;
+                        this.log('info', msg);
+                        return reject(new Error(msg));
+                    }
+
+                    this.client.call('CoreHub', 'queryExchangeState', product).done((queryErr: Error, data: any) => {
+                        if (queryErr) {
+                            return reject(queryErr);
+                        }
+                        if (!data) {
+                            const msg = `failed to queryExchangeState to ${product} on ${this.owner}`;
+                            this.log('error', msg);
+                            return reject(new Error(msg));
+                        }
+                        const snapshot: SnapshotMessage = this.processSnapshot(product, data);
+                        this.push(snapshot);
+                        return resolve(true);
+                    });
+                });
             });
-            this.client.call('CoreHub', 'queryExchangeState', product).done((err: Error, data: any) => {
-                const snapshot: SnapshotMessage = this.processSnapshot(product, data);
-                this.push(snapshot);
-            });
+        })).then(() => {
+            // Every result is guaranteed to be true
+            return Promise.resolve(true);
+        }).catch((err) => {
+            return Promise.reject(err);
         });
-        return true;
     }
 
     protected connect() {
-        const client = this.client = this.client = Bittrex.websockets.client();
-        client.serviceHandlers.messageReceived = (msg: any) => this.handleMessage(msg);
-        client.serviceHandlers.bound = () => this.onNewConnection();
-        client.serviceHandlers.disconnected = (code: number, reason: string) => this.onClose(code, reason);
-        client.serviceHandlers.onerror = (err: Error) => this.onError(err);
-        client.serviceHandlers.connected = (connection: any) => {
-            this.connection = connection;
-            this.emit('websocket-connection');
-        };
+        Bittrex.websockets.client(
+            (client: any) => {
+                this.client = client;
+                client.serviceHandlers.messageReceived = (msg: any) => this.handleMessage(msg);
+                client.serviceHandlers.bound = () => this.onNewConnection();
+                client.serviceHandlers.disconnected = (code: number, reason: string) => this.onClose(code, reason);
+                client.serviceHandlers.onerror = (err: Error) => this.onError(err);
+                client.serviceHandlers.connected = (connection: any) => {
+                    this.connection = connection;
+                    this.emit('websocket-connection');
+                };
+            }
+        );
     }
 
     protected handleMessage(msg: any): void {
