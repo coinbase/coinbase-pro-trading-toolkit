@@ -20,6 +20,7 @@ import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
 import { CancelOrderRequestMessage, isStreamMessage, MyOrderPlacedMessage, PlaceOrderMessage, StreamMessage, TradeExecutedMessage, TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
+import { StreamError } from '../lib/errors';
 
 export interface TraderConfig {
     logger: Logger;
@@ -51,11 +52,13 @@ export interface TraderConfig {
 export class Trader extends Writable {
     private _productId: string;
     private logger: Logger;
+     // Used to keep track of all non-market orders this trader has placed.
     private myBook: BookBuilder;
     private api: AuthenticatedExchangeAPI;
     private _fitOrders: boolean = true;
     private sizePrecision: number;
     private pricePrecision: number;
+    private unfilledMarketOrders: Set<string>;
 
     constructor(config: TraderConfig) {
         super({ objectMode: true });
@@ -65,6 +68,7 @@ export class Trader extends Writable {
         this._productId = config.productId;
         this.sizePrecision = config.sizePrecision || 2;
         this.pricePrecision = config.pricePrecision || 2;
+        this.unfilledMarketOrders = new Set();
         if (!this.api) {
             throw new Error('Trader cannot work without an exchange interface using valid credentials. Have you set the necessary ENVARS?');
         }
@@ -89,12 +93,17 @@ export class Trader extends Writable {
             req.price = Big(req.price).round(this.pricePrecision, 2).toString();
         }
         return this.api.placeOrder(req).then((order: LiveOrder) => {
-            this.myBook.add(order);
+            if (req.orderType !== 'market') {
+                this.myBook.add(order);
+            } else {
+                this.unfilledMarketOrders.add(order.id);
+            }
             return order;
-        }).catch((err: Error) => {
+        }).catch((err: StreamError) => {
             // Errors can fail if they're too precise, too small, or the API is down
             // We pass the message along, but let the user decide what to do
-            this.emit('Trader.place-order-failed', err.message);
+            // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
+            this.emitMessageAsync('Trader.place-order-failed', err.asMessage());
             return Promise.resolve(null);
         });
     }
@@ -115,7 +124,7 @@ export class Trader extends Writable {
             return this.cancelOrder(id);
         });
         return Promise.all(promises).then((ids: string[]) => {
-            this.emit('Trader.my-orders-cancelled', ids);
+            this.emitMessageAsync('Trader.my-orders-cancelled', ids);
             return ids;
         });
     }
@@ -127,10 +136,10 @@ export class Trader extends Writable {
     cancelAllOrders(): Promise<string[]> {
         return this.api.cancelAllOrders(null).then((ids: string[]) => {
             this.myBook.clear();
-            this.emit('Trader.all-orders-cancelled', ids);
+            this.emitMessageAsync('Trader.all-orders-cancelled', ids);
             return ids;
         }, (err: Error) => {
-            this.emit('error', err);
+            this.emitMessageAsync('error', err);
             return [];
         });
     }
@@ -195,24 +204,27 @@ export class Trader extends Writable {
         }
         this.placeOrder(request).then((result: LiveOrder) => {
             if (result) {
-                this.emit('Trader.order-placed', result);
+                this.emitMessageAsync('Trader.order-placed', result);
             }
         });
     }
 
     private handleCancelOrder(request: CancelOrderRequestMessage) {
         this.cancelOrder(request.orderId).then((result: string) => {
-            return this.emit('Trader.order-cancelled', result);
+            return this.emitMessageAsync('Trader.order-cancelled', result);
         }, (err: Error) => {
-            this.emit('Trader.cancel-order-failed', err);
+            this.emitMessageAsync('Trader.cancel-order-failed', err);
         });
     }
 
     private handleTradeExecutedMessage(msg: TradeExecutedMessage) {
-        this.emit('Trader.trade-executed', msg);
-        if (msg.orderType !== 'limit') {
+        if (msg.orderType === 'market') {
+            if (this.unfilledMarketOrders.has(msg.orderId)) {
+                this.emit('Trader.trade-executed', msg);
+            }
             return;
         }
+        this.emit('Trader.trade-executed', msg);
         const order: Level3Order = this.myBook.getOrder(msg.orderId);
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
@@ -232,9 +244,10 @@ export class Trader extends Writable {
         const id: string = msg.orderId;
         const order: Level3Order = this.myBook.remove(id);
         if (!order) {
-            this.logger.log('warn', 'Trader: Cancelled order not in my book', id);
-            this.emit('Trader.outOfSyncWarning', 'Cancelled order not in my book');
-            return;
+            if (!this.unfilledMarketOrders.has(id)) {
+                return;
+            }
+            this.unfilledMarketOrders.delete(id);
         }
         this.emit('Trader.trade-finalized', msg);
     }
@@ -258,5 +271,17 @@ export class Trader extends Writable {
         };
         this.myBook.add(order);
         this.emit('Trader.external-order-placement', msg);
+    }
+
+    /**
+     * Wraps a message emission in a setImmediate. This should be called from inside Promise handlers, otherwise errors in the user code (event handler) will
+     * get thrown from here, which leads to confusing stack traces.
+     * @param {string} event
+     * @param payload
+     */
+    private emitMessageAsync(event: string, payload: any) {
+        setImmediate(() => {
+            this.emit(event, payload);
+        });
     }
 }

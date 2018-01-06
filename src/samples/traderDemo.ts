@@ -18,10 +18,11 @@ import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
 import { Trader, TraderConfig } from '../core/Trader';
 import Limiter from '../core/RateLimiter';
 import {
+    CancelOrderRequestMessage, ErrorMessage,
     PlaceOrderMessage,
     StreamMessage,
     TradeExecutedMessage,
-    TradeFinalizedMessage,
+    TradeFinalizedMessage
 } from '../core/Messages';
 import { StaticCommandSet } from '../lib/StaticCommandSet';
 import { LiveOrder } from '../lib/Orderbook';
@@ -32,24 +33,34 @@ const auth = {
     passphrase: process.env.GDAX_PASSPHRASE
 };
 const logger = ConsoleLoggerFactory();
+const product = 'LTC-USD';
 
 /**
  * Prepare a set of order execution messages. For simplicity, we'll use `StaticCommandSet` to play them to
- * the `Trader`
+ * the `Trader`.
+ * You need about 0.015 LTC and 50c in your account for this to execute completely without errors.
+ * Because of fees and spread, you'll lose a penny or two each time you run it.
+ *
+ * The messages will
+ *
+ * 1. Buy 10c worth of LTC at market rates
+ * 2. Place a limit order for 0.1 LTC at $1.10
+ * 3. Sell 10c worth of LTC at market
+ * 4. Place a stop-loss for 0.01 LTC at $10
+ * 5. Place a limit buy order for 0.1 LTC at $1.40
+ * 6. Cancel the 2 limits orders and the stop orders
  */
 const messages: StreamMessage[] = [
     {
         type: 'placeOrder',
-        productId: 'BTC-USD',
-        size: '0.1',
-        price: '1.0',
+        productId: product,
+        funds: '0.1',
         side: 'buy',
-        orderType: 'limit',
-        postOnly: true
+        orderType: 'market'
     } as PlaceOrderMessage,
     {
         type: 'placeOrder',
-        productId: 'BTC-USD',
+        productId: product,
         size: '0.1',
         price: '1.1',
         side: 'buy',
@@ -58,25 +69,23 @@ const messages: StreamMessage[] = [
     } as PlaceOrderMessage,
     {
         type: 'placeOrder',
-        productId: 'BTC-USD',
-        size: '0.1',
-        price: '1.2',
-        side: 'buy',
-        orderType: 'limit',
+        productId: product,
+        funds: '0.1',
+        side: 'sell',
+        orderType: 'market'
+    } as PlaceOrderMessage,
+    {
+        type: 'placeOrder',
+        productId: product,
+        size: '0.01',
+        price: '10',
+        side: 'sell',
+        orderType: 'stop',
         postOnly: true
     } as PlaceOrderMessage,
     {
         type: 'placeOrder',
-        productId: 'BTC-USD',
-        size: '0.1',
-        price: '1.3',
-        side: 'buy',
-        orderType: 'limit',
-        postOnly: true
-    } as PlaceOrderMessage,
-    {
-        type: 'placeOrder',
-        productId: 'BTC-USD',
+        productId: product,
         size: '0.1',
         price: '1.4',
         side: 'buy',
@@ -86,16 +95,17 @@ const messages: StreamMessage[] = [
 ];
 
 // We could also use FeedFactory here and avoid all the config above.
-getSubscribedFeeds({ auth: auth, logger: logger }, ['BTC-USD']).then((feed: GDAXFeed) => {
+getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: GDAXFeed) => {
     // Configure the trader, and use the API provided by the feed
     const traderConfig: TraderConfig = {
         logger: logger,
-        productId: 'BTC-USD',
+        productId: product,
         exchangeAPI: feed.authenticatedAPI,
         fitOrders: false
     };
     const trader = new Trader(traderConfig);
-    const orders = new StaticCommandSet(messages);
+    const orders = new StaticCommandSet(messages, false);
+    let cancellations = 0;
     // We use a limiter to play each order once every 2 seconds.
     const limiter = new Limiter(1, 500);
     // We'll play the orders through the limiter, so connect them up
@@ -112,6 +122,20 @@ getSubscribedFeeds({ auth: auth, logger: logger }, ['BTC-USD']).then((feed: GDAX
     // We're basically done. Now set up listeners to log the trades as they happen
     trader.on('Trader.order-placed', (msg: LiveOrder) => {
         logger.log('info', 'Order placed', JSON.stringify(msg));
+        if (msg.extra.type === 'market') {
+            return;
+        }
+        const cancel: CancelOrderRequestMessage = {
+            time: null,
+            type: 'cancelOrder',
+            orderId: msg.id
+        };
+        orders.messages.push(cancel);
+        orders.sendOne();
+        cancellations++;
+        if (msg.price.toString() === '1.4') {
+            orders.end();
+        }
     });
     trader.on('Trader.trade-executed', (msg: TradeExecutedMessage) => {
         logger.log('info', 'Trade executed', JSON.stringify(msg));
@@ -122,16 +146,21 @@ getSubscribedFeeds({ auth: auth, logger: logger }, ['BTC-USD']).then((feed: GDAX
     trader.on('Trader.my-orders-cancelled', (ids: string[]) => {
         logger.log('info', `${ids.length} orders cancelled`);
     });
+    trader.on('Trader.place-order-failed', (err: ErrorMessage) => {
+        logger.log('error', 'Order placement failed', err);
+    });
     trader.on('error', (err: Error) => {
-        logger.log('error', 'Error cancelling orders', err);
+        logger.log('error', 'An error occurred', err);
     });
     limiter.on('end', () => {
-        console.log(JSON.stringify(trader.state()));
         // Wait a second to allow final order to settle
         setTimeout(() => {
-            trader.cancelMyOrders().catch((err: Error) => {
-                logger.log('error', 'Error cancelling orders', err);
-            });
+            console.log('..and we are done. Final Trader state:');
+            console.log(JSON.stringify(trader.state()));
+            process.exit(0);
+            // trader.cancelMyOrders().catch((err: Error) => {
+            //     logger.log('error', 'Error cancelling orders', err);
+            // });
         }, 5000);
 
     });
@@ -140,5 +169,4 @@ getSubscribedFeeds({ auth: auth, logger: logger }, ['BTC-USD']).then((feed: GDAX
     feed.once('snapshot', () => {
         orders.send();
     });
-
 });

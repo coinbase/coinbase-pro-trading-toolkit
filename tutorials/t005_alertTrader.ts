@@ -62,7 +62,7 @@ GTT.Factories.GDAX.getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) 
 
 function submitTrade(side: string, amount: string) {
     const order: PlaceOrderMessage = {
-        type: 'order',
+        type: 'placeOrder',
         time: null,
         productId: product,
         orderType: 'market',
