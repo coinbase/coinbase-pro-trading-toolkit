@@ -169,7 +169,7 @@ If you've skipped ahead, or want to see the finished product, the full script re
 
     $ ts-node tutorials/t001_feeds.ts
 
-{% include tip.html content="`ts-node` is a useful utility that compiles and runs Typescript code directly. Install it with `npm -g ts-node typescript`" %}
+{% include tip.html content="`ts-node` is a useful utility that compiles and runs Typescript code directly. Install it with `npm install -g ts-node typescript`" %}
 
 Typical output for the script will look like:
 

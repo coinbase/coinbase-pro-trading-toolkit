@@ -45,9 +45,12 @@ export function getSubscribedFeeds(options: ExchangeFeedConfig, products: string
             return reject(new Error('TIMEOUT. Could not connect to Bittrex Feed server'));
         }, 30000);
         feed.on('websocket-connection', () => {
-            feed.subscribe(products);
-            clearTimeout(timeout);
-            return resolve(feed);
+            feed.subscribe(products).then(() => {
+                clearTimeout(timeout);
+                return resolve(feed);
+            }).catch((err: Error) => {
+                return reject(err);
+            });
         });
     });
 }
