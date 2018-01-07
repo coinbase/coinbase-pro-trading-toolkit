@@ -26,36 +26,42 @@ const product: string = 'BTC-ETH';
 const config: ExchangeFeedConfig = {
     logger: logger,
     auth: null,
-    wsUrl: null,
+    wsUrl: null
 };
 
 const feed: BittrexFeed = new BittrexFeed(config);
+
 feed.on('websocket-connection', () => {
-    feed.subscribe([product]);
+    feed.subscribe([product]).then(() => {
+        doSomethingWithFeed();
+    });
 });
-const book = new LiveOrderbook({ logger: logger, product: product, strictMode: false });
-book.on('LiveOrderbook.snapshot', () => {
-    logger.log('info', 'Snapshot received by LiveOrderbook Demo');
-    setInterval(() => {
-        console.log(printOrderbook(book, 10, 4, 4));
-    }, 5000);
-});
-book.on('LiveOrderbook.ticker', (ticker: Ticker) => {
-    console.log(printTicker(ticker));
-});
-book.on('LiveOrderbook.trade', (trade: TradeMessage) => {
-    logger.log('info', `${trade.side} ${trade.size} on ${trade.productId} at ${trade.price}`);
-});
-book.on('LiveOrderbook.skippedMessage', (details: SkippedMessageEvent) => {
-    console.log('SKIPPED MESSAGE', details);
-    console.log('Reconnecting to feed');
-    feed.reconnect(1000);
-});
-book.on('end', () => {
-    console.log('Orderbook closed');
-});
-book.on('error', (err: Error) => {
-    console.log('Livebook errored: ', err);
+
+function doSomethingWithFeed() {
+    const book = new LiveOrderbook({ logger: logger, product: product, strictMode: false });
+    book.on('LiveOrderbook.snapshot', () => {
+        logger.log('info', 'Snapshot received by LiveOrderbook Demo');
+        setInterval(() => {
+            console.log(printOrderbook(book, 10, 4, 4));
+        }, 5000);
+    });
+    book.on('LiveOrderbook.ticker', (ticker: Ticker) => {
+        console.log(printTicker(ticker));
+    });
+    book.on('LiveOrderbook.trade', (trade: TradeMessage) => {
+        logger.log('info', `${trade.side} ${trade.size} on ${trade.productId} at ${trade.price}`);
+    });
+    book.on('LiveOrderbook.skippedMessage', (details: SkippedMessageEvent) => {
+        console.log('SKIPPED MESSAGE', details);
+        console.log('Reconnecting to feed');
+        feed.reconnect(1000);
+    });
+    book.on('end', () => {
+        console.log('Orderbook closed');
+    });
+    book.on('error', (err: Error) => {
+        console.log('Livebook errored: ', err);
+        feed.pipe(book);
+    });
     feed.pipe(book);
-});
-feed.pipe(book);
+}
