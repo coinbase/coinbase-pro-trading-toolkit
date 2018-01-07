@@ -9,6 +9,7 @@ declare module 's3-streamlogger' {
         export interface S3TransportOptions {
             bucket: string;
             folder?: string;
+            file_name?: string;
             access_key_id?: string;
             secret_access_key?: string;
             tags?: { [s: string] : string; } 

@@ -15,7 +15,7 @@
 import { Big, BigJS, Biglike, ZERO } from '../lib/types';
 import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from '../lib/Orderbook';
 import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from '../lib/BookBuilder';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../utils/Logger';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import {
     ChangedOrderMessage,
@@ -32,7 +32,7 @@ import { Duplex } from 'stream';
 export interface LiveBookConfig {
     product: string;
     strictMode?: boolean;             // If true, throws errors when state goes out of sync rather than restarting
-    logger?: LoggerInstance;
+    logger?: Logger;
 }
 
 export enum SequenceStatus {
@@ -60,7 +60,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
     protected _book: BookBuilder;
     protected liveTicker: Ticker;
     protected _sourceSequence: number;
-    private logger: LoggerInstance;
+    private logger: Logger;
 
     constructor(config: LiveBookConfig) {
         super({ objectMode: true, highWaterMark: 1024 });

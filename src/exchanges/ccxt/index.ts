@@ -22,7 +22,7 @@ import { Big, BigJS } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../../utils/Logger';
 import { GTTError, HTTPError } from '../../lib/errors';
 
 type ExchangeDefinition = [string, new (opts: any) => ccxt.Exchange];
@@ -108,7 +108,7 @@ const exchanges: { [index: string]: ExchangeDefinition } = {
 };
 
 export default class CCXTExchangeWrapper implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
-    static createExchange(name: string, auth: ExchangeAuthConfig, logger: LoggerInstance, opts: any = {}): CCXTExchangeWrapper {
+    static createExchange(name: string, auth: ExchangeAuthConfig, logger: Logger, opts: any = {}): CCXTExchangeWrapper {
         const [owner, exchange] = exchanges[name];
         const upName = name.toUpperCase();
         const key = auth.key || process.env[`${upName}_KEY`];
@@ -139,9 +139,9 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     readonly owner: string;
     private instance: ccxt.Exchange;
     private options: any;
-    private logger: LoggerInstance;
+    private logger: Logger;
 
-    constructor(owner: string, opts: any, ccxtInstance: ccxt.Exchange, logger: LoggerInstance) {
+    constructor(owner: string, opts: any, ccxtInstance: ccxt.Exchange, logger: Logger) {
         this.owner = owner;
         this.instance = ccxtInstance;
         this.options = opts;

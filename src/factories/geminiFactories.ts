@@ -15,7 +15,7 @@ import { GeminiMarketFeed } from '../exchanges/gemini/GeminiMarketFeed';
 import { GEMINI_WS_FEED, PRODUCT_MAP } from '../exchanges/gemini/GeminiCommon';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import * as GI from '../exchanges/gemini/GeminiInterfaces';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
 
 export function getSubscribedFeeds(options: any, symbol: string): Promise<GeminiMarketFeed> {
@@ -38,7 +38,7 @@ export function getSubscribedFeeds(options: any, symbol: string): Promise<Gemini
     });
 }
 
-export function FeedFactory(logger: LoggerInstance, symbol: string, auth?: ExchangeAuthConfig): Promise<GeminiMarketFeed> {
+export function FeedFactory(logger: Logger, symbol: string, auth?: ExchangeAuthConfig): Promise<GeminiMarketFeed> {
     auth = auth || {
         key: process.env.GEMINI_KEY,
         secret: process.env.GEMINI_SECRET

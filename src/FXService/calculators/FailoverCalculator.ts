@@ -14,13 +14,12 @@
 
 import { FXRateCalculator } from '../FXRateCalculator';
 import { CurrencyPair, FXObject } from '../FXProvider';
-import { ConsoleLoggerFactory } from '../../utils/Logger';
-import { LoggerInstance } from 'winston';
+import { ConsoleLoggerFactory, Logger } from '../../utils/Logger';
 import { tryUntil } from '../../utils/promises';
 
 export interface FailoverCalculatorConfig {
     calculators: FXRateCalculator[];
-    logger?: LoggerInstance;
+    logger?: Logger;
 }
 
 /**
@@ -28,7 +27,7 @@ export interface FailoverCalculatorConfig {
  * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
  */
 export default class FailoverCalculator extends FXRateCalculator {
-    logger: LoggerInstance;
+    logger: Logger;
     calculators: FXRateCalculator[];
     private lastCalculatorUsed: FXRateCalculator = null;
 

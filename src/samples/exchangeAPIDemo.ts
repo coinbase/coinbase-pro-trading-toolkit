@@ -17,8 +17,7 @@
  * returning data in a consistent format
  */
 import { BitfinexConfig, BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { LoggerInstance } from 'winston';
+import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { PublicExchangeAPI, Ticker } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
@@ -28,7 +27,7 @@ import { LiveOrder } from '../lib/Orderbook';
 import { DefaultAPI } from '../factories/bittrexFactories';
 import { GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
 
-const logger: LoggerInstance = ConsoleLoggerFactory({ level: 'info' });
+const logger: Logger = ConsoleLoggerFactory({ level: 'info' });
 
 const bitfinexConfig: BitfinexConfig = {
     logger: logger,

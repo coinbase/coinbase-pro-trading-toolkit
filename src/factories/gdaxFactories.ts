@@ -15,7 +15,7 @@
 import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
 import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { Product } from '../exchanges/PublicExchangeAPI';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
 import { GDAXAuthConfig } from '../exchanges/gdax/GDAXInterfaces';
 
@@ -25,7 +25,7 @@ let publicAPIInstance: GDAXExchangeAPI;
  * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
  * key details are found in the GDAX_KEY etc. envars, they will be used
  */
-export function DefaultAPI(logger: LoggerInstance): GDAXExchangeAPI {
+export function DefaultAPI(logger: Logger): GDAXExchangeAPI {
     if (!publicAPIInstance) {
         publicAPIInstance = new GDAXExchangeAPI({
             logger: logger,
@@ -83,7 +83,7 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<GD
  *
  * It is assumed that your API keys are stored in the GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars
  */
-export function FeedFactory(logger: LoggerInstance, productIDs?: string[], auth?: GDAXAuthConfig): Promise<GDAXFeed> {
+export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAuthConfig): Promise<GDAXFeed> {
     auth = auth || {
         key: process.env.GDAX_KEY,
         secret: process.env.GDAX_SECRET,

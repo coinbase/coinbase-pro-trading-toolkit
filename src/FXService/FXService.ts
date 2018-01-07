@@ -15,8 +15,7 @@
 import { FXRateCalculator } from './FXRateCalculator';
 import Timer = NodeJS.Timer;
 import { CurrencyPair, FXObject, pairAsString } from './FXProvider';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { LoggerInstance } from 'winston';
+import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { EventEmitter } from 'events';
 import assert = require('assert');
 
@@ -37,7 +36,7 @@ import assert = require('assert');
  */
 
 export interface FXServiceConfig {
-    logger?: LoggerInstance;
+    logger?: Logger;
     calculator: FXRateCalculator;
     refreshInterval?: number;
     activePairs?: CurrencyPair[];
@@ -51,7 +50,7 @@ export class FXService extends EventEmitter {
     private _currencyPairs: CurrencyPair[] = [];
     private timer: Timer;
     private _rates: FXRates;
-    private _logger: LoggerInstance;
+    private _logger: Logger;
     private errorState: boolean;
 
     constructor(config: FXServiceConfig) {
@@ -82,14 +81,14 @@ export class FXService extends EventEmitter {
     /**
      * Returns the currently attached logger
      */
-    get logger(): LoggerInstance {
+    get logger(): Logger {
         return this._logger;
     }
 
     /**
      * Sets a logger for the service  and returns `this` so that you can chain setter calls.
      */
-    setLogger(value: LoggerInstance) {
+    setLogger(value: Logger) {
         this._logger = value;
         return this;
     }

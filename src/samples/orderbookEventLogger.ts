@@ -1,12 +1,11 @@
 import * as GTT from '..';
 import { LiveBookConfig, LiveOrderbook, SkippedMessageEvent, TradeMessage, LevelMessage, SnapshotMessage } from '../core';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
-import { LoggerInstance } from 'winston';
 
 const product = 'BTC-USD';
 
 import { S3LoggerFactory } from '../utils';
-const logger: LoggerInstance = S3LoggerFactory(
+const logger: GTT.utils.Logger = S3LoggerFactory(
     {
         // see full list of options for this S3 transport here: https://github.com/Coggle/s3-streamlogger
         bucket: 'cryptotrader.data',
@@ -16,7 +15,7 @@ const logger: LoggerInstance = S3LoggerFactory(
         secret_access_key: '...',
         // tags: {type: 'myType', project: 'myProject'},
         // let files grow to 100MB (bits * kb * mb)
-        // max_file_size: 1000 * 1000 * 100,
+        max_file_size: 1000 * 1000 * 100,
         // create a bigger buffer to accomodate heavy data flow
         buffer_size: 1024 * 10,
         // upload files every minute

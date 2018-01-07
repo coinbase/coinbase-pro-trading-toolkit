@@ -13,8 +13,7 @@
  ***************************************************************************************************************************/
 
 import SimpleRateCalculator from '../FXService/calculators/SimpleRateCalculator';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { LoggerInstance } from 'winston';
+import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { FXProviderConfig } from '../FXService/FXProvider';
 import YahooFinanceFXProvider from '../FXService/providers/YahooFXProvider';
 import OpenExchangeProvider, { OpenExchangeConfig } from '../FXService/providers/OpenExchangeProvider';
@@ -25,10 +24,10 @@ import CoinMarketCapProvider from '../FXService/providers/CoinMarketCapProvider'
  * Create and return a new FXProvider.
  * @param provider {string} Allowed values are 'yahoo' and 'openexhangerates'. OpenExchangeRates requires the API key to
  * be specifies in the OPENEXCHANGERATE_KEY environment variable.
- * @param logger {LoggerInstance} An existing logger object.
+ * @param logger {Logger} An existing logger object.
  * @constructor
  */
-export function FXProviderFactory(provider: string, logger: LoggerInstance) {
+export function FXProviderFactory(provider: string, logger: Logger) {
     const baseConfig: FXProviderConfig = {
         logger: logger
     };
@@ -57,11 +56,11 @@ export function FXProviderFactory(provider: string, logger: LoggerInstance) {
  * ```
  *
  * @param provider {string} Either 'yahoo', 'openexchangerates' or 'coinmarketcap'. For OER, the OPENEXCHANGE_KEY envar must be set
- * @param logger {LoggerInstance} If not specified a new ConsoleLogger will be created
+ * @param logger {Logger} If not specified a new ConsoleLogger will be created
  * @param refreshInterval {number} the period (in ms) to poll the underlying API for new prices
  */
-export function SimpleFXServiceFactory(provider: string = 'yahoo', logger?: LoggerInstance, refreshInterval?: number) {
-    const log: LoggerInstance = logger || ConsoleLoggerFactory();
+export function SimpleFXServiceFactory(provider: string = 'yahoo', logger?: Logger, refreshInterval?: number) {
+    const log: Logger = logger || ConsoleLoggerFactory();
     const fxProvider = FXProviderFactory(provider, logger);
     const calculator = new SimpleRateCalculator(fxProvider, log);
     const config: FXServiceConfig = {

@@ -15,7 +15,11 @@ import { sanitizeMessage } from '../core/Messages';
 import { S3StreamLogger } from 's3-streamlogger';
 import * as Winston from 'winston';
 
-export function ConsoleLoggerFactory(options?: Winston.LoggerOptions): Winston.LoggerInstance {
+export interface Logger {
+    log(level: string, message: string, meta?: any): void;
+}
+
+export function ConsoleLoggerFactory(options?: any): Logger {
     const logOptions: any = Object.assign({
         level: 'debug',
         transports: [
@@ -78,17 +82,13 @@ export const NullLogger = new Winston.Logger({
 /**
  * Utility function that acts exactly like ConsoleLogger, except that it runs any metadata through messageSanitizer first to blank out sensitive data
  */
-/*
-export function SanitizedLoggerFactory(sensitiveKeys: string[], options?: any): Winston.LoggerInstance {
-    const logger: Winston.LoggerInstance = ConsoleLoggerFactory(options);
+
+export function SanitizedLoggerFactory(sensitiveKeys: string[], options?: any): Logger {
+    const logger: Logger = ConsoleLoggerFactory(options);
     return {
         log: (level: string, message: string, meta?: any) => {
             meta = meta && typeof meta === 'object' ? sanitizeMessage(meta, sensitiveKeys) : meta;
             logger.log(level, message, meta);
-        },
-        error: (err: Error): void => {
-            logger.error(sanitizeMessage(err, sensitiveKeys));
         }
     };
 }
-*/

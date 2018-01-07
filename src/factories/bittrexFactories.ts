@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { LoggerInstance } from 'winston';
+import { Logger } from '../utils/Logger';
 import { BittrexAPI } from '../exchanges/bittrex/BittrexAPI';
 import { BittrexFeed } from '../exchanges/bittrex/BittrexFeed';
 import { ExchangeFeedConfig } from '../exchanges/ExchangeFeed';
@@ -24,7 +24,7 @@ let publicAPIInstance: BittrexAPI;
  * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
  * key details are found in the GDAX_KEY etc. envars, they will be used
  */
-export function DefaultAPI(logger: LoggerInstance): BittrexAPI {
+export function DefaultAPI(logger: Logger): BittrexAPI {
     if (!publicAPIInstance) {
         publicAPIInstance = new BittrexAPI({
             key: process.env.BITTREX_KEY,
@@ -45,9 +45,12 @@ export function getSubscribedFeeds(options: ExchangeFeedConfig, products: string
             return reject(new Error('TIMEOUT. Could not connect to Bittrex Feed server'));
         }, 30000);
         feed.on('websocket-connection', () => {
-            feed.subscribe(products);
-            clearTimeout(timeout);
-            return resolve(feed);
+            feed.subscribe(products).then(() => {
+                clearTimeout(timeout);
+                return resolve(feed);
+            }).catch((err: Error) => {
+                return reject(err);
+            });
         });
     });
 }
@@ -59,7 +62,7 @@ export function getSubscribedFeeds(options: ExchangeFeedConfig, products: string
  *
  * It is assumed that your API keys are stored in the BITTREX_KEY and BITTREX_SECRET envars
  */
-export function FeedFactory(logger: LoggerInstance, productIds: string[], auth?: ExchangeAuthConfig): Promise<BittrexFeed> {
+export function FeedFactory(logger: Logger, productIds: string[], auth?: ExchangeAuthConfig): Promise<BittrexFeed> {
     auth = auth || {
         key: process.env.BITTREX_KEY,
         secret: process.env.BITTREX_SECRET

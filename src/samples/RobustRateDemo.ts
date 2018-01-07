@@ -12,8 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                         *
  **********************************************************************************************************************/
 import { CurrencyPair, FXProvider } from '../FXService/FXProvider';
-import { ConsoleLoggerFactory } from '../utils/Logger';
-import { LoggerInstance } from 'winston';
+import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import CCXTWrapper from '../exchanges/ccxt';
 import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { RobustCalculator } from '../FXService/calculators/RobustCalculator';
@@ -22,7 +21,7 @@ import { FXRates, FXService } from '../FXService/FXService';
 import { BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 
-const logger: LoggerInstance = ConsoleLoggerFactory();
+const logger: Logger = ConsoleLoggerFactory();
 const noAuth: ExchangeAuthConfig = { key: null, secret: null };
 const providers: FXProvider[] = [
     new CryptoProvider({ exchange: CCXTWrapper.createExchange('gemini', noAuth, logger), logger: logger }),

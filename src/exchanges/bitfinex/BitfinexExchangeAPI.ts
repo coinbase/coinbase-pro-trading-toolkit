@@ -19,7 +19,7 @@ import * as BitfinexAuth from './BitfinexAuth';
 import {
     BitfinexBalance, BitfinexOrderRequest, BitfinexOrderType, BitfinexResult, BitfinexSuccessfulOrderExecution, BitfinexTransferRequest, BitfinexWallet, isBFWallet
 } from './BitfinexAuth';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../../utils/Logger';
 import { PRODUCT_MAP, REVERSE_CURRENCY_MAP, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
@@ -34,7 +34,7 @@ const API_V1 = 'https://api.bitfinex.com/v1';
 
 export interface BitfinexConfig {
     auth?: ExchangeAuthConfig;
-    logger?: LoggerInstance;
+    logger?: Logger;
 }
 
 const ORDER_TYPE_MAP: { [index: string]: BitfinexOrderType } = {
@@ -98,7 +98,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
 
     owner: string;
     private auth: ExchangeAuthConfig;
-    private logger: LoggerInstance;
+    private logger: Logger;
 
     constructor(config: BitfinexConfig) {
         this.owner = 'Bitfinex';

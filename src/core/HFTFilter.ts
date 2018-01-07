@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { LoggerInstance } from 'winston';
+import { Logger } from '../utils/Logger';
 import { BaseOrderMessage, ChangedOrderMessage, isOrderMessage, isStreamMessage, NewOrderMessage, StreamMessage } from './Messages';
 import { RBTree } from 'bintrees';
 import { Duplex } from 'stream';
@@ -40,7 +40,7 @@ export interface HFTFilterStats {
  * re-order any messages that may have arrived out of order
  */
 export class HFTFilter extends Duplex {
-    private logger: LoggerInstance;
+    private logger: Logger;
     private messages: RBTree<StreamMessage>;
     private messagesById: { [id: string]: BaseOrderMessage };
     private skippedMessages: number = 0;

@@ -13,7 +13,7 @@
  **********************************************************************************************************************/
 import { FXRateCalculator } from '../FXRateCalculator';
 import { CurrencyPair, FXObject, FXProvider, pairAsString } from '../FXProvider';
-import { LoggerInstance } from 'winston';
+import { Logger } from '../../utils/Logger';
 import { eachParallelAndFinish } from '../../utils/promises';
 import * as ss from 'simple-statistics';
 import { Big } from '../../lib/types';
@@ -29,7 +29,7 @@ export interface RobustCalculatorConfig {
     deltaThreshold: number;
     // The minimum number of reliable sources in a given request to consider the overall request valid
     minNumberOfReliableSources: number;
-    logger?: LoggerInstance;
+    logger?: Logger;
 }
 
 export const NO_CURRENT_PRICE_ERROR = 1;
@@ -68,7 +68,7 @@ export interface QueryStatus {
 export class RobustCalculator extends FXRateCalculator {
     deltaThreshold: number;
     priceThreshold: number;
-    logger: LoggerInstance;
+    logger: Logger;
     sources: FXProvider[];
     minNumberOfReliableSources: number;
     private report: RobustCalculatorReport;
