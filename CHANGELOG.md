@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.2.2
+* GDAX API public clients can use custom API url
+* GDAX stop orders work when price field is provided
+* Fix Poloniex reconnection bug
+* Fix tickertape tutorial
+* Improvements tp Bittrex WS feed
+* Fix trader logic for market orders
+* Basic general console support for all exchanges
+
 ## 0.2.0
 * Error API - Underlying exchange errors get propagated properly
 * FX service handles null results from calculator
