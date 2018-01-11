@@ -24,6 +24,7 @@ import { LiveOrder } from '../lib/Orderbook';
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import { Logger } from '../utils/Logger';
+import { ZERO } from '../lib/types';
 
 program
     .option('-e --exchange [value]', 'The exchange to query')
@@ -34,9 +35,18 @@ program
     .option('-O --orders', 'Retrieve all my open orders (if pair is provided, limited to that book)')
     .option('-x --cancelAllOrders', 'Cancel all open orders (if pair is provided, limited to that book)')
     .option('-W --crypto_withdraw [amount,cur,address]', 'Withdraw to a crypto address')
+    .option('--list', 'Lists supported exchanges and exit')
     .parse(process.argv);
 
 const logger: Logger = ConsoleLoggerFactory();
+
+if (program.list) {
+    const exchanges = CCXTExchangeWrapper.supportedExchanges();
+    console.log(printSeparator());
+    console.log(exchanges.join(', '));
+    console.log(printSeparator());
+    process.exit(0);
+}
 
 const exchangeName = program.exchange;
 if (exchangeName === undefined) {
@@ -94,7 +104,7 @@ if (program.ticker) {
     console.log(`Ticker for ${program.pair} on ${exchangeName}`);
     api.loadTicker(program.pair).then((ticker: Ticker) => {
         console.log(printSeparator());
-        console.log(printTicker(ticker));
+        console.log(printTicker(ticker, 5));
         console.log(printSeparator());
     }).catch(logError);
 }
@@ -130,9 +140,11 @@ if (program.balances && hasAuth()) {
             const account = balances[profile];
             for (const cur in account) {
                 const bal = account[cur];
-                console.log(`Balances for ${cur} in ${profile}:`);
-                console.log(`Available: ${padfloat(bal.available, 8, 4)} ${cur}`);
-                console.log(`Total:     ${padfloat(bal.balance, 8, 4)} ${cur}\n`);
+                if (bal.balance && bal.balance.gt(ZERO)) {
+                    console.log(`Balances for ${cur} in ${profile}:`);
+                    console.log(`Available: ${padfloat(bal.available, 8, 4)} ${cur}`);
+                    console.log(`Total:     ${padfloat(bal.balance, 8, 4)} ${cur}\n`);
+                }
             }
         }
         console.log(printSeparator());
