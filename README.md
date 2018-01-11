@@ -8,14 +8,102 @@
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
 GDAX and supported digital asset exchanges. Note: Node 7.6 or above is required.
 
+## Getting Started
+### Install prerequisites
+Dependending on the OS of your machine, the specific method to install these application will vary.  With a little Google help you can figure out how to install these:
 
-## Install
-    yarn add gdax-trading-toolkit
+1. Node 7.6+
+2. TypeScript  2.6+
+3. Yarn 1.3+
 
-## Test
- Run the included test suite with the command
+### Install the the module
+If you want to use the published version of the module in an existing TypeScript project:
+```
+yarn add gdax-trading-toolkit
+```
+Then go read the documentation referenced below.
 
-    yarn test
+## Working directly with the code
+If you want to work directly with the source code on your own machine
+
+### Download copy of the code
+clone the repository to directory on your machine ($WORKSPACE_ROOT)
+
+### Install depedency libraries
+From $WORKSPACE_ROOT
+```
+yarn install
+``` 
+### Test
+Run the test suite just to make sure...
+```
+yarn test
+```
+
+### VS Code Setup
+If you use Visual Studio Code the following will be helpful.
+
+1. Create a ".vscode" subdirectory in $WORKSPACE_ROOT
+2. In the .vscode directory, create a "tasks.json" file that will tell VS Code how to build the software (this assumes the TypeScript compiler is in your $PATH)
+```
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "typescript",
+            "label": "tsc",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
+``` 
+3. Create "launch.json" file that will allow you to lauch applications for debugging or run the Mocha tests in debug mode
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/test"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "tsc"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${file}",
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "cwd": "${workspaceRoot}",
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ],
+            "runtimeExecutable": null,
+            "outputCapture" : "std",
+            "preLaunchTask": "tsc"
+        }
+    ]
+}
+```
 
 ## Run
 
