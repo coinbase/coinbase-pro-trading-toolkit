@@ -120,4 +120,33 @@ describe('FailoverCalculator', () => {
             assert.equal(results[1].to, 'USD');
         });
     });
+
+    it('returns results from the second provider if the first errors out', () => {
+        nock('https://api.gdax.com:443')
+            .get('/products/BTC-USD/ticker')
+            .reply(500);
+        nock('https://api.bitfinex.com:443')
+            .get('/v1/pubticker/btcusd')
+            .reply(200, {
+                bid: '400.00',
+                ask: '410.00',
+                last_price: '410.0'
+            });
+        return calculator.calculateRatesFor([{ from: 'BTC', to: 'USD' }]).then((results: FXObject[]) => {
+            const rate: FXObject = results[0];
+            assert.equal(rate.rate.toNumber(), 405);
+        });
+    });
+
+    it('returns null if all providers fail', () => {
+        nock('https://api.gdax.com:443')
+            .get('/products/BTC-USD/ticker')
+            .reply(500);
+        nock('https://api.bitfinex.com:443')
+            .get('/v1/pubticker/btcusd')
+            .reply(500);
+        return calculator.calculateRatesFor([{ from: 'BTC', to: 'USD' }]).then((result) => {
+            assert.equal(result[0], null);
+        });
+    });
 });
