@@ -27,7 +27,7 @@ The first interface provides a common way of polling for publicly accessible inf
 the ticker price, and order books. `AuthenticatedExchangeAPI` provides access to calls requiring API keys, such as wallet
 balances or placing trades.
 
-So let's try something. Assume you have two exchange classes configured (we'll get two that in a moment) as follows:
+So let's try something. Assume you have two exchange classes configured (we'll get to that in a moment) as follows:
 
     let exchanges = [ gdaxExchangeAPI, bitfinexExchangeAPI ];
 

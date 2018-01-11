@@ -20,29 +20,35 @@ import { StreamMessage } from '../core/Messages';
  */
 export class StaticCommandSet extends Readable {
     messages: StreamMessage[];
+    private autoClose: boolean;
 
-    constructor(messages: StreamMessage[]) {
+    constructor(messages: StreamMessage[], autoClose: boolean = true) {
         super({ objectMode: true });
         this.messages = messages;
+        this.autoClose = autoClose;
     }
 
     send() {
-        this.messages.forEach((msg: StreamMessage) => {
-            this.push(msg);
-        });
-        this.messages = [];
-        this.push(null);
+        while (this.sendOne()) {
+            /* no-op */
+        }
     }
 
-    sendOne() {
+    sendOne(): boolean {
         const message: StreamMessage = this.messages.shift();
         if (message) {
             this.push(message);
         }
-        if (this.messages.length === 0) {
+        if (this.messages.length === 0 && this.autoClose) {
             this.push(null);
         }
+        return !!message;
     }
 
-    _read(size: number): void { /* no-op */ }
+    end() {
+        this.push(null);
+    }
+
+    _read(size: number): void { /* no-op */
+    }
 }
