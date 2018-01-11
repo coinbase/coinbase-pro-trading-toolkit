@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>GDAXFeedConfig | GDAX Trading Toolkit API Reference</title>
+	<title>LastRequestInfo | GDAX Trading Toolkit API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,46 +56,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_exchanges_gdax_gdaxfeed_.html">&quot;src/exchanges/gdax/GDAXFeed&quot;</a>
+					<a href="../modules/_src_fxservice_calculators_failovercalculator_.html">&quot;src/FXService/calculators/FailoverCalculator&quot;</a>
 				</li>
 				<li>
-					<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html">GDAXFeedConfig</a>
+					<a href="_src_fxservice_calculators_failovercalculator_.lastrequestinfo.html">LastRequestInfo</a>
 				</li>
 			</ul>
-			<h1>Interface GDAXFeedConfig</h1>
+			<h1>Interface LastRequestInfo</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Configuration interface for a GDAX websocket feed stream. <code>wsUrl</code> is used to override the default websocket URL.
-							Usually, you don&#39;t need this, but you may want to obtain a feed from the sandbox for testing, or an historical
-						message source, for example.</p>
-					</div>
-					<p>The channels array determines which types of messages are sent back down the feed. Leave this as null to receive
-					all messages, or specify any of</p>
-					<ul>
-						<li><code>level2</code> - The orderbook messages</li>
-						<li><code>matches</code> - aLl trades</li>
-						<li><code>ticker</code> - Ticker updates (these come after every trade, so specifying both <code>matches</code> and <code>ticker</code> may be redundant)</li>
-						<li><code>user</code> - If you provided auth credentials, private messages will also be sent</li>
-					</ul>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html" class="tsd-signature-type">ExchangeFeedConfig</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">GDAXFeedConfig</span>
-							</li>
-						</ul>
+						<span class="target">LastRequestInfo</span>
 					</li>
 				</ul>
 			</section>
@@ -106,11 +84,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#apiurl" class="tsd-kind-icon">api<wbr>Url</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#auth" class="tsd-kind-icon">auth</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#channels" class="tsd-kind-icon">channels</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#logger" class="tsd-kind-icon">logger</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#wsurl" class="tsd-kind-icon">ws<wbr>Url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_fxservice_calculators_failovercalculator_.lastrequestinfo.html#calculator" class="tsd-kind-icon">calculator</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,55 +93,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="apiurl" class="tsd-anchor"></a>
-					<h3>api<wbr>Url</h3>
-					<div class="tsd-signature tsd-kind-icon">api<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="calculator" class="tsd-anchor"></a>
+					<h3>calculator</h3>
+					<div class="tsd-signature tsd-kind-icon">calculator<span class="tsd-signature-symbol">:</span> <a href="../classes/_src_fxservice_fxratecalculator_.fxratecalculator.html" class="tsd-signature-type">FXRateCalculator</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/exchanges/gdax/GDAXFeed.ts#L70">src/exchanges/gdax/GDAXFeed.ts:70</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-					<a name="auth" class="tsd-anchor"></a>
-					<h3>auth</h3>
-					<div class="tsd-signature tsd-kind-icon">auth<span class="tsd-signature-symbol">:</span> <a href="_src_exchanges_gdax_gdaxinterfaces_.gdaxauthconfig.html" class="tsd-signature-type">GDAXAuthConfig</a></div>
-					<aside class="tsd-sources">
-						<p>Overrides <a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html">ExchangeFeedConfig</a>.<a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html#auth">auth</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/exchanges/gdax/GDAXFeed.ts#L67">src/exchanges/gdax/GDAXFeed.ts:67</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="channels" class="tsd-anchor"></a>
-					<h3>channels</h3>
-					<div class="tsd-signature tsd-kind-icon">channels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/exchanges/gdax/GDAXFeed.ts#L69">src/exchanges/gdax/GDAXFeed.ts:69</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="logger" class="tsd-anchor"></a>
-					<h3>logger</h3>
-					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <a href="_src_utils_logger_.logger.html" class="tsd-signature-type">Logger</a></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html">ExchangeFeedConfig</a>.<a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html#logger">logger</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/exchanges/ExchangeFeed.ts#L25">src/exchanges/ExchangeFeed.ts:25</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-					<a name="wsurl" class="tsd-anchor"></a>
-					<h3>ws<wbr>Url</h3>
-					<div class="tsd-signature tsd-kind-icon">ws<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Overrides <a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html">ExchangeFeedConfig</a>.<a href="../classes/_src_exchanges_exchangefeed_.exchangefeedconfig.html#wsurl">wsUrl</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/exchanges/gdax/GDAXFeed.ts#L68">src/exchanges/gdax/GDAXFeed.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/FXService/calculators/FailoverCalculator.ts#L26">src/FXService/calculators/FailoverCalculator.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -180,42 +111,30 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_src_exchanges_gdax_gdaxfeed_.html">"src/exchanges/gdax/GDAXFeed"</a>
+						<a href="../modules/_src_fxservice_calculators_failovercalculator_.html">"src/FXService/calculators/<wbr>Failover<wbr>Calculator"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_src_exchanges_gdax_gdaxfeed_.gdaxfeed.html" class="tsd-kind-icon">GDAXFeed</a>
+						<a href="../classes/_src_fxservice_calculators_failovercalculator_.failovercalculator.html" class="tsd-kind-icon">Failover<wbr>Calculator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_fxservice_calculators_failovercalculator_.failovercalculatorconfig.html" class="tsd-kind-icon">Failover<wbr>Calculator<wbr>Config</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html" class="tsd-kind-icon">GDAXFeed<wbr>Config</a>
+						<a href="_src_fxservice_calculators_failovercalculator_.lastrequestinfo.html" class="tsd-kind-icon">Last<wbr>Request<wbr>Info</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#apiurl" class="tsd-kind-icon">api<wbr>Url</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-								<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#auth" class="tsd-kind-icon">auth</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#channels" class="tsd-kind-icon">channels</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#logger" class="tsd-kind-icon">logger</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-								<a href="_src_exchanges_gdax_gdaxfeed_.gdaxfeedconfig.html#wsurl" class="tsd-kind-icon">ws<wbr>Url</a>
+								<a href="_src_fxservice_calculators_failovercalculator_.lastrequestinfo.html#calculator" class="tsd-kind-icon">calculator</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_src_exchanges_gdax_gdaxfeed_.html#gdax_ws_feed" class="tsd-kind-icon">GDAX_<wbr>WS_<wbr>FEED</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

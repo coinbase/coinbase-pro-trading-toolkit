@@ -128,6 +128,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_core_trader_.trader.html#mybook" class="tsd-kind-icon">my<wbr>Book</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_core_trader_.trader.html#priceprecision" class="tsd-kind-icon">price<wbr>Precision</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_core_trader_.trader.html#sizeprecision" class="tsd-kind-icon">size<wbr>Precision</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_core_trader_.trader.html#unfilledmarketorders" class="tsd-kind-icon">unfilled<wbr>Market<wbr>Orders</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_core_trader_.trader.html#writable" class="tsd-kind-icon">writable</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_core_trader_.trader.html#eventemitter" class="tsd-kind-icon">Event<wbr>Emitter</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_core_trader_.trader.html#defaultmaxlisteners" class="tsd-kind-icon">default<wbr>Max<wbr>Listeners</a></li>
@@ -150,6 +151,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_core_trader_.trader.html#cancelorder" class="tsd-kind-icon">cancel<wbr>Order</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_core_trader_.trader.html#checkstate" class="tsd-kind-icon">check<wbr>State</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_core_trader_.trader.html#emit" class="tsd-kind-icon">emit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_core_trader_.trader.html#emitmessageasync" class="tsd-kind-icon">emit<wbr>Message<wbr>Async</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_core_trader_.trader.html#end" class="tsd-kind-icon">end</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_core_trader_.trader.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_core_trader_.trader.html#executemessage" class="tsd-kind-icon">execute<wbr>Message</a></li>
@@ -190,7 +192,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Writable.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L58">src/core/Trader.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L61">src/core/Trader.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -212,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">_fit<wbr>Orders<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L56">src/core/Trader.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L58">src/core/Trader.ts:58</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,7 +224,7 @@
 					<div class="tsd-signature tsd-kind-icon">_product<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L52">src/core/Trader.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L53">src/core/Trader.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -232,7 +234,7 @@
 					<div class="tsd-signature tsd-kind-icon">api<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_exchanges_authenticatedexchangeapi_.authenticatedexchangeapi.html" class="tsd-signature-type">AuthenticatedExchangeAPI</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L55">src/core/Trader.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L57">src/core/Trader.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -242,7 +244,7 @@
 					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_utils_logger_.logger.html" class="tsd-signature-type">Logger</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L53">src/core/Trader.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L54">src/core/Trader.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -252,7 +254,7 @@
 					<div class="tsd-signature tsd-kind-icon">my<wbr>Book<span class="tsd-signature-symbol">:</span> <a href="_src_lib_bookbuilder_.bookbuilder.html" class="tsd-signature-type">BookBuilder</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L54">src/core/Trader.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L56">src/core/Trader.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -262,7 +264,7 @@
 					<div class="tsd-signature tsd-kind-icon">price<wbr>Precision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L58">src/core/Trader.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L60">src/core/Trader.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -272,7 +274,17 @@
 					<div class="tsd-signature tsd-kind-icon">size<wbr>Precision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L57">src/core/Trader.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L59">src/core/Trader.ts:59</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="unfilledmarketorders" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> unfilled<wbr>Market<wbr>Orders</h3>
+					<div class="tsd-signature tsd-kind-icon">unfilled<wbr>Market<wbr>Orders<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L61">src/core/Trader.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -323,7 +335,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L77">src/core/Trader.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L81">src/core/Trader.ts:81</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -331,7 +343,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L81">src/core/Trader.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L85">src/core/Trader.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -354,7 +366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L73">src/core/Trader.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L77">src/core/Trader.ts:77</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -375,7 +387,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Writable._write</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L187">src/core/Trader.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L196">src/core/Trader.ts:196</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -674,7 +686,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L127">src/core/Trader.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L136">src/core/Trader.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -697,7 +709,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L109">src/core/Trader.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L118">src/core/Trader.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -714,7 +726,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L102">src/core/Trader.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L111">src/core/Trader.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -737,7 +749,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L147">src/core/Trader.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L156">src/core/Trader.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -893,6 +905,40 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="emitmessageasync" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> emit<wbr>Message<wbr>Async</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">emit<wbr>Message<wbr>Async<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L282">src/core/Trader.ts:282</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Wraps a message emission in a setImmediate. This should be called from inside Promise handlers, otherwise errors in the user code (event handler) will
+									get thrown from here, which leads to confusing stack traces.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>payload: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="end" class="tsd-anchor"></a>
 					<h3>end</h3>
@@ -981,7 +1027,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L158">src/core/Trader.ts:158</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L167">src/core/Trader.ts:167</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1023,7 +1069,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L203">src/core/Trader.ts:203</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L212">src/core/Trader.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1046,7 +1092,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L247">src/core/Trader.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L260">src/core/Trader.ts:260</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1076,7 +1122,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L192">src/core/Trader.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L201">src/core/Trader.ts:201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1099,7 +1145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L211">src/core/Trader.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L220">src/core/Trader.ts:220</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1122,7 +1168,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L231">src/core/Trader.ts:231</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L243">src/core/Trader.ts:243</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1671,7 +1717,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L85">src/core/Trader.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L89">src/core/Trader.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2458,7 +2504,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/core/Trader.ts#L138">src/core/Trader.ts:138</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/core/Trader.ts#L147">src/core/Trader.ts:147</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_src_lib_orderbook_.orderbookstate.html" class="tsd-signature-type">OrderbookState</a></h4>
@@ -2585,6 +2631,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_src_core_trader_.trader.html#sizeprecision" class="tsd-kind-icon">size<wbr>Precision</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_src_core_trader_.trader.html#unfilledmarketorders" class="tsd-kind-icon">unfilled<wbr>Market<wbr>Orders</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_src_core_trader_.trader.html#writable" class="tsd-kind-icon">writable</a>
 							</li>
@@ -2620,6 +2669,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="_src_core_trader_.trader.html#emit" class="tsd-kind-icon">emit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_src_core_trader_.trader.html#emitmessageasync" class="tsd-kind-icon">emit<wbr>Message<wbr>Async</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_src_core_trader_.trader.html#end" class="tsd-kind-icon">end</a>

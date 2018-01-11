@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;src/consoles/gdaxConsole&quot; | GDAX Trading Toolkit API Reference</title>
+	<title>&quot;src/consoles/console&quot; | GDAX Trading Toolkit API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_src_consoles_gdaxconsole_.html">&quot;src/consoles/gdaxConsole&quot;</a>
+					<a href="_src_consoles_console_.html">&quot;src/consoles/console&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;src/consoles/gdaxConsole&quot;</h1>
+			<h1>External module &quot;src/consoles/console&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -73,23 +73,25 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#gdaxapi" class="tsd-kind-icon">gdax<wbr>Api</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#api" class="tsd-kind-icon">api</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#exchangename" class="tsd-kind-icon">exchange<wbr>Name</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#exchangenameupper" class="tsd-kind-icon">exchange<wbr>Name<wbr>Upper</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#logger" class="tsd-kind-icon">logger</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#supportedexchanges" class="tsd-kind-icon">supported<wbr>Exchanges</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#hasauth" class="tsd-kind-icon">has<wbr>Auth</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#logerror" class="tsd-kind-icon">log<wbr>Error</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#makegenericrequest" class="tsd-kind-icon">make<wbr>Generic<wbr>Request</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#requiredoptions" class="tsd-kind-icon">required<wbr>Options</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#hasauth" class="tsd-kind-icon">has<wbr>Auth</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#logerror" class="tsd-kind-icon">log<wbr>Error</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#requiredoptions" class="tsd-kind-icon">required<wbr>Options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Object literals</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#auth" class="tsd-kind-icon">auth</a></li>
-								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_gdaxconsole_.html#gdaxconfig" class="tsd-kind-icon">gdax<wbr>Config</a></li>
+								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_consoles_console_.html#auth" class="tsd-kind-icon">auth</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,12 +100,52 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Variables</h2>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="gdaxapi" class="tsd-anchor"></a>
-					<h3>gdax<wbr>Api</h3>
-					<div class="tsd-signature tsd-kind-icon">gdax<wbr>Api<span class="tsd-signature-symbol">:</span> <a href="../classes/_src_exchanges_gdax_gdaxexchangeapi_.gdaxexchangeapi.html" class="tsd-signature-type">GDAXExchangeAPI</a><span class="tsd-signature-symbol"> =&nbsp;new GDAXExchangeAPI(gdaxConfig)</span></div>
+					<a name="api" class="tsd-anchor"></a>
+					<h3>api</h3>
+					<div class="tsd-signature tsd-kind-icon">api<span class="tsd-signature-symbol">:</span> <a href="../classes/_src_exchanges_ccxt_index_.ccxtexchangewrapper.html" class="tsd-signature-type">CCXTExchangeWrapper</a><span class="tsd-signature-symbol"> =&nbsp;CCXTExchangeWrapper.createExchange(exchangeName, auth, logger)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L59">src/consoles/gdaxConsole.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L70">src/consoles/console.ts:70</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="exchangename" class="tsd-anchor"></a>
+					<h3>exchange<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">exchange<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;program.exchange</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L51">src/consoles/console.ts:51</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="exchangenameupper" class="tsd-anchor"></a>
+					<h3>exchange<wbr>Name<wbr>Upper</h3>
+					<div class="tsd-signature tsd-kind-icon">exchange<wbr>Name<wbr>Upper<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;exchangeName.toUpperCase()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L63">src/consoles/console.ts:63</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="logger" class="tsd-anchor"></a>
+					<h3>logger</h3>
+					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_utils_logger_.logger.html" class="tsd-signature-type">Logger</a><span class="tsd-signature-symbol"> =&nbsp;ConsoleLoggerFactory()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L41">src/consoles/console.ts:41</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="supportedexchanges" class="tsd-anchor"></a>
+					<h3>supported<wbr>Exchanges</h3>
+					<div class="tsd-signature tsd-kind-icon">supported<wbr>Exchanges<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;CCXTExchangeWrapper.supportedExchanges()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L57">src/consoles/console.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -120,7 +162,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L70">src/consoles/gdaxConsole.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L72">src/consoles/console.ts:72</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -137,7 +179,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L78">src/consoles/gdaxConsole.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L80">src/consoles/console.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -151,35 +193,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="makegenericrequest" class="tsd-anchor"></a>
-					<h3>make<wbr>Generic<wbr>Request</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">make<wbr>Generic<wbr>Request<span class="tsd-signature-symbol">(</span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L98">src/consoles/gdaxConsole.ts:98</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>method: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>url: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>body: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="requiredoptions" class="tsd-anchor"></a>
 					<h3>required<wbr>Options</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
@@ -189,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L87">src/consoles/gdaxConsole.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L89">src/consoles/console.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -211,66 +224,26 @@
 					<div class="tsd-signature tsd-kind-icon">auth<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L45">src/consoles/gdaxConsole.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L65">src/consoles/console.ts:65</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
 						<a name="auth.key" class="tsd-anchor"></a>
 						<h3>key</h3>
-						<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;process.env.GDAX_KEY</span></div>
+						<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;process.env[&#x60;${exchangeNameUpper}_KEY&#x60;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L46">src/consoles/gdaxConsole.ts:46</a></li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="auth.passphrase" class="tsd-anchor"></a>
-						<h3>passphrase</h3>
-						<div class="tsd-signature tsd-kind-icon">passphrase<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;process.env.GDAX_PASSPHRASE</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L48">src/consoles/gdaxConsole.ts:48</a></li>
+								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L66">src/consoles/console.ts:66</a></li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
 						<a name="auth.secret" class="tsd-anchor"></a>
 						<h3>secret</h3>
-						<div class="tsd-signature tsd-kind-icon">secret<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;process.env.GDAX_SECRET</span></div>
+						<div class="tsd-signature tsd-kind-icon">secret<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;process.env[&#x60;${exchangeNameUpper}_SECRET&#x60;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L47">src/consoles/gdaxConsole.ts:47</a></li>
-							</ul>
-						</aside>
-					</section>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="gdaxconfig" class="tsd-anchor"></a>
-					<h3>gdax<wbr>Config</h3>
-					<div class="tsd-signature tsd-kind-icon">gdax<wbr>Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L50">src/consoles/gdaxConsole.ts:50</a></li>
-						</ul>
-					</aside>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="gdaxconfig.apiurl" class="tsd-anchor"></a>
-						<h3>api<wbr>Url</h3>
-						<div class="tsd-signature tsd-kind-icon">api<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;program.api || process.env.API_URL || &#x27;https://api.gdax.com&#x27;</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L52">src/consoles/gdaxConsole.ts:52</a></li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="gdaxconfig.logger" class="tsd-anchor"></a>
-						<h3>logger</h3>
-						<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/gdaxConsole.ts#L51">src/consoles/gdaxConsole.ts:51</a></li>
+								<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/consoles/console.ts#L67">src/consoles/console.ts:67</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -284,32 +257,38 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_src_consoles_gdaxconsole_.html">"src/consoles/gdax<wbr>Console"</a>
+						<a href="_src_consoles_console_.html">"src/consoles/console"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#gdaxapi" class="tsd-kind-icon">gdax<wbr>Api</a>
+						<a href="_src_consoles_console_.html#api" class="tsd-kind-icon">api</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_consoles_console_.html#exchangename" class="tsd-kind-icon">exchange<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_consoles_console_.html#exchangenameupper" class="tsd-kind-icon">exchange<wbr>Name<wbr>Upper</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_consoles_console_.html#logger" class="tsd-kind-icon">logger</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_consoles_console_.html#supportedexchanges" class="tsd-kind-icon">supported<wbr>Exchanges</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#hasauth" class="tsd-kind-icon">has<wbr>Auth</a>
+						<a href="_src_consoles_console_.html#hasauth" class="tsd-kind-icon">has<wbr>Auth</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#logerror" class="tsd-kind-icon">log<wbr>Error</a>
+						<a href="_src_consoles_console_.html#logerror" class="tsd-kind-icon">log<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#makegenericrequest" class="tsd-kind-icon">make<wbr>Generic<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#requiredoptions" class="tsd-kind-icon">required<wbr>Options</a>
+						<a href="_src_consoles_console_.html#requiredoptions" class="tsd-kind-icon">required<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#auth" class="tsd-kind-icon">auth</a>
-					</li>
-					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_src_consoles_gdaxconsole_.html#gdaxconfig" class="tsd-kind-icon">gdax<wbr>Config</a>
+						<a href="_src_consoles_console_.html#auth" class="tsd-kind-icon">auth</a>
 					</li>
 				</ul>
 			</nav>
