@@ -9,38 +9,38 @@ Provide all the tools traders need, both professional and hobbyist alike, to cre
 GDAX and supported digital asset exchanges. Note: Node 7.6 or above is required.
 
 ## Getting Started
-### Install prerequisites
+### Install Prereqs
 Dependending on the OS of your machine, the specific method to install these application will vary.  With a little Google help you can figure out how to install these:
 
 1. Node 7.6+
 2. TypeScript  2.6+
 3. Yarn 1.3+
 
-### Install the the module
+### Install the Module
 If you want to use the published version of the module in an existing TypeScript project:
 ```
 yarn add gdax-trading-toolkit
 ```
 Then go read the documentation referenced below.
 
-## Working directly with the code
-If you want to work directly with the source code on your own machine
+### Work with a local copy of the code
+If you want to more familiar with the source, or even make a contribution
 
-### Download copy of the code
+#### Download the code
 clone the repository to directory on your machine ($WORKSPACE_ROOT)
 
-### Install depedency libraries
+#### Install depedency libraries
 From $WORKSPACE_ROOT
 ```
 yarn install
 ``` 
-### Test
+#### Test
 Run the test suite just to make sure...
 ```
 yarn test
 ```
 
-### VS Code Setup
+#### VS Code Setup
 If you use Visual Studio Code the following will be helpful.
 
 1. Create a ".vscode" subdirectory in $WORKSPACE_ROOT
@@ -105,7 +105,7 @@ If you use Visual Studio Code the following will be helpful.
 }
 ```
 
-## Run
+#### Run
 
 The `src/samples` folder contains many working demo scripts showcasing different aspects of the toolkit, while the `tutorials` folder
 contains running demo programs to accompany the [GTT documentation](https://coinbase.github.io/gdax-tt/).
