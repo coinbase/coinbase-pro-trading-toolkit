@@ -25,12 +25,13 @@ const nock = require('nock');
 
 describe('FailoverCalculator', () => {
     let calculator: FailoverCalculator;
-
+    let calc1: SimpleRateCalculator;
+    let calc2: SimpleRateCalculator;
     before(() => {
         const provider1 = new CryptoProvider({ logger: NullLogger, exchange: GDAX(NullLogger) });
         const provider2 = new CryptoProvider({ logger: NullLogger, exchange: Bitfinex(NullLogger) });
-        const calc1 = new SimpleRateCalculator(provider1, NullLogger);
-        const calc2 = new SimpleRateCalculator(provider2, NullLogger);
+        calc1 = new SimpleRateCalculator(provider1, NullLogger);
+        calc2 = new SimpleRateCalculator(provider2, NullLogger);
         calculator = new FailoverCalculator({
             logger: NullLogger,
             calculators: [calc1, calc2]
@@ -61,6 +62,8 @@ describe('FailoverCalculator', () => {
             assert.equal(results[0].rate.toNumber(), 10500);
             assert.equal(results[0].from, 'BTC');
             assert.equal(results[0].to, 'USD');
+            const info = calculator.getLastRequestInfo();
+            assert.equal(info.calculator, calc1);
         });
     });
 
@@ -79,6 +82,8 @@ describe('FailoverCalculator', () => {
             assert.equal(results[0].rate.toNumber(), 500);
             assert.equal(results[0].from, 'ETH');
             assert.equal(results[0].to, 'USD');
+            const info = calculator.getLastRequestInfo();
+            assert.equal(info.calculator, calc2);
         });
     });
 
@@ -118,6 +123,8 @@ describe('FailoverCalculator', () => {
             assert.equal(results[1].rate.toNumber(), 405);
             assert.equal(results[1].from, 'ETH');
             assert.equal(results[1].to, 'USD');
+            const info = calculator.getLastRequestInfo();
+            assert.equal(info.calculator, calc2);
         });
     });
 
@@ -135,6 +142,8 @@ describe('FailoverCalculator', () => {
         return calculator.calculateRatesFor([{ from: 'BTC', to: 'USD' }]).then((results: FXObject[]) => {
             const rate: FXObject = results[0];
             assert.equal(rate.rate.toNumber(), 405);
+            const info = calculator.getLastRequestInfo();
+            assert.equal(info.calculator, calc2);
         });
     });
 
@@ -147,6 +156,8 @@ describe('FailoverCalculator', () => {
             .reply(500);
         return calculator.calculateRatesFor([{ from: 'BTC', to: 'USD' }]).then((result) => {
             assert.equal(result[0], null);
+            const info = calculator.getLastRequestInfo();
+            assert.equal(info.calculator, calc2);
         });
     });
 });

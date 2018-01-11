@@ -22,6 +22,10 @@ export interface FailoverCalculatorConfig {
     logger?: Logger;
 }
 
+export interface LastRequestInfo {
+    calculator: FXRateCalculator;
+}
+
 /**
  * A simple FX rate calculator that uses a single FXProvider and return the current exchange rate from it directly.
  * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
@@ -37,7 +41,7 @@ export default class FailoverCalculator extends FXRateCalculator {
         this.logger = config.logger || ConsoleLoggerFactory();
     }
 
-    getLastRequestInfo(): any {
+    getLastRequestInfo(): LastRequestInfo {
         return { calculator: this.lastCalculatorUsed };
     }
 
