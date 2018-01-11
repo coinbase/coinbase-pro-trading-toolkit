@@ -50,7 +50,7 @@
     "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
-    "ccxt": "1.10.55",
+    "ccxt": "1.10.641",
     "commander": "2.9.0",
     "crypto": "0.0.3",
     "gdax": "https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77",

@@ -75,7 +75,7 @@ describe('FailoverProvider', () => {
         });
     });
 
-    it('returns spot rate from first provider is supported', () => {
+    it('returns spot rate from first provider if it is supported', () => {
         nock('https://api.gdax.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
@@ -167,6 +167,20 @@ describe('FailoverProvider', () => {
             assert.equal(result.rate.toNumber(), 10450);
             assert.equal(result.from, 'BTC');
             assert.equal(result.to, 'USD');
+        });
+    });
+
+    it('rejects promise if all providers are erroring', () => {
+        nock('https://api.gdax.com:443')
+            .get('/products/BTC-USD/ticker')
+            .reply(500);
+        nock('https://api.bitfinex.com:443')
+            .get('/v1/pubticker/btcusd')
+            .reply(500);
+        return provider.fetchCurrentRate({ from: 'BTC', to: 'USD' }).then((result: FXObject) => {
+            assert.fail(result, null, 'should reject promise');
+        }, (err: Error) => {
+            assert.ok(err instanceof EFXRateUnavailable);
         });
     });
 });
