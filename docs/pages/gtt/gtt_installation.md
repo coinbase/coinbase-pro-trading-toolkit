@@ -102,7 +102,7 @@ Our ultimate goal is to have more than 80% test coverage. You can run the existi
 
 ## Hello GTT
 
-You should consider using [`tsnode`](https://www.npmjs.com/package/ts-node) to compile and run TS scripts on the fly:
+You should consider using [`ts-node`](https://www.npmjs.com/package/ts-node) to compile and run TS scripts on the fly:
 
     npm i -g ts-node typescript
     ts-node src/consoles/gdaxConsole.ts --product BTC-USD -t
