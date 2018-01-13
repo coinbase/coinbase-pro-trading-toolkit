@@ -1,3 +1,4 @@
+"use strict";
 /***************************************************************************************************************************
  * @license                                                                                                                *
  * Copyright 2017 Coinbase, Inc.                                                                                           *
@@ -11,26 +12,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
-
-import { Writable } from 'stream';
-import { Logger } from '../utils/Logger';
-import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI';
-import { BookBuilder } from '../lib/BookBuilder';
-import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
-import { CancelOrderRequestMessage, isStreamMessage, MyOrderPlacedMessage, PlaceOrderMessage, StreamMessage, TradeExecutedMessage, TradeFinalizedMessage } from './Messages';
-import { OrderbookDiff } from '../lib/OrderbookDiff';
-import { Big, BigJS } from '../lib/types';
-import { StreamError } from '../lib/errors';
-
-export interface TraderConfig {
-    logger: Logger;
-    exchangeAPI: AuthenticatedExchangeAPI;
-    productId: string;
-    fitOrders: boolean;
-    sizePrecision?: number;
-    pricePrecision?: number;
-}
-
+Object.defineProperty(exports, "__esModule", { value: true });
+const stream_1 = require("stream");
+const BookBuilder_1 = require("../lib/BookBuilder");
+const Messages_1 = require("./Messages");
+const OrderbookDiff_1 = require("../lib/OrderbookDiff");
+const types_1 = require("../lib/types");
 /**
  * The Trader class places orders on your behalf. The commands for placing the trades can either come from an attached
  * stream, or directly via the API.
@@ -49,22 +36,13 @@ export interface TraderConfig {
  *   Trader.place-order-failed - A REST order request returned with an error
  *   Trader.cancel-order-failed - A Cancel request returned with an error status
  */
-export class Trader extends Writable {
-    private _productId: string;
-    private logger: Logger;
-     // Used to keep track of all non-market orders this trader has placed.
-    private myBook: BookBuilder;
-    private api: AuthenticatedExchangeAPI;
-    private _fitOrders: boolean = true;
-    private sizePrecision: number;
-    private pricePrecision: number;
-    private unfilledMarketOrders: Set<string>;
-
-    constructor(config: TraderConfig) {
+class Trader extends stream_1.Writable {
+    constructor(config) {
         super({ objectMode: true });
+        this._fitOrders = true;
         this.api = config.exchangeAPI;
         this.logger = config.logger;
-        this.myBook = new BookBuilder(this.logger);
+        this.myBook = new BookBuilder_1.BookBuilder(this.logger);
         this._productId = config.productId;
         this.sizePrecision = config.sizePrecision || 2;
         this.pricePrecision = config.pricePrecision || 2;
@@ -73,33 +51,30 @@ export class Trader extends Writable {
             throw new Error('Trader cannot work without an exchange interface using valid credentials. Have you set the necessary ENVARS?');
         }
     }
-
-    get productId(): string {
+    get productId() {
         return this._productId;
     }
-
-    get fitOrders(): boolean {
+    get fitOrders() {
         return this._fitOrders;
     }
-
-    set fitOrders(value: boolean) {
+    set fitOrders(value) {
         this._fitOrders = value;
     }
-
-    placeOrder(req: PlaceOrderMessage): Promise<LiveOrder> {
+    placeOrder(req) {
         if (this.fitOrders) {
-            req.size = req.size ? Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
-            req.funds = req.funds ? Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
-            req.price = Big(req.price).round(this.pricePrecision, 2).toString();
+            req.size = req.size ? types_1.Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
+            req.funds = req.funds ? types_1.Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
+            req.price = types_1.Big(req.price).round(this.pricePrecision, 2).toString();
         }
-        return this.api.placeOrder(req).then((order: LiveOrder) => {
+        return this.api.placeOrder(req).then((order) => {
             if (req.orderType !== 'market') {
                 this.myBook.add(order);
-            } else {
+            }
+            else {
                 this.unfilledMarketOrders.add(order.id);
             }
             return order;
-        }).catch((err: StreamError) => {
+        }).catch((err) => {
             // Errors can fail if they're too precise, too small, or the API is down
             // We pass the message along, but let the user decide what to do
             // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
@@ -107,73 +82,67 @@ export class Trader extends Writable {
             return Promise.resolve(null);
         });
     }
-
-    cancelOrder(orderId: string): Promise<string> {
-        return this.api.cancelOrder(orderId).then((id: string) => {
+    cancelOrder(orderId) {
+        return this.api.cancelOrder(orderId).then((id) => {
             // To avoid race conditions, we only actually remove the order when the tradeFinalized message arrives
             return id;
         });
     }
-
-    cancelMyOrders(): Promise<string[]> {
+    cancelMyOrders() {
         if (!this.myBook.orderPool) {
             return Promise.resolve([]);
         }
         const orderIds = Object.keys(this.myBook.orderPool);
-        const promises: Promise<string>[] = orderIds.map((id: string) => {
+        const promises = orderIds.map((id) => {
             return this.cancelOrder(id);
         });
-        return Promise.all(promises).then((ids: string[]) => {
+        return Promise.all(promises).then((ids) => {
             this.emitMessageAsync('Trader.my-orders-cancelled', ids);
             return ids;
         });
     }
-
     /**
      * Cancel all, and we mean ALL orders (even those not placed by this Trader). To cancel only the messages
      * listed in the in-memory orderbook, use `cancelMyOrders`
      */
-    cancelAllOrders(): Promise<string[]> {
-        return this.api.cancelAllOrders(null).then((ids: string[]) => {
+    cancelAllOrders() {
+        return this.api.cancelAllOrders(null).then((ids) => {
             this.myBook.clear();
             this.emitMessageAsync('Trader.all-orders-cancelled', ids);
             return ids;
-        }, (err: Error) => {
+        }, (err) => {
             this.emitMessageAsync('error', err);
             return [];
         });
     }
-
-    state(): OrderbookState {
+    state() {
         return this.myBook.state();
     }
-
     /**
      * Compare the state of the in-memory orderbook with the one returned from a REST query of all my orders. The
      * result is an `OrderbookState` object that represents the diff between the two states. Negative sizes represent
      * orders in-memory that don't exist on the book and positive ones are vice versa
      */
-    checkState(): Promise<OrderbookState> {
-        return this.api.loadAllOrders(this.productId).then((actualOrders: LiveOrder[]) => {
-            const book = new BookBuilder(this.logger);
-            actualOrders.forEach((order: LiveOrder) => {
+    checkState() {
+        return this.api.loadAllOrders(this.productId).then((actualOrders) => {
+            const book = new BookBuilder_1.BookBuilder(this.logger);
+            actualOrders.forEach((order) => {
                 book.add(order);
             });
-            const diff = OrderbookDiff.compareByOrder(this.myBook, book);
+            const diff = OrderbookDiff_1.OrderbookDiff.compareByOrder(this.myBook, book);
             return Promise.resolve(diff);
         });
     }
-
-    executeMessage(msg: StreamMessage) {
-        if (!isStreamMessage(msg)) {
+    executeMessage(msg) {
+        if (!Messages_1.isStreamMessage(msg)) {
             return;
         }
         switch (msg.type) {
             case 'placeOrder':
-                this.handleOrderRequest(msg as PlaceOrderMessage);
+                this.handleOrderRequest(msg);
                 break;
             case 'cancelOrder':
-                this.handleCancelOrder(msg as CancelOrderRequestMessage);
+                this.handleCancelOrder(msg);
                 break;
             case 'cancelAllOrders':
                 this.cancelAllOrders();
@@ -182,42 +151,38 @@ export class Trader extends Writable {
                 this.cancelMyOrders();
                 break;
             case 'tradeExecuted':
-                this.handleTradeExecutedMessage(msg as TradeExecutedMessage);
+                this.handleTradeExecutedMessage(msg);
                 break;
             case 'tradeFinalized':
-                this.handleTradeFinalized(msg as TradeFinalizedMessage);
+                this.handleTradeFinalized(msg);
                 break;
             case 'myOrderPlaced':
-                this.handleOrderPlacedConfirmation(msg as MyOrderPlacedMessage);
+                this.handleOrderPlacedConfirmation(msg);
                 break;
         }
     }
-
-    _write(msg: any, encoding: string, callback: (err?: Error) => any): void {
+    _write(msg, encoding, callback) {
         this.executeMessage(msg);
         callback();
     }
-
-    private handleOrderRequest(request: PlaceOrderMessage) {
+    handleOrderRequest(request) {
         if (request.productId !== this._productId) {
             return;
         }
-        this.placeOrder(request).then((result: LiveOrder) => {
+        this.placeOrder(request).then((result) => {
             if (result) {
                 this.emitMessageAsync('Trader.order-placed', result);
             }
         });
     }
-
-    private handleCancelOrder(request: CancelOrderRequestMessage) {
-        this.cancelOrder(request.orderId).then((result: string) => {
+    handleCancelOrder(request) {
+        this.cancelOrder(request.orderId).then((result) => {
             return this.emitMessageAsync('Trader.order-cancelled', result);
-        }, (err: Error) => {
+        }, (err) => {
             this.emitMessageAsync('Trader.cancel-order-failed', err);
         });
     }
-
-    private handleTradeExecutedMessage(msg: TradeExecutedMessage) {
+    handleTradeExecutedMessage(msg) {
         if (msg.orderType === 'market') {
             if (this.unfilledMarketOrders.has(msg.orderId)) {
                 this.emit('Trader.trade-executed', msg);
@@ -225,60 +190,60 @@ export class Trader extends Writable {
             return;
         }
         this.emit('Trader.trade-executed', msg);
-        const order: Level3Order = this.myBook.getOrder(msg.orderId);
+        const order = this.myBook.getOrder(msg.orderId);
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
             this.emit('Trader.outOfSyncWarning', 'Traded order not in my book');
             return;
         }
-        let newSize: BigJS;
+        let newSize;
         if (msg.tradeSize) {
             newSize = order.size.minus(msg.tradeSize);
-        } else {
-            newSize = Big(msg.remainingSize);
+        }
+        else {
+            newSize = types_1.Big(msg.remainingSize);
         }
         this.myBook.modify(order.id, newSize);
     }
-
-    private handleTradeFinalized(msg: TradeFinalizedMessage) {
-        const id: string = msg.orderId;
-        const order: Level3Order = this.myBook.remove(id);
+    handleTradeFinalized(msg) {
+        const id = msg.orderId;
+        const order = this.myBook.remove(id);
         if (!order && this.unfilledMarketOrders.has(id)) {
             this.unfilledMarketOrders.delete(id);
         }
         this.emit('Trader.trade-finalized', msg);
     }
-
     /**
      *  We should just confirm that we have the order, since we added when we placed it.
      *  Otherwise this Trader didn't place the order (or somehow missed the callback), but we should add
      *  it to our memory book anyway otherwise it will go out of sync
      */
-    private handleOrderPlacedConfirmation(msg: MyOrderPlacedMessage) {
+    handleOrderPlacedConfirmation(msg) {
         const orderId = msg.orderId;
         if (this.myBook.getOrder(orderId)) {
             this.logger.log('debug', 'Order confirmed', msg);
             return;
         }
-        const order: Level3Order = {
+        const order = {
             id: orderId,
-            price: Big(msg.price),
+            price: types_1.Big(msg.price),
             side: msg.side,
-            size: Big(msg.size)
+            size: types_1.Big(msg.size)
         };
         this.myBook.add(order);
         this.emit('Trader.external-order-placement', msg);
     }
-
     /**
      * Wraps a message emission in a setImmediate. This should be called from inside Promise handlers, otherwise errors in the user code (event handler) will
      * get thrown from here, which leads to confusing stack traces.
      * @param {string} event
      * @param payload
      */
-    private emitMessageAsync(event: string, payload: any) {
+    emitMessageAsync(event, payload) {
         setImmediate(() => {
             this.emit(event, payload);
         });
     }
 }
+exports.Trader = Trader;
+//# sourceMappingURL=Trader.js.map
