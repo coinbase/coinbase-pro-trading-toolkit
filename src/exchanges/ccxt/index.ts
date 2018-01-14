@@ -155,94 +155,107 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         this.logger.log(level, msg, meta);
     }
 
-    getSourceSymbol(gdaxProduct: string): Promise<string> {
+    async getSourceSymbol(gdaxProduct: string): Promise<string | null> {
         const [base, quote] = gdaxProduct.split('-');
-        return this.instance.loadMarkets(false).then((markets: CCXTMarket[]) => {
-            for (const id in markets) {
-                const m: CCXTMarket = markets[id];
-                if (m.base === base && m.quote === quote) {
-                    return Promise.resolve(m.symbol);
+        const markets: CCXTMarket[] = await this.instance.loadMarkets(false)
+            .catch((err: Error) => rejectWithError(
+                `Error loading symbols for ${gdaxProduct} on ${this.instance.name} (CCXT)`,
+                err
+            ));
+
+        const matchedMarket = Object.entries(markets)
+            .find(([id, market]) => {
+                return market.base === base && market.quote === quote;
+            });
+        return matchedMarket ? matchedMarket[1].symbol : null;
+    }
+
+    async loadProducts(): Promise<Product[]> {
+        const markets: ccxt.CCXTMarket[] = await this.instance.loadMarkets(true)
+            .catch((err) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
+
+        if (!markets) {
+            return Promise.resolve([]);
+        }
+        const result: Product[] = markets.map((m) => ({
+            id: CCXTExchangeWrapper.getGDAXSymbol(m),
+            sourceId: m.id,
+            baseCurrency: m.base,
+            quoteCurrency: m.quote,
+            baseMinSize: m.info && (m.info.min || m.info.minimum_order_size),
+            baseMaxSize: m.info && (m.info.max || m.info.maximum_order_size),
+            quoteIncrement: m.info && (m.info.quote_increment || m.info.step),
+            sourceData: m.info
+        }));
+        return result;
+    }
+
+    async loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
+        const t: Ticker = await this.loadTicker(gdaxProduct);
+        if (!(t && t.ask && t.bid)) {
+            throw new HTTPError(
+                `Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`,
+                { status: 200, body: t}
+            );
+        }
+
+        return t.bid.plus(t.ask).div(2);
+    }
+
+    async loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
+        let ccxtBook: CCXTOrderbook;
+        try {
+            const sourceSymbolId = await this.getSourceSymbol(gdaxProduct);
+            ccxtBook = await this.instance.fetchOrderBook(sourceSymbolId);
+        } catch (err) {
+            rejectWithError(
+                `Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`,
+                err
+            );
+        }
+
+        const addSide = (builder: BookBuilder, side: string, orders: number[][]) => {
+            orders.forEach((o) => {
+                if (!Array.isArray(o) || o.length !== 2) {
+                    return;
                 }
-            }
-            return Promise.resolve(null);
-        }).catch((err: Error) => rejectWithError(`Error loading symbols for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
-    }
-
-    loadProducts(): Promise<Product[]> {
-        return this.instance.loadMarkets(true).then((markets: ccxt.CCXTMarket[]) => {
-            if (!markets) {
-                return Promise.resolve([]);
-            }
-            const result: Product[] = [];
-            for (const id in markets) {
-                const m = markets[id];
-                const product: Product = {
-                    id: CCXTExchangeWrapper.getGDAXSymbol(m),
-                    sourceId: m.id,
-                    baseCurrency: m.base,
-                    quoteCurrency: m.quote,
-                    baseMinSize: m.info && (m.info.min || m.info.minimum_order_size),
-                    baseMaxSize: m.info && (m.info.max || m.info.maximum_order_size),
-                    quoteIncrement: m.info && (m.info.quote_increment || m.info.step),
-                    sourceData: m.info
+                const order: Level3Order = {
+                    price: Big(o[0]),
+                    size: Big(o[1]),
+                    side: side,
+                    id: String(o[0])
                 };
-                result.push(product);
-            }
-            return Promise.resolve(result);
-        }).catch((err: Error) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
+                builder.add(order);
+            });
+        };
+
+        const book: BookBuilder = new BookBuilder(this.logger);
+        addSide(book, 'buy', ccxtBook.bids);
+        addSide(book, 'sell', ccxtBook.asks);
+        return book;
     }
 
-    loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
-        return this.loadTicker(gdaxProduct).then((t: Ticker) => {
-            if (!(t && t.ask && t.bid)) {
-                return Promise.reject(new HTTPError(`Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`, {status: 200, body: t}));
-            }
-            return Promise.resolve(t.bid.plus(t.ask).div(2));
-        });
-    }
+    async loadTicker(gdaxProduct: string): Promise<Ticker | null> {
+        let ticker;
+        try {
+            const sourceSymbolId = await this.getSourceSymbol(gdaxProduct);
+            ticker = await this.instance.fetchTicker(sourceSymbolId);
+        } catch (err) {
+            rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err);
+        }
 
-    loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
-        return this.getSourceSymbol(gdaxProduct).then((id: string) => {
-            return this.instance.fetchOrderBook(id);
-        }).then((ccxtBook: CCXTOrderbook) => {
-            const book: BookBuilder = new BookBuilder(this.logger);
-            const addSide = (side: string, orders: number[][]) => {
-                orders.forEach((o) => {
-                    if (!Array.isArray(o) || o.length !== 2) {
-                        return;
-                    }
-                    const order: Level3Order = {
-                        price: Big(o[0]),
-                        size: Big(o[1]),
-                        side: side,
-                        id: String(o[0])
-                    };
-                    book.add(order);
-                });
-            };
-            addSide('buy', ccxtBook.bids);
-            addSide('sell', ccxtBook.asks);
-            return Promise.resolve(book);
-        }).catch((err: Error) => rejectWithError(`Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
-    }
-
-    loadTicker(gdaxProduct: string): Promise<Ticker> {
-        return this.getSourceSymbol(gdaxProduct).then((id: string) => {
-            return this.instance.fetchTicker(id);
-        }).then((ticker: any) => {
-            if (!ticker) {
-                return Promise.resolve(null);
-            }
-            const t: Ticker = {
-                productId: gdaxProduct,
-                price: Big(0),
-                time: new Date(ticker.timestamp),
-                ask: Big(ticker.bid),
-                bid: Big(ticker.ask),
-                volume: Big(ticker.baseVolume)
-            };
-            return Promise.resolve(t);
-        }).catch((err: Error) => rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
+        if (!ticker) {
+            return null;
+        }
+        const t: Ticker = {
+            productId: gdaxProduct,
+            price: Big(0),
+            time: new Date(ticker.timestamp),
+            ask: Big(ticker.bid),
+            bid: Big(ticker.ask),
+            volume: Big(ticker.baseVolume)
+        };
+        return t;
     }
 
     loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
@@ -270,27 +283,39 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }).catch((err: Error) => rejectWithError(`Error loading candles for ${product} on ${this.instance.name} (CCXT)`, err));
     }
 
-    placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
-        return this.getSourceSymbol(order.productId).then((id: string) => {
+    async placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
+        try {
+            const id: string = await this.getSourceSymbol(order.productId);
             if (!id) {
-                return Promise.resolve(null);
+                return null;
             }
-            const args = Object.assign({postOnly: order.postOnly, funds: order.funds, clientId: order.clientId}, order.extra);
-            return this.instance.createOrder(id, order.orderType, order.side, order.size.toString(), order.price.toString(), args).then((res: any) => {
-                const result: LiveOrder = {
-                    productId: order.productId,
-                    price: Big(order.price),
-                    size: Big(order.size),
-                    side: order.side,
-                    id: res.id,
-                    time: new Date(),
-                    extra: res.info,
-                    status: 'active'
-                };
-                return Promise.resolve(result);
-            }).catch((err: Error) => rejectWithError(`Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`, err));
-        });
 
+            const args = {
+                ...order.extra,
+                postOnly: order.postOnly,
+                funds: order.funds,
+                clientId: order.clientId
+            };
+
+            const res = await this.instance.createOrder(
+                id, order.orderType, order.side, order.size.toString(), order.price.toString(), args
+            );
+
+            const result: LiveOrder = {
+                productId: order.productId,
+                price: Big(order.price),
+                size: Big(order.size),
+                side: order.side,
+                id: res.id,
+                time: new Date(),
+                extra: res.info,
+                status: 'active'
+            };
+            return result;
+        } catch (error) {
+            const msg = `Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`;
+            throw new GTTError(`${error.constructor.name}: ${msg}`, error);
+        }
     }
 
     cancelOrder(id: string): Promise<string> {
@@ -309,28 +334,37 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         throw new Error('Not implemented yet');
     }
 
-    loadBalances(): Promise<Balances> {
+    async loadBalances(): Promise<Balances> {
         if (!this.options.apiKey) {
-            return Promise.reject(new Error('An API key is required to make this call'));
+            throw new Error('An API key is required to make this call');
         }
-        return this.instance.fetchBalance().then((balances: any) => {
+
+        try {
+            const balances = await this.instance.fetchBalance();
             if (!balances) {
-                return Promise.resolve(null);
+                return null;
             }
-            const result: Balances = {default: {}};
+
+            const result: Balances = { default: {} };
             for (const cur in balances) {
                 if (cur === 'info') {
                     continue;
                 }
+
                 const total = balances[cur].total;
                 const available = balances[cur].free;
+
                 result.default[cur] = {
                     balance: isFinite(total) ? Big(total) : null,
                     available: isFinite(available) ? Big(available) : null
                 };
             }
-            return Promise.resolve(result);
-        }).catch((err: Error) => rejectWithError(`Error loading balances on ${this.instance.name} (CCXT)`, err));
+
+            return result;
+        } catch (error) {
+            const msg = `Error loading balances on ${this.instance.name} (CCXT)`;
+            throw new GTTError(`${error.constructor.name}: ${msg}`, error);
+        }
     }
 
     requestCryptoAddress(cur: string): Promise<CryptoAddress> {
@@ -372,10 +406,11 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     async fetchOHLCV(symbol: string, params?: {}): Promise<CCXTOHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
-            return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
+            throw new GTTError(`${this.instance.name} does not support candles`);
         }
-        const sourceSymbol = await this.getSourceSymbol(symbol);
+
         try {
+            const sourceSymbol = await this.getSourceSymbol(symbol);
             return await this.instance.fetchOHLCV(sourceSymbol, params);
         } catch (err) {
             return rejectWithError(`Error loading candles for ${symbol} on ${this.instance.name} (CCXT)`, err);

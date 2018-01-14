@@ -31,7 +31,7 @@ const ARRAY_FIELDS = ['bids', 'asks'];
  * Implements a stream filter that applies an exchange rate to a stream of GDAX messages.
  *
  *
- * If the FXService has any problems and enters an ErrorState, the  filter will continue to convert prices, but you
+ * If the FXService has any problems and enters an ErrorState, the filter will continue to convert prices, but you
  * can watch for FXRateMayBeInvalid events and respond accordingly
  */
 export class ExchangeRateFilter extends AbstractMessageTransform {

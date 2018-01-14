@@ -435,9 +435,9 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-ccxt@1.10.641:
-  version "1.10.641"
-  resolved "https://registry.yarnpkg.com/ccxt/-/ccxt-1.10.641.tgz#ad6d104be952b48526219baed633876d1423244d"
+ccxt@1.10.694:
+  version "1.10.694"
+  resolved "https://registry.yarnpkg.com/ccxt/-/ccxt-1.10.694.tgz#32ba9b5fdb8876b107526fdd8af1d48135f72bfd"
   dependencies:
     crypto-js "3.1.9-1"
     fetch-ponyfill "^4.1.0"
