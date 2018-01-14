@@ -16,7 +16,13 @@ import * as ccxt from 'ccxt';
 import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
-import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
+import {
+    CryptoAddress,
+    ExchangeTransferAPI,
+    TransferRequest,
+    TransferResult,
+    WithdrawalRequest,
+} from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
 import { Big, BigJS } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
@@ -108,14 +114,24 @@ const exchanges: { [index: string]: ExchangeDefinition } = {
 };
 
 export default class CCXTExchangeWrapper implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
-    static createExchange(name: string, auth: ExchangeAuthConfig, logger: Logger, opts: any = {}): CCXTExchangeWrapper {
+    static createExchange(
+        name: string, auth: ExchangeAuthConfig, logger: Logger, opts: any = {}
+    ): CCXTExchangeWrapper {
         const [owner, exchange] = exchanges[name];
         const upName = name.toUpperCase();
         const key = auth.key || process.env[`${upName}_KEY`];
         const secret = auth.secret || process.env[`${upName}_SECRET`];
         const password = opts.passphrase || process.env[`${upName}_PASSPHRASE`];
         const uid = opts.uid || process.env[`${upName}_UID`];
-        const options = Object.assign(opts, {apiKey: key, secret: secret, uid: uid, password: password});
+
+        const options = {
+            ...opts,
+            apiKey: key,
+            secret: secret,
+            uid: uid,
+            password: password
+        };
+
         const ccxtInstance = new exchange(options);
         return new CCXTExchangeWrapper(owner, options, ccxtInstance, logger);
     }
@@ -149,10 +165,9 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     log(level: string, msg: string, meta?: any) {
-        if (!this.logger) {
-            return;
+        if (this.logger) {
+            this.logger.log(level, msg, meta);
         }
-        this.logger.log(level, msg, meta);
     }
 
     async getSourceSymbol(gdaxProduct: string): Promise<string | null> {
@@ -163,21 +178,21 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 err
             ));
 
-        const matchedMarket = Object.entries(markets)
-            .find(([id, market]) => {
-                return market.base === base && market.quote === quote;
-            });
+        const matchedMarket = Object.entries(markets).find(([id, market]) => {
+            return market.base === base && market.quote === quote;
+        });
         return matchedMarket ? matchedMarket[1].symbol : null;
     }
 
     async loadProducts(): Promise<Product[]> {
         const markets: ccxt.CCXTMarket[] = await this.instance.loadMarkets(true)
-            .catch((err) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
+            .catch((err: Error) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
 
         if (!markets) {
-            return Promise.resolve([]);
+            return [];
         }
-        const result: Product[] = markets.map((m) => ({
+
+        const result: Product[] = markets.map((m: ccxt.CCXTMarket) => ({
             id: CCXTExchangeWrapper.getGDAXSymbol(m),
             sourceId: m.id,
             baseCurrency: m.base,
@@ -208,7 +223,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             const sourceSymbolId = await this.getSourceSymbol(gdaxProduct);
             ccxtBook = await this.instance.fetchOrderBook(sourceSymbolId);
         } catch (err) {
-            rejectWithError(
+            return await rejectWithError(
                 `Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`,
                 err
             );
@@ -241,7 +256,10 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             const sourceSymbolId = await this.getSourceSymbol(gdaxProduct);
             ticker = await this.instance.fetchTicker(sourceSymbolId);
         } catch (err) {
-            rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err);
+            return await rejectWithError(
+                `Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`,
+                err
+            );
         }
 
         if (!ticker) {
@@ -258,29 +276,32 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return t;
     }
 
-    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+    async loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
         const product = options.gdaxProduct;
+
         if (!product) {
-            return Promise.reject(new Error('No product ID provided to loadCandles'));
+            throw new Error('No product ID provided to loadCandles');
         }
+
         if (!this.instance.hasFetchOHLCV) {
-            return Promise.reject(new Error(`${this.instance.name} does not support candles`));
+            throw new Error(`${this.instance.name} does not support candles`);
         }
-        return this.getSourceSymbol(product).then((id: string) => {
-            return this.instance.fetchOHLCV(id, options.interval);
-        }).then((data: CCXTOHLCV[]) => {
-            const candles = data.map((d: CCXTOHLCV) => {
-                return {
-                    timestamp: new Date(d[0]),
-                    open: Big(d[1]),
-                    high: Big(d[2]),
-                    low: Big(d[3]),
-                    close: Big(d[4]),
-                    volume: Big(d[5])
-                };
-            });
-            return Promise.resolve(candles);
-        }).catch((err: Error) => rejectWithError(`Error loading candles for ${product} on ${this.instance.name} (CCXT)`, err));
+
+        try {
+            const id = await this.getSourceSymbol(product);
+            const data: CCXTOHLCV[] = await this.instance.fetchOHLCV(id, options.interval);
+
+            return data.map((d: CCXTOHLCV) => ({
+                timestamp: new Date(d[0]),
+                open: Big(d[1]),
+                high: Big(d[2]),
+                low: Big(d[3]),
+                close: Big(d[4]),
+                volume: Big(d[5])
+            }));
+        } catch (error) {
+            return await rejectWithError(`Error loading candles for ${product} on ${this.instance.name} (CCXT)`, error);
+        }
     }
 
     async placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
@@ -312,9 +333,11 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 status: 'active'
             };
             return result;
-        } catch (error) {
-            const msg = `Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`;
-            throw new GTTError(`${error.constructor.name}: ${msg}`, error);
+        } catch (err) {
+            return await rejectWithError(
+                `Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`,
+                err
+            );
         }
     }
 
@@ -336,7 +359,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     async loadBalances(): Promise<Balances> {
         if (!this.options.apiKey) {
-            throw new Error('An API key is required to make this call');
+            return Promise.reject(new Error('An API key is required to make this call'));
         }
 
         try {
@@ -362,8 +385,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
             return result;
         } catch (error) {
-            const msg = `Error loading balances on ${this.instance.name} (CCXT)`;
-            throw new GTTError(`${error.constructor.name}: ${msg}`, error);
+            return await rejectWithError(`Error loading balances on ${this.instance.name} (CCXT)`, error);
         }
     }
 
@@ -387,20 +409,26 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
      * Attempts to fetch historical trade data from the exchange and return it in
      */
     async fetchHistTrades(symbol: string, params?: {}): Promise<TradeMessage[]> {
-        const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
+            const sourceSymbol = await this.getSourceSymbol(symbol);
             const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
-            return rawTrades.map(({info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount}) => ({
-                type: 'trade' as 'trade',
-                time: new Date(timestamp),
-                productId: _symbol,
-                side,
-                tradeId: id,
-                price: price.toString(),
-                size: amount.toString(),
-            }));
+
+            return rawTrades.map(
+                ({ info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount }) => ({
+                    type: 'trade' as 'trade',
+                    time: new Date(timestamp),
+                    productId: _symbol,
+                    side,
+                    tradeId: id,
+                    price: price.toString(),
+                    size: amount.toString(),
+                })
+            );
         } catch (err) {
-            return rejectWithError(`Error trade history for ${symbol} on ${this.instance.name} (CCXT)`, err);
+            return await rejectWithError(
+                `Error trade history for ${symbol} on ${this.instance.name} (CCXT)`,
+                err
+            );
         }
     }
 
@@ -413,7 +441,10 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             const sourceSymbol = await this.getSourceSymbol(symbol);
             return await this.instance.fetchOHLCV(sourceSymbol, params);
         } catch (err) {
-            return rejectWithError(`Error loading candles for ${symbol} on ${this.instance.name} (CCXT)`, err);
+            return await rejectWithError(
+                `Error loading candles for ${symbol} on ${this.instance.name} (CCXT)`,
+                err
+            );
         }
     }
 }
