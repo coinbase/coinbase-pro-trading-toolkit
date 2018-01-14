@@ -1,6 +1,6 @@
 {
   "name": "gdax-trading-toolkit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A trading toolkit for building advanced trading bots on the GDAX platform",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -54,8 +54,8 @@
     "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
-    "ccxt": "1.10.55",
     "chai-as-promised": "7.1.1",
+    "ccxt": "1.10.641",
     "commander": "2.9.0",
     "crypto": "0.0.3",
     "gdax": "https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77",

@@ -108,6 +108,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_lib_staticcommandset_.staticcommandset.html#autoclose" class="tsd-kind-icon">auto<wbr>Close</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_lib_staticcommandset_.staticcommandset.html#messages" class="tsd-kind-icon">messages</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#readable" class="tsd-kind-icon">readable</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_lib_staticcommandset_.staticcommandset.html#eventemitter" class="tsd-kind-icon">Event<wbr>Emitter</a></li>
@@ -120,6 +121,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_lib_staticcommandset_.staticcommandset.html#_read" class="tsd-kind-icon">_read</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#emit" class="tsd-kind-icon">emit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_lib_staticcommandset_.staticcommandset.html#end" class="tsd-kind-icon">end</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#getmaxlisteners" class="tsd-kind-icon">get<wbr>Max<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_lib_staticcommandset_.staticcommandset.html#listenercount" class="tsd-kind-icon">listener<wbr>Count</a></li>
@@ -154,20 +156,23 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Static<wbr>Command<wbr>Set<span class="tsd-signature-symbol">(</span>messages<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_core_messages_.streammessage.html" class="tsd-signature-type">StreamMessage</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_lib_staticcommandset_.staticcommandset.html" class="tsd-signature-type">StaticCommandSet</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Static<wbr>Command<wbr>Set<span class="tsd-signature-symbol">(</span>messages<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_core_messages_.streammessage.html" class="tsd-signature-type">StreamMessage</a><span class="tsd-signature-symbol">[]</span>, autoClose<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_lib_staticcommandset_.staticcommandset.html" class="tsd-signature-type">StaticCommandSet</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides Readable.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/lib/StaticCommandSet.ts#L22">src/lib/StaticCommandSet.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L23">src/lib/StaticCommandSet.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>messages: <a href="../interfaces/_src_core_messages_.streammessage.html" class="tsd-signature-type">StreamMessage</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> autoClose: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_lib_staticcommandset_.staticcommandset.html" class="tsd-signature-type">StaticCommandSet</a></h4>
@@ -177,13 +182,23 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="autoclose" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> auto<wbr>Close</h3>
+					<div class="tsd-signature tsd-kind-icon">auto<wbr>Close<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L23">src/lib/StaticCommandSet.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="messages" class="tsd-anchor"></a>
 					<h3>messages</h3>
 					<div class="tsd-signature tsd-kind-icon">messages<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_core_messages_.streammessage.html" class="tsd-signature-type">StreamMessage</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/lib/StaticCommandSet.ts#L22">src/lib/StaticCommandSet.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L22">src/lib/StaticCommandSet.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -234,7 +249,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Readable._read</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/lib/StaticCommandSet.ts#L47">src/lib/StaticCommandSet.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L52">src/lib/StaticCommandSet.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -596,6 +611,23 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="end" class="tsd-anchor"></a>
+					<h3>end</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L48">src/lib/StaticCommandSet.ts:48</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1847,7 +1879,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/lib/StaticCommandSet.ts#L29">src/lib/StaticCommandSet.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L31">src/lib/StaticCommandSet.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1858,16 +1890,16 @@
 					<a name="sendone" class="tsd-anchor"></a>
 					<h3>send<wbr>One</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">send<wbr>One<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">send<wbr>One<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/1aabd6d/src/lib/StaticCommandSet.ts#L37">src/lib/StaticCommandSet.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/147adc1/src/lib/StaticCommandSet.ts#L37">src/lib/StaticCommandSet.ts:37</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -2048,6 +2080,9 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="_src_lib_staticcommandset_.staticcommandset.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_src_lib_staticcommandset_.staticcommandset.html#autoclose" class="tsd-kind-icon">auto<wbr>Close</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_lib_staticcommandset_.staticcommandset.html#messages" class="tsd-kind-icon">messages</a>
 							</li>
@@ -2068,6 +2103,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="_src_lib_staticcommandset_.staticcommandset.html#emit" class="tsd-kind-icon">emit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_lib_staticcommandset_.staticcommandset.html#end" class="tsd-kind-icon">end</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="_src_lib_staticcommandset_.staticcommandset.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a>
