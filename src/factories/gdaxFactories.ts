@@ -60,20 +60,14 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<GD
         });
     }
     return new Promise((resolve) => {
-        if (feed.isConnecting) {
-            feed.once('websocket-open', () => {
-                feed.subscribe(products).then(() => {
-                    return resolve(feed);
-                });
-            });
-        } else {
+        if (!feed.isConnecting) {
             feed.reconnect(50);
-            feed.on('websocket-open', () => {
-                feed.subscribe(products).then(() => {
-                    return resolve(feed);
-                });
-            });
         }
+        feed.once('websocket-open', () => {
+            feed.subscribe(products).then(() => {
+                return resolve(feed);
+            });
+        });
     });
 }
 
