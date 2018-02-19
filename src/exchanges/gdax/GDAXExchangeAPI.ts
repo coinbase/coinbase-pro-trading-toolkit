@@ -252,7 +252,8 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         const clientMethod = side === 'buy' ? this.authClient.buy.bind(this.authClient) : this.authClient.sell.bind(this.authClient);
         return clientMethod(gdaxOrder).then((result: OrderInfo) => {
             // Check for error
-            if ((result as any).message) {
+            // TODO: Remove the first type assertion when https://github.com/coinbase/gdax-node/issues/269 is fixed.
+            if ((result as any).status === 'rejected' || (result as any).message) {
                 return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, result));
             }
             return GDAXOrderToOrder(result);
