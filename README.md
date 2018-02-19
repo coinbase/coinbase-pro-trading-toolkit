@@ -8,6 +8,10 @@
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
 GDAX and supported digital asset exchanges. Note: Node 7.6 or above is required.
 
+Recommended:
+* Node 9.4 or above
+* Typescript 2.7
+
 
 ## Install
     yarn add gdax-trading-toolkit
