@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RobustCalculatorReport | GDAX Trading Toolkit API Reference</title>
+	<title>CandleRequestOptions | GDAX Trading Toolkit API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_fxservice_calculators_robustcalculator_.html">&quot;src/FXService/calculators/RobustCalculator&quot;</a>
+					<a href="../modules/_src_exchanges_publicexchangeapi_.html">&quot;src/exchanges/PublicExchangeAPI&quot;</a>
 				</li>
 				<li>
-					<a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html">RobustCalculatorReport</a>
+					<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html">CandleRequestOptions</a>
 				</li>
 			</ul>
-			<h1>Interface RobustCalculatorReport</h1>
+			<h1>Interface CandleRequestOptions</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">RobustCalculatorReport</span>
+						<span class="target">CandleRequestOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +84,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html#sources" class="tsd-kind-icon">sources</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#extra" class="tsd-kind-icon">extra</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#from" class="tsd-kind-icon">from</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#gdaxproduct" class="tsd-kind-icon">gdax<wbr>Product</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#interval" class="tsd-kind-icon">interval</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#limit" class="tsd-kind-icon">limit</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,30 +97,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="data" class="tsd-anchor"></a>
-					<h3>data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<a name="extra" class="tsd-anchor"></a>
+					<h3>extra</h3>
+					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/FXService/calculators/RobustCalculator.ts#L40">src/FXService/calculators/RobustCalculator.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/exchanges/PublicExchangeAPI.ts#L68">src/exchanges/PublicExchangeAPI.ts:68</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>pair: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="_src_fxservice_calculators_robustcalculator_.querystatus.html" class="tsd-signature-type">QueryStatus</a></h5>
-							</li>
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="sources" class="tsd-anchor"></a>
-					<h3>sources</h3>
-					<div class="tsd-signature tsd-kind-icon">sources<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="from" class="tsd-anchor"></a>
+					<h3>from</h3>
+					<div class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/FXService/calculators/RobustCalculator.ts#L41">src/FXService/calculators/RobustCalculator.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/exchanges/PublicExchangeAPI.ts#L66">src/exchanges/PublicExchangeAPI.ts:66</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="gdaxproduct" class="tsd-anchor"></a>
+					<h3>gdax<wbr>Product</h3>
+					<div class="tsd-signature tsd-kind-icon">gdax<wbr>Product<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/exchanges/PublicExchangeAPI.ts#L64">src/exchanges/PublicExchangeAPI.ts:64</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="interval" class="tsd-anchor"></a>
+					<h3>interval</h3>
+					<div class="tsd-signature tsd-kind-icon">interval<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_exchanges_publicexchangeapi_.html#candleinterval" class="tsd-signature-type">CandleInterval</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/exchanges/PublicExchangeAPI.ts#L65">src/exchanges/PublicExchangeAPI.ts:65</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="limit" class="tsd-anchor"></a>
+					<h3>limit</h3>
+					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coinbase/gdax-tt/blob/5bd349b/src/exchanges/PublicExchangeAPI.ts#L67">src/exchanges/PublicExchangeAPI.ts:67</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -130,44 +155,53 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_src_fxservice_calculators_robustcalculator_.html">"src/FXService/calculators/<wbr>Robust<wbr>Calculator"</a>
+						<a href="../modules/_src_exchanges_publicexchangeapi_.html">"src/exchanges/<wbr>Public<wbr>ExchangeAPI"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_src_fxservice_calculators_robustcalculator_.robustcalculator.html" class="tsd-kind-icon">Robust<wbr>Calculator</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_fxservice_calculators_robustcalculator_.querystatus.html" class="tsd-kind-icon">Query<wbr>Status</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorconfig.html" class="tsd-kind-icon">Robust<wbr>Calculator<wbr>Config</a>
+						<a href="_src_exchanges_publicexchangeapi_.candle.html" class="tsd-kind-icon">Candle</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html" class="tsd-kind-icon">Robust<wbr>Calculator<wbr>Report</a>
+						<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html" class="tsd-kind-icon">Candle<wbr>Request<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html#data" class="tsd-kind-icon">data</a>
+								<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#extra" class="tsd-kind-icon">extra</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_fxservice_calculators_robustcalculator_.robustcalculatorreport.html#sources" class="tsd-kind-icon">sources</a>
+								<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#from" class="tsd-kind-icon">from</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#gdaxproduct" class="tsd-kind-icon">gdax<wbr>Product</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#interval" class="tsd-kind-icon">interval</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_exchanges_publicexchangeapi_.candlerequestoptions.html#limit" class="tsd-kind-icon">limit</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_src_fxservice_calculators_robustcalculator_.html#no_current_price_error" class="tsd-kind-icon">NO_<wbr>CURRENT_<wbr>PRICE_<wbr>ERROR</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_publicexchangeapi_.product.html" class="tsd-kind-icon">Product</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_src_fxservice_calculators_robustcalculator_.html#price_change_deviation_error" class="tsd-kind-icon">PRICE_<wbr>CHANGE_<wbr>DEVIATION_<wbr>ERROR</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_publicexchangeapi_.publicexchangeapi.html" class="tsd-kind-icon">Public<wbr>ExchangeAPI</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_src_fxservice_calculators_robustcalculator_.html#price_deviation_error" class="tsd-kind-icon">PRICE_<wbr>DEVIATION_<wbr>ERROR</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_src_exchanges_publicexchangeapi_.ticker.html" class="tsd-kind-icon">Ticker</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_src_exchanges_publicexchangeapi_.html#candleinterval" class="tsd-kind-icon">Candle<wbr>Interval</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module">
+						<a href="../modules/_src_exchanges_publicexchangeapi_.html#intervalinms" class="tsd-kind-icon">Interval<wbr>InMS</a>
 					</li>
 				</ul>
 			</nav>

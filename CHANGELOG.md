@@ -7,6 +7,8 @@
 ## 0.3.0
 * Fix bug where timestamps from Bittrex were interpreted as local time. This is a potential breaking change, hence minor
   version update.
+* CCXT v1.10
+
 ## 0.2.2
 * GDAX API public clients can use custom API url
 * GDAX stop orders work when price field is provided

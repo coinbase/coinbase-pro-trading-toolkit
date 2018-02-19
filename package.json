@@ -66,9 +66,9 @@
   },
   "devDependencies": {
     "expect.js": "0.3.1",
-    "markdown-magic": "^0.1.18",
-    "markdown-magic-github-contributors": "^0.0.3",
-    "markdown-magic-version-badge": "^1.1.1",
+    "markdown-magic": "0.1.20",
+    "markdown-magic-github-contributors": "0.0.3",
+    "markdown-magic-version-badge": "1.1.1",
     "mocha": "3.2.0",
     "nock": "9.0.2",
     "nyc": "11.1.0",
@@ -78,5 +78,8 @@
     "typedoc": "0.8.0",
     "typescript": "^2.5.3",
     "uuid": "3.0.0"
+  },
+  "resolutions": {
+    "deasync": "^0.1.12"
   }
 }
