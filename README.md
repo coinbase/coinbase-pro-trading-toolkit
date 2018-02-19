@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/coinbase/gdax-tt.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-tt)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (VERSIONBADGE) -->
-[![npm](https://img.shields.io/badge/npm-v0.3.0-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
+[![npm](https://img.shields.io/badge/npm-v0.3.1-green.svg)](https://www.npmjs.com/package/gdax-trading-toolkit)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
