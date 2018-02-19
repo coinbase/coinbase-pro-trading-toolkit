@@ -14,7 +14,7 @@
 
 import * as ccxt from 'ccxt';
 import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
-import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
+import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
@@ -115,7 +115,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const secret = auth.secret || process.env[`${upName}_SECRET`];
         const password = opts.passphrase || process.env[`${upName}_PASSPHRASE`];
         const uid = opts.uid || process.env[`${upName}_UID`];
-        const options = Object.assign(opts, { apiKey: key, secret: secret, uid: uid, password: password });
+        const options = Object.assign(opts, {apiKey: key, secret: secret, uid: uid, password: password});
         const ccxtInstance = new exchange(options);
         return new CCXTExchangeWrapper(owner, options, ccxtInstance, logger);
     }
@@ -195,7 +195,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
         return this.loadTicker(gdaxProduct).then((t: Ticker) => {
             if (!(t && t.ask && t.bid)) {
-                return Promise.reject(new HTTPError(`Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`, { status: 200, body: t}));
+                return Promise.reject(new HTTPError(`Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`, {status: 200, body: t}));
             }
             return Promise.resolve(t.bid.plus(t.ask).div(2));
         });
@@ -245,12 +245,37 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }).catch((err: Error) => rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
+    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+        const product = options.gdaxProduct;
+        if (!product) {
+            return Promise.reject(new Error('No product ID provided to loadCandles'));
+        }
+        if (!this.instance.hasFetchOHLCV) {
+            return Promise.reject(new Error(`${this.instance.name} does not support candles`));
+        }
+        return this.getSourceSymbol(product).then((id: string) => {
+            return this.instance.fetchOHLCV(id, options.interval);
+        }).then((data: CCXTOHLCV[]) => {
+            const candles = data.map((d: CCXTOHLCV) => {
+                return {
+                    timestamp: new Date(d[0]),
+                    open: Big(d[1]),
+                    high: Big(d[2]),
+                    low: Big(d[3]),
+                    close: Big(d[4]),
+                    volume: Big(d[5])
+                };
+            });
+            return Promise.resolve(candles);
+        }).catch((err: Error) => rejectWithError(`Error loading candles for ${product} on ${this.instance.name} (CCXT)`, err));
+    }
+
     placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
         return this.getSourceSymbol(order.productId).then((id: string) => {
             if (!id) {
                 return Promise.resolve(null);
             }
-            const args = Object.assign({ postOnly: order.postOnly, funds: order.funds, clientId: order.clientId }, order.extra);
+            const args = Object.assign({postOnly: order.postOnly, funds: order.funds, clientId: order.clientId}, order.extra);
             return this.instance.createOrder(id, order.orderType, order.side, order.size.toString(), order.price.toString(), args).then((res: any) => {
                 const result: LiveOrder = {
                     productId: order.productId,
@@ -292,7 +317,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             if (!balances) {
                 return Promise.resolve(null);
             }
-            const result: Balances = { default: {} };
+            const result: Balances = {default: {}};
             for (const cur in balances) {
                 if (cur === 'info') {
                     continue;
@@ -331,7 +356,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
             const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
-            return rawTrades.map(({ info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount }) => ({
+            return rawTrades.map(({info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount}) => ({
                 type: 'trade' as 'trade',
                 time: new Date(timestamp),
                 productId: _symbol,
