@@ -945,9 +945,9 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-"gdax@https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77":
-  version "0.5.0"
-  resolved "https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77"
+gdax@0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/gdax/-/gdax-0.5.1.tgz#88a0ed29dbecc348c5cac03c5598d4c809072632"
   dependencies:
     bintrees "1.0.1"
     num "0.3.0"
