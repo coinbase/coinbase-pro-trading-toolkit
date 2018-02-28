@@ -131,7 +131,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                     price: Big(ticker.price || 0),
                     size: Big(ticker.size || 0),
                     volume: Big(ticker.volume || 0),
-                    time: new Date(ticker.time || new Date()),
+                    time: ticker.time ? new Date(ticker.time) : new Date(),
                     trade_id: ticker.trade_id ? ticker.trade_id.toString() : '0'
                 };
             }).catch((err: GDAXHTTPError) => {
