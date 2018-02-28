@@ -75,7 +75,7 @@ When writing Typescript projects with the GTT, we recommend the following settin
       ]
     }
 
-Importing the top-level `GTT` object is also a striaghtforward import:
+Importing the top-level `GTT` object is also a straightforward import:
 
      import * as GTT from 'gdax-trading-toolkit';
 
