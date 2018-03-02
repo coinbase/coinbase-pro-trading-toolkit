@@ -393,8 +393,7 @@ export class GDAXFeed extends ExchangeFeed {
                     type: 'unknown',
                     time: new Date(),
                     sequence: (feedMessage as any).sequence,
-                    productId: (feedMessage as any).product_id,
-                    extra: feedMessage
+                    productId: (feedMessage as any).product_id
                 };
                 return msg;
             }
@@ -404,8 +403,7 @@ export class GDAXFeed extends ExchangeFeed {
                     type: 'unknown',
                     time: new Date(),
                     sequence: this.getSequence(product),
-                    productId: product,
-                    extra: feedMessage
+                    productId: product
                 };
                 return msg;
             }
