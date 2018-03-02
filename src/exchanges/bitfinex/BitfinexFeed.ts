@@ -273,7 +273,11 @@ export class BitfinexFeed extends ExchangeFeed {
                     })
                 };
                 if (self.standardMessages) {
-                    self.push(self.mapSnapshot(snapshot));
+                    const s = self.mapSnapshot(snapshot);
+                    process.nextTick(() => {
+                        self.emit('snapshot', s.productId);
+                    });
+                    self.push(s);
                 } else {
                     self.push(snapshot);
                 }

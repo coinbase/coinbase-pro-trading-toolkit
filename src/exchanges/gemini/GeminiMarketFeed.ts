@@ -60,7 +60,11 @@ export class GeminiMarketFeed extends ExchangeFeed {
     private processUpdate(update: GI.GeminiUpdateMessage) {
         if (update.socket_sequence === 0) {
             // Process the first message with the orderbook state
-            this.push(this.createSnapshotMessage(update));
+            const snapshot = this.createSnapshotMessage(update);
+            this.push(snapshot);
+            process.nextTick(() => {
+                this.emit('snapshot', snapshot.productId);
+            });
         } else {
             update.events.forEach((event) => {
                 let message: StreamMessage;

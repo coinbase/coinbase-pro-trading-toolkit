@@ -306,6 +306,9 @@ export class PoloniexFeed extends ExchangeFeed {
                     channelInfo.sequence = sequence;
                     const snapshot: SnapshotMessage = self.createSnapshotMessage(product, sequence, update[1]);
                     self.push(snapshot);
+                    process.nextTick(() => {
+                        self.emit('snapshot', snapshot.productId);
+                    });
                     return;
                 }
                 if (type === 'o') {

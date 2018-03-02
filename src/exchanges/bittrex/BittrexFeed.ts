@@ -75,6 +75,9 @@ export class BittrexFeed extends ExchangeFeed {
                         }
                         const snapshot: SnapshotMessage = this.processSnapshot(product, data);
                         this.push(snapshot);
+                        process.nextTick(() => {
+                            this.emit('snapshot', snapshot.productId);
+                        });
                         return resolve(true);
                     });
                 });
