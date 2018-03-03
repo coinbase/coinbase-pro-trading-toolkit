@@ -80,8 +80,6 @@ export interface GDAXFeedConfig extends ExchangeFeedConfig {
 export class GDAXFeed extends ExchangeFeed {
     private products: Set<string>;
     private gdaxAPI: GDAXExchangeAPI;
-    private queue: { [product: string]: any[] } = {};
-    private queueing: { [product: string]: boolean } = {};
     private internalSequence: { [index: string]: number } = {};
     private channels: string[];
 
@@ -189,7 +187,7 @@ export class GDAXFeed extends ExchangeFeed {
                     (message as any).sourceSequence = (feedMessage as any).sequence;
                 }
                 message.origin = feedMessage;
-                this.pushMessage(message);
+                this.push(message);
             }
         } catch (err) {
             err.ws_msg = msg;
@@ -233,20 +231,6 @@ export class GDAXFeed extends ExchangeFeed {
             this.internalSequence[product] = 1;
         }
         return this.internalSequence[product];
-    }
-
-    /**
-     * Marked for deprecation
-     */
-    private pushMessage(message: StreamMessage): void {
-        const product: string = (message as any).productId;
-        const needsQueue = (message as any).sequence && this.queueing[product];
-        // If we're waiting for a snapshot, and the message needs one (i.e. has a sequence  number) queue it up, else send it straight on
-        if (!product || !needsQueue) {
-            this.push(message);
-            return;
-        }
-        this.queue[product].push(message);
     }
 
     private createSnapshotMessage(snapshot: GDAXSnapshotMessage): SnapshotMessage {
@@ -300,7 +284,7 @@ export class GDAXFeed extends ExchangeFeed {
                 side: side,
                 origin: update
             };
-            this.pushMessage(message);
+            this.push(message);
         });
     }
 
