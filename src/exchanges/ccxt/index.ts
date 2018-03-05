@@ -13,7 +13,7 @@
  **********************************************************************************************************************/
 
 import * as ccxt from 'ccxt';
-import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
+import { CCXTHistTrade, Market, OHLCV, CCXTOrderbook } from 'ccxt';
 import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
@@ -132,7 +132,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return result;
     }
 
-    static getGDAXSymbol(m: CCXTMarket): string {
+    static getGDAXSymbol(m: Market): string {
         return `${m.base}-${m.quote}`;
     }
 
@@ -157,9 +157,9 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     getSourceSymbol(gdaxProduct: string): Promise<string> {
         const [base, quote] = gdaxProduct.split('-');
-        return this.instance.loadMarkets(false).then((markets: CCXTMarket[]) => {
+        return this.instance.loadMarkets(false).then((markets: Market[]) => {
             for (const id in markets) {
-                const m: CCXTMarket = markets[id];
+                const m: Market = markets[id];
                 if (m.base === base && m.quote === quote) {
                     return Promise.resolve(m.symbol);
                 }
@@ -169,7 +169,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     loadProducts(): Promise<Product[]> {
-        return this.instance.loadMarkets(true).then((markets: ccxt.CCXTMarket[]) => {
+        return this.instance.loadMarkets(true).then((markets: ccxt.Market[]) => {
             if (!markets) {
                 return Promise.resolve([]);
             }
@@ -255,8 +255,8 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
         return this.getSourceSymbol(product).then((id: string) => {
             return this.instance.fetchOHLCV(id, options.interval);
-        }).then((data: CCXTOHLCV[]) => {
-            const candles = data.map((d: CCXTOHLCV) => {
+        }).then((data: OHLCV[]) => {
+            const candles = data.map((d: OHLCV) => {
                 return {
                     timestamp: new Date(d[0]),
                     open: Big(d[1]),
@@ -370,7 +370,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
     }
 
-    async fetchOHLCV(symbol: string, params?: {}): Promise<CCXTOHLCV[] | null> {
+    async fetchOHLCV(symbol: string, params?: {}): Promise<OHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
             return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
         }
