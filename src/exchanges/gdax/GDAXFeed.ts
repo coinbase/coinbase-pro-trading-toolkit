@@ -64,7 +64,7 @@ export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
  *   - `user` - If you provided auth credentials, private messages will also be sent
  */
 export interface GDAXFeedConfig extends ExchangeFeedConfig {
-    auth: GDAXAuthConfig;
+    auth?: GDAXAuthConfig;
     wsUrl: string;
     channels?: string[]; // If supplied, the channels to subscribe to. This feature may be deprecated in a future release
     apiUrl: string;
