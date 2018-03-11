@@ -210,7 +210,7 @@ export class Trader extends Writable {
 
     private handleCancelOrder(request: CancelOrderRequestMessage) {
         this.cancelOrder(request.orderId).then((result: string) => {
-            return this.emitMessageAsync('Trader.order-cancelled', result);
+            this.emitMessageAsync('Trader.order-cancelled', result);
         }, (err: Error) => {
             this.emitMessageAsync('Trader.cancel-order-failed', err);
         });
