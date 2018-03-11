@@ -106,8 +106,6 @@ export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
 
 /**
  * In order-level books, represents a new order.
- *
- * `orderType` is market, limit, stop
  */
 export interface NewOrderMessage extends BaseOrderMessage {
     type: 'newOrder';
@@ -179,6 +177,8 @@ export interface TickerMessage extends StreamMessage, Ticker {
 /**
  * A new order request message. Only the most common fields are specified here. Additional options can be specified
  * in the extra field, which can be handled by the target trade engine.
+ *
+ * `orderType` is limit, market, stop
  */
 export interface PlaceOrderMessage extends StreamMessage {
     type: 'placeOrder';
@@ -200,6 +200,8 @@ export interface CancelOrderRequestMessage extends StreamMessage {
 
 /**
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
+ *
+ * `orderType` is limit, market, stop
  */
 export interface TradeExecutedMessage extends StreamMessage {
     type: 'tradeExecuted';
@@ -212,6 +214,10 @@ export interface TradeExecutedMessage extends StreamMessage {
     remainingSize: string;
 }
 
+/**
+ * Emitted when my order is finalized. (An authenticated feed is
+ * required).
+ */
 export interface TradeFinalizedMessage extends StreamMessage {
     type: 'tradeFinalized';
     productId: string;
@@ -222,6 +228,10 @@ export interface TradeFinalizedMessage extends StreamMessage {
     reason: string;
 }
 
+/**
+ * Emitted when my order is placed. (An authenticated feed is
+ * required).
+ */
 export interface MyOrderPlacedMessage extends StreamMessage {
     type: 'myOrderPlaced';
     productId: string;
