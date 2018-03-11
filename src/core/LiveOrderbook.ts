@@ -13,8 +13,14 @@
  ***************************************************************************************************************************/
 
 import { Big, BigJS, Biglike, ZERO } from '../lib/types';
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from '../lib/Orderbook';
-import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from '../lib/BookBuilder';
+import { CumulativePriceLevel,
+         Level3Order,
+         Orderbook,
+         OrderbookState } from '../lib/Orderbook';
+import { AggregatedLevelFactory,
+         AggregatedLevelWithOrders,
+         BookBuilder,
+         StartPoint } from '../lib/BookBuilder';
 import { Logger } from '../utils/Logger';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import {

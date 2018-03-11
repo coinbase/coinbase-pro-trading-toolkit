@@ -12,7 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AvailableBalance, Balances } from '../exchanges/AuthenticatedExchangeAPI';
+import { AvailableBalance,
+         Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { Big, BigJS } from '../lib/types';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { LiveOrder, Orderbook } from '../lib/Orderbook';

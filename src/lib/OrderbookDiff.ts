@@ -12,9 +12,16 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { CancelOrderRequestMessage, PlaceOrderMessage, StreamMessage } from '../core/Messages';
-import { Level3Order, OrderbookState, PriceLevel, PriceLevelWithOrders } from './Orderbook';
-import { AggregatedLevel, AggregatedLevelWithOrders, BookBuilder } from './BookBuilder';
+import { CancelOrderRequestMessage,
+         PlaceOrderMessage,
+         StreamMessage } from '../core/Messages';
+import { Level3Order,
+         OrderbookState,
+         PriceLevel,
+         PriceLevelWithOrders } from './Orderbook';
+import { AggregatedLevel,
+         AggregatedLevelWithOrders,
+         BookBuilder } from './BookBuilder';
 import { RBTree } from 'bintrees';
 import { BigJS, ZERO } from './types';
 
