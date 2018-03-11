@@ -123,7 +123,7 @@ describe('BookBuilder:', () => {
             assert.ok(book.hasOrder(order.id), 'Book has order');
         });
 
-        it('removes an order when the order size is modified to zero', () => {
+        it('keeps an order when the order size is modified to zero', () => {
             assert.ok(book.hasOrder('00006'),
                       'Order was not removed');
             const order = book.getOrder('00006');
@@ -131,8 +131,10 @@ describe('BookBuilder:', () => {
                       'Order still was not removed');
             assert.ok(book.modify('00006', ZERO),
                       'Order can be modified to zero size');
-            assert.ok(!book.hasOrder('00006'),
-                      'Book does not have order after modified to zero size');
+            assert.ok(book.hasOrder('00006'),
+                      'Book has order after modified to zero size');
+            assert.ok(book.getOrder('00006').size.eq(ZERO),
+                      'The order has zero size');
         });
     });
 });
