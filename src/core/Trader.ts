@@ -104,7 +104,7 @@ export class Trader extends Writable {
             // We pass the message along, but let the user decide what to do
             // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
             this.emitMessageAsync('Trader.place-order-failed', err.asMessage());
-            return Promise.resolve(null);
+            return null;
         });
     }
 
@@ -158,8 +158,7 @@ export class Trader extends Writable {
             actualOrders.forEach((order: LiveOrder) => {
                 book.add(order);
             });
-            const diff = OrderbookDiff.compareByOrder(this.myBook, book);
-            return Promise.resolve(diff);
+            return OrderbookDiff.compareByOrder(this.myBook, book);
         });
     }
 
