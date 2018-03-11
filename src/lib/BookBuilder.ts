@@ -266,11 +266,8 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         if (newSize.lt(ZERO)) {
             throw new Error('Cannot set an order size to a negative number');
         }
-        const order = this.getOrder(id);
+        const order = this.remove(id);
         if (!order) {
-            return false;
-        }
-        if (!this.remove(id)) {
             return false;
         }
         if (newSize.gt(ZERO)) {
