@@ -228,7 +228,6 @@ export interface MyOrderPlacedMessage extends StreamMessage {
     orderId: string;
     side: Side;
     price: string;
-    orderType: string;
     size: string;
     sequence: number;
 }
