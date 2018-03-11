@@ -109,10 +109,9 @@ export class Trader extends Writable {
     }
 
     cancelOrder(orderId: string): Promise<string> {
-        return this.api.cancelOrder(orderId).then((id: string) => {
-            // To avoid race conditions, we only actually remove the order when the tradeFinalized message arrives
-            return id;
-        });
+        // To avoid race conditions, we only actually remove the order
+        // when the tradeFinalized message arrives.
+        return this.api.cancelOrder(orderId);
     }
 
     cancelMyOrders(): Promise<string[]> {
