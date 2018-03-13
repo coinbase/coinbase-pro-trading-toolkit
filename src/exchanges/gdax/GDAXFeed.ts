@@ -66,7 +66,7 @@ export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
 export interface GDAXFeedConfig extends ExchangeFeedConfig {
     auth: GDAXAuthConfig;
     wsUrl: string;
-    channels: string[]; // If supplied, the channels to subscribe to. This feature may be deprecated in a future release
+    channels?: string[]; // If supplied, the channels to subscribe to. This feature may be deprecated in a future release
     apiUrl: string;
 }
 
