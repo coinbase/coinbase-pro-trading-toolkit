@@ -77,7 +77,7 @@ export default class BigArray {
         return this.values.length;
     }
 
-    sumTo(i: number) {
+    sumTo(i: number): BigJS {
         if (i < 0) {
             return ZERO;
         }
@@ -88,7 +88,7 @@ export default class BigArray {
         return i < n ? this.sumArray.values[i] : this.sumArray.values[n - 1];
     }
 
-    sum() {
+    sum(): BigJS {
         return this.sumTo(this.length - 1);
     }
 
