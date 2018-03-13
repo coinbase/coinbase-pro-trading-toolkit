@@ -36,19 +36,13 @@ interface OrderPage {
     orders: BaseOrderInfo[];
 }
 
-interface PublicClients {
-    default: PublicClient;
-
-    [product: string]: PublicClient;
-}
-
 export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
     owner: string;
     quoteCurrency: string;
     baseCurrency: string;
     private coinbaseAccounts: CoinbaseAccount[];
     private _apiURL: string;
-    private publicClients: PublicClients;
+    private publicClient: PublicClient;
     private authClient: AuthenticatedClient;
     private auth: GDAXAuthConfig;
     private logger: Logger;
@@ -61,8 +55,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         if (this.auth) {
             this.authClient = new AuthenticatedClient(this.auth.key, this.auth.secret, this.auth.passphrase, this._apiURL);
         }
-        this.publicClients = {default: new PublicClient('BTC-USD', this._apiURL)};
-        this.publicClients['BTC-USD'] = this.publicClients.default;
+        this.publicClient = new PublicClient(this._apiURL);
     }
 
     get apiURL(): string {
@@ -77,7 +70,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     loadProducts(): Promise<Product[]> {
-        return this.getPublicClient().getProducts()
+        return this.publicClient.getProducts()
             .then((products: ProductInfo[]) => {
                 return products.map((prod: ProductInfo) => {
                     return {
@@ -117,7 +110,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
 
     loadGDAXOrderbook(options: OrderbookEndpointParams): Promise<any> {
         const {product, ...params} = options;
-        return this.getPublicClient(product).getProductOrderBook(params)
+        return this.publicClient.getProductOrderBook(product, params)
             .then((orders) => {
                 if (!(orders.bids && orders.asks)) {
                     return Promise.reject(new HTTPError(`Error loading ${product} orderbook from GDAX`, {status: 200, body: orders}));
@@ -129,7 +122,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     loadTicker(product: string): Promise<Ticker> {
-        return this.getPublicClient(product).getProductTicker()
+        return this.publicClient.getProductTicker(product)
             .then((ticker: ProductTicker) => {
                 return {
                     productId: product,
@@ -138,7 +131,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                     price: Big(ticker.price || 0),
                     size: Big(ticker.size || 0),
                     volume: Big(ticker.volume || 0),
-                    time: new Date(ticker.time || new Date()),
+                    time: ticker.time ? new Date(ticker.time) : new Date(),
                     trade_id: ticker.trade_id ? ticker.trade_id.toString() : '0'
                 };
             }).catch((err: GDAXHTTPError) => {
@@ -151,7 +144,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         if (!product) {
             return Promise.reject(new Error('No product ID provided to loadCandles'));
         }
-        return this.getPublicClient(product).getProductHistoricRates({
+        return this.publicClient.getProductHistoricRates(product, {
             granularity: IntervalInMS[options.interval] * 0.001,
             limit: options.limit || 350
         }).then((data: any[][]) => {
@@ -528,16 +521,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 orders: orders
             };
         });
-    }
-
-    private getPublicClient(product?: string): PublicClient {
-        if (!product) {
-            return this.publicClients.default;
-        }
-        if (!this.publicClients[product]) {
-            this.publicClients[product] = new PublicClient(product, this._apiURL);
-        }
-        return this.publicClients[product];
     }
 }
 
