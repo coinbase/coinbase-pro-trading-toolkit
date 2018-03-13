@@ -105,7 +105,6 @@ getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: GDAXFe
     };
     const trader = new Trader(traderConfig);
     const orders = new StaticCommandSet(messages, false);
-    let cancellations = 0;
     // We use a limiter to play each order once every 2 seconds.
     const limiter = new Limiter(1, 500);
     // We'll play the orders through the limiter, so connect them up
@@ -132,7 +131,6 @@ getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: GDAXFe
         };
         orders.messages.push(cancel);
         orders.sendOne();
-        cancellations++;
         if (msg.price.toString() === '1.4') {
             orders.end();
         }

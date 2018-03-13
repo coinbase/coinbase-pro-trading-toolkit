@@ -14,9 +14,3 @@ entries:
     - title: GTT API reference
       url: /apiref
       output: web
-    - title: GTT UI Users' Guide
-      url: /gttui_about.html
-      output: web
-    - title: GTT UI API reference
-      url: /apiref-ui\/index.html
-      output: web

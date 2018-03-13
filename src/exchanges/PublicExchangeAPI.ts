@@ -14,6 +14,7 @@
 
 import { BookBuilder } from '../lib/BookBuilder';
 import { BigJS } from '../lib/types';
+
 /**
  * A generic API interface that defines the standard REST features that any crypto exchange typically exposes
  *
@@ -46,7 +47,39 @@ export interface PublicExchangeAPI {
      * Load the ticker for the configured product from the REST API, Resolves with the latest ticker object, or else rejects with an HTTPError
      */
     loadTicker(gdaxProduct: string): Promise<Ticker>;
+
+    loadCandles(options: CandleRequestOptions): Promise<Candle[]>;
 }
+
+export interface Candle {
+    timestamp: Date;
+    open: BigJS;
+    close: BigJS;
+    high: BigJS;
+    low: BigJS;
+    volume: BigJS;
+}
+
+export interface CandleRequestOptions {
+    gdaxProduct: string;
+    interval: CandleInterval;
+    from: Date;
+    limit: number;
+    extra: any;
+}
+
+export type CandleInterval = '1m' | '3m' | '5m' | '10m' | '30m' | '1h' | '4h' | '12h' | '1d' | '3d' | '7d';
+export const IntervalInMS: { [interval: string]: number } = {'1m': 60 * 1000};
+IntervalInMS['3m'] = 3 * IntervalInMS['1m'];
+IntervalInMS['5m'] = 5 * IntervalInMS['1m'];
+IntervalInMS['10m'] = 10 * IntervalInMS['1m'];
+IntervalInMS['30m'] = 30 * IntervalInMS['1m'];
+IntervalInMS['1h'] = 60 * IntervalInMS['1m'];
+IntervalInMS['4h'] = 4 * IntervalInMS['1h'];
+IntervalInMS['12h'] = 12 * IntervalInMS['12h'];
+IntervalInMS['1d'] = 24 * IntervalInMS['24h'];
+IntervalInMS['3d'] = 3 * IntervalInMS['1d'];
+IntervalInMS['7d'] = 7 * IntervalInMS['1d'];
 
 /**
  * The interface for the book ticker. The standard GDAX api is employed. See (https://docs.gdax.com/#get-product-ticker)

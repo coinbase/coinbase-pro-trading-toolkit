@@ -207,6 +207,9 @@ export class BittrexFeed extends ExchangeFeed {
                 this.push(msg);
             });
             state.Fills.forEach((fill: BittrexFill) => {
+                if (!fill.TimeStamp.endsWith('Z')) {
+                    fill.TimeStamp += 'Z';
+                }
                 const message: TradeMessage = {
                     type: 'trade',
                     productId: product,
