@@ -17,7 +17,7 @@ import { ZERO, Big } from '../../src/lib/types';
 import createOrderbookUtils from './createOrderbookUtils';
 import assert = require('assert');
 
-describe('OrderboohUtils', () => {
+describe('OrderbookUtils', () => {
     describe('objects', () => {
         let obu: OrderbookUtils = null;
         beforeEach(() => {
