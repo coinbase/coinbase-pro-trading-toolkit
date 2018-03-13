@@ -89,7 +89,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAu
         secret: process.env.GDAX_SECRET,
         passphrase: process.env.GDAX_PASSPHRASE
     };
-    // Use the GAX API to get, and subscribe to all the endpoints
+    // Use the GDAX API to get, and subscribe to all the endpoints
     let productPromise: Promise<string[]>;
     if (productIDs) {
         productPromise = Promise.resolve(productIDs);
