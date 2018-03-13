@@ -23,6 +23,7 @@ import {
 import { WEBSOCKET_API_VERSION, ORDERBOOK_PRECISION, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
@@ -411,7 +412,7 @@ export class BitfinexFeed extends ExchangeFeed {
     private mapOrderMessage(order: BitfinexOrderMessage): LevelMessage {
         const pair = this.subscriptions[order.channel_id].pair;
         const productId = this.mapProduct(pair);
-        let side: string = null;
+        let side: Side;
         const size = +order.size;
         if (size < 0) {
             side = 'sell';

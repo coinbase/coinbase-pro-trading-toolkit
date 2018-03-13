@@ -15,6 +15,7 @@
 import { Candle, CandleRequestOptions, IntervalInMS, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { BookBuilder } from '../../lib/BookBuilder';
+import { Side } from '../../lib/sides';
 import { Big, BigJS, ZERO } from '../../lib/types';
 import { Logger } from '../../utils/Logger';
 import { PlaceOrderMessage } from '../../core/Messages';
@@ -201,7 +202,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         }
         let gdaxOrder: OrderParams;
         assert(order.side === 'buy' || order.side === 'sell');
-        const side: 'buy' | 'sell' = order.side === 'buy' ? 'buy' : 'sell';
+        const side: Side = order.side === 'buy' ? 'buy' : 'sell';
         switch (order.orderType) {
             case 'limit':
                 gdaxOrder = {

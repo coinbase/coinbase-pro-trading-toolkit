@@ -18,6 +18,7 @@ import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { Side } from '../../lib/sides';
 import { Big, BigJS, ZERO } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
@@ -206,7 +207,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             return this.instance.fetchOrderBook(id);
         }).then((ccxtBook: CCXTOrderbook) => {
             const book: BookBuilder = new BookBuilder(this.logger);
-            const addSide = (side: string, orders: number[][]) => {
+            const addSide = (side: Side, orders: number[][]) => {
                 orders.forEach((o) => {
                     if (!Array.isArray(o) || o.length !== 2) {
                         return;
