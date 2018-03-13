@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
+import { Candle, CandleRequestOptions, IntervalInMS, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { Big, BigJS, ZERO } from '../../lib/types';
@@ -61,7 +61,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         if (this.auth) {
             this.authClient = new AuthenticatedClient(this.auth.key, this.auth.secret, this.auth.passphrase, this._apiURL);
         }
-        this.publicClients = { default: new PublicClient('BTC-USD', this._apiURL) };
+        this.publicClients = {default: new PublicClient('BTC-USD', this._apiURL)};
         this.publicClients['BTC-USD'] = this.publicClients.default;
     }
 
@@ -99,7 +99,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     loadMidMarketPrice(product: string): Promise<BigJS> {
         return this.loadTicker(product).then((ticker) => {
             if (!ticker || !ticker.bid || !ticker.ask) {
-                throw new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, { status: 200, body: ticker });
+                throw new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, {status: 200, body: ticker});
             }
             return ticker.ask.plus(ticker.bid).times(0.5);
         });
@@ -110,17 +110,17 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     loadFullOrderbook(product: string): Promise<BookBuilder> {
-        return this.loadGDAXOrderbook({ product: product, level: 3 }).then((body) => {
+        return this.loadGDAXOrderbook({product: product, level: 3}).then((body) => {
             return this.buildBook(body);
         });
     }
 
     loadGDAXOrderbook(options: OrderbookEndpointParams): Promise<any> {
-        const { product, ...params } = options;
+        const {product, ...params} = options;
         return this.getPublicClient(product).getProductOrderBook(params)
             .then((orders) => {
                 if (!(orders.bids && orders.asks)) {
-                    return Promise.reject(new HTTPError(`Error loading ${product} orderbook from GDAX`, { status: 200, body: orders }));
+                    return Promise.reject(new HTTPError(`Error loading ${product} orderbook from GDAX`, {status: 200, body: orders}));
                 }
                 return orders;
             }).catch((err: GDAXHTTPError) => {
@@ -144,6 +144,30 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             }).catch((err: GDAXHTTPError) => {
                 return Promise.reject(new HTTPError(`Error loading ${product} ticker from GDAX`, extractResponse(err.response)));
             });
+    }
+
+    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+        const product = options.gdaxProduct;
+        if (!product) {
+            return Promise.reject(new Error('No product ID provided to loadCandles'));
+        }
+        return this.getPublicClient(product).getProductHistoricRates({
+            granularity: IntervalInMS[options.interval] * 0.001,
+            limit: options.limit || 350
+        }).then((data: any[][]) => {
+            return data.map((d: any[]) => {
+                return {
+                    timestamp: new Date(d[0] * 1000),
+                    low: Big(d[1]),
+                    high: Big(d[2]),
+                    open: Big(d[3]),
+                    close: Big(d[4]),
+                    volume: Big(d[5])
+                };
+            });
+        }).catch((err: GDAXHTTPError) => {
+            return Promise.reject(new HTTPError(`Error loading ${product} candles from GDAX`, extractResponse(err.response)));
+        });
     }
 
     public aggregateBook(body: any): BookBuilder {
@@ -220,7 +244,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                     funds: order.funds,
                     client_oid: order.clientId,
                     stp: order.extra && order.extra.stp
-                };
+                } as OrderParams; // Override for incomplete definition in GDAX lib
                 break;
             default:
                 return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
@@ -240,7 +264,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
 
     cancelOrder(id: string): Promise<string> {
         const apiCall = this.authCall('DELETE', `/orders/${id}`, {});
-        return this.handleResponse<string[]>(apiCall, { order_id: id }).then((ids: string[]) => {
+        return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
             return Promise.resolve(ids[0]);
         });
 
@@ -248,7 +272,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
 
     cancelAllOrders(product: string): Promise<string[]> {
         const apiCall = this.authCall('DELETE', `/orders`, {});
-        const options = product ? { product_id: product } : null;
+        const options = product ? {product_id: product} : null;
         return this.handleResponse<string[]>(apiCall, options).then((ids: string[]) => {
             return Promise.resolve(ids);
         });
@@ -493,7 +517,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         if (after) {
             qs.after = after;
         }
-        return this.authCall('GET', '/orders', { qs: qs }).then((res) => {
+        return this.authCall('GET', '/orders', {qs: qs}).then((res) => {
             const cbAfter = res.header['cb-after'];
             const orders = res.body;
             return {

@@ -14,6 +14,7 @@
 
 import { GDAXExchangeAPI } from '../../src/exchanges/gdax/GDAXExchangeAPI';
 import { CryptoAddress } from '../../src/exchanges/ExchangeTransferAPI';
+import { Candle } from '../../src/exchanges/PublicExchangeAPI';
 
 const assert = require('assert');
 const nock = require('nock');
@@ -21,11 +22,11 @@ const nock = require('nock');
 describe('GDAX Exchange API', () => {
     let gdax: GDAXExchangeAPI;
     before(() => {
-        gdax = new GDAXExchangeAPI({ logger: null });
+        gdax = new GDAXExchangeAPI({logger: null});
     });
 
     it('returns a ticker object', () => {
-        nock('https://api.gdax.com', { encodedQueryParams: true })
+        nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 ask: '250.0',
@@ -42,7 +43,7 @@ describe('GDAX Exchange API', () => {
     });
 
     it('returns a midmarket price', () => {
-        nock('https://api.gdax.com', { encodedQueryParams: true })
+        nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 ask: '250.0',
@@ -57,9 +58,9 @@ describe('GDAX Exchange API', () => {
     });
 
     it('loads the orderbook', (done) => {
-        nock('https://api.gdax.com', { encodedQueryParams: true })
+        nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/products/BTC-USD/book')
-            .query({ level: '3' })
+            .query({level: '3'})
             .reply(200, {
                 sequence: 100,
                 bids: [['240', '5', 1], ['245', '3', 1], ['248', '1', 1]],
@@ -73,16 +74,37 @@ describe('GDAX Exchange API', () => {
             done();
         });
     });
+
+    it('returns candles', (done) => {
+        nock('https://api.gdax.com', {encodedQueryParams: true})
+            .get('/products/BTC-USD/candles')
+            .query({granularity: '3600', limit: 3})
+            .reply(200, [
+                [1519037640, 10911.82, 10911.82, 10911.82, 10911.82, 0.043492],
+                [1519037580, 10911.81, 10924.99, 10924.99, 10911.82, 2.32705733],
+                [1519037520, 10910.33, 10925, 10910.33, 10924.99, 0.47783237999999995]
+            ]);
+        gdax.loadCandles({gdaxProduct: 'BTC-USD', interval: '1h', limit: 3, from: null, extra: null}).then((candles: Candle[]) => {
+            assert.equal(candles.length, 3);
+            assert.ok(candles[0].timestamp.valueOf(), 1519037640000);
+            assert.ok(candles[0].open.toFixed(2), 10911.82);
+            assert.ok(candles[1].high.toFixed(2), 10924.99);
+            assert.ok(candles[2].low.toFixed(2), 10910.33);
+            assert.ok(candles[0].close.toFixed(2), 10911.82);
+            assert.ok(candles[1].volume.toFixed(2), 2.33);
+            done();
+        });
+    });
 });
 
 describe('GDAX Authenticated Exchange API', () => {
     let gdax: GDAXExchangeAPI;
     before(() => {
-        gdax = new GDAXExchangeAPI({ logger: null, auth: { key: 'key', secret: 'secret', passphrase: 'pass' } });
+        gdax = new GDAXExchangeAPI({logger: null, auth: {key: 'key', secret: 'secret', passphrase: 'pass'}});
     });
 
     it('returns a crypto address', () => {
-        nock('https://api.gdax.com', { encodedQueryParams: true })
+        nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/coinbase-accounts')
             .reply(200, [{
                 id: '12345-6789',

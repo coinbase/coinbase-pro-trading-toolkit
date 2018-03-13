@@ -25,7 +25,6 @@ import { EventEmitter } from 'events';
  * trapdoor).
  */
 export class StreamCopier extends EventEmitter {
-    private feed: Readable;
     private outputs: StreamConnection[];
     private bufferStreams: PassThrough[];
     private numConnected: number;
@@ -40,7 +39,6 @@ export class StreamCopier extends EventEmitter {
      */
     constructor(feed: Readable, numOutputs: number, options?: any) {
         super();
-        this.feed = feed;
         this.outputs = [];
         this.bufferStreams = new Array(numOutputs);
         options = options || { objectMode: true };
