@@ -314,7 +314,8 @@ export class GDAXFeed extends ExchangeFeed {
             bid: Big(ticker.best_bid),
             ask: Big(ticker.best_ask),
             trade_id: String(ticker.trade_id),
-            size: Big(ticker.last_size)
+            size: Big(ticker.last_size),
+            volume: Big(ticker.volume_24h)
         } as TickerMessage;
     }
 
