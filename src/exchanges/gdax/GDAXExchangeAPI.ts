@@ -371,10 +371,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
-        // then<T> is required to workaround bug in TS2.1 https://github.com/Microsoft/TypeScript/issues/10977
-        return req.then<T>((res: Response) => {
+        return req.then((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
-                return Promise.resolve<T>(res.body as T);
+                return Promise.resolve(res.body);
             }
             const err: HTTPError = new HTTPError(`Error handling GDAX request for ${(req as any).url}`, res);
             return Promise.reject(err);
