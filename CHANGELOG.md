@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.3.1
+* Candles support via `loadCandles` method on Public API interface.
+* Support for Typescript 2.7
+ 
+## 0.3.0
+* Fix bug where timestamps from Bittrex were interpreted as local time. This is a potential breaking change, hence minor
+  version update.
+* CCXT v1.10
+
+## 0.2.2
+* GDAX API public clients can use custom API url
+* GDAX stop orders work when price field is provided
+* Fix Poloniex reconnection bug
+* Fix tickertape tutorial
+* Improvements tp Bittrex WS feed
+* Fix trader logic for market orders
+* Basic general console support for all exchanges
+
 ## 0.2.0
 * Error API - Underlying exchange errors get propagated properly
 * FX service handles null results from calculator

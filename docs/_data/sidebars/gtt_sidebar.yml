@@ -18,7 +18,7 @@ entries:
       output: pdf
       type: frontmatter
 
-  - title: Getting Started
+  - title: General information
     output: web, pdf
     folderitems:
     - title: About
@@ -34,7 +34,7 @@ entries:
       url: /gtt_roadmap.html
       output: web, pdf
 
-  - title: Basics
+  - title: Tutorials
     output: web, pdf
     folderitems:
     - title: The market data feed
@@ -54,11 +54,4 @@ entries:
       output: web, pdf
     - title: Introduction to Triggers
       url: /gtt_tutorials_triggers.html
-      output: web, pdf
-
-  - title: Advanced topics
-    output: web, pdf
-    folderitems:
-    - title: Build a Market Maker bot
-      url: /gtt_advanced_marketmaking.html
       output: web, pdf

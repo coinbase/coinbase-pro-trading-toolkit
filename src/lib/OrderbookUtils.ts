@@ -44,7 +44,7 @@ interface OrderbookCache {
  * Calculate stats for trades given an order book. The orderbook is immutable.
  */
 export default class OrderbookUtils {
-    static calcFees(fees: BigJS, totalCost: BigJS) {
+    static calcFees(fees: BigJS, totalCost: BigJS): { fees_total: BigJS; total_cost: BigJS } {
         const feesTotal = totalCost.times(fees);
         totalCost = totalCost.plus(feesTotal);
         return { fees_total: feesTotal, total_cost: totalCost };
@@ -250,7 +250,7 @@ export default class OrderbookUtils {
      * @param index {number}
      * @param isBuy {boolean}
      */
-    getCumulativeSize(index: number, isBuy: boolean) {
+    getCumulativeSize(index: number, isBuy: boolean): BigJS {
         const orderData = isBuy ? this.cache.asks : this.cache.bids;
         return orderData.sizes.sumTo(index);
     }
@@ -260,7 +260,7 @@ export default class OrderbookUtils {
      * @param index {number}
      * @param isBuy {boolean}
      */
-    getCumulativeCost(index: number, isBuy: boolean) {
+    getCumulativeCost(index: number, isBuy: boolean): BigJS {
         const orderData = isBuy ? this.cache.asks : this.cache.bids;
         return orderData.value.sumTo(index);
     }

@@ -637,9 +637,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-deasync@^0.1.9:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.10.tgz#4e4a6836fbe0477bd5f908308bd2a96557d5d7fe"
+deasync@^0.1.12, deasync@^0.1.9:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.12.tgz#0159492a4133ab301d6c778cf01e74e63b10e549"
   dependencies:
     bindings "~1.2.1"
     nan "^2.0.7"
@@ -1675,7 +1675,7 @@ markdown-link@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/markdown-link/-/markdown-link-0.1.1.tgz#32c5c65199a6457316322d1e4229d13407c8c7cf"
 
-markdown-magic-github-contributors@^0.0.3:
+markdown-magic-github-contributors@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/markdown-magic-github-contributors/-/markdown-magic-github-contributors-0.0.3.tgz#46e7094d33b4418fe53dc6c6ea34b51ca9774688"
   dependencies:
@@ -1685,16 +1685,16 @@ markdown-magic-github-contributors@^0.0.3:
     github-url-from-git "^1.5.0"
     remote-origin-url "^0.5.2"
 
-markdown-magic-version-badge@^1.1.1:
+markdown-magic-version-badge@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/markdown-magic-version-badge/-/markdown-magic-version-badge-1.1.1.tgz#6e7cd951d7c32703470bc7bbb0f1de126fc8f82e"
   dependencies:
     findup "^0.1.5"
     semver "^5.3.0"
 
-markdown-magic@^0.1.18:
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/markdown-magic/-/markdown-magic-0.1.18.tgz#69a95f0f51248f9fc284ed75f24bdad85a45ceee"
+markdown-magic@0.1.20:
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/markdown-magic/-/markdown-magic-0.1.20.tgz#5f0ef79342fa1b43bba42afe63d3023286e3eec3"
   dependencies:
     commander "^2.9.0"
     deepmerge "^1.3.0"

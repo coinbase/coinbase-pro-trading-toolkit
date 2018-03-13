@@ -74,7 +74,6 @@ export class MessageQueue extends Duplex {
     private targetQueueLength: number;
     private lastSequence: number;
     private productId: string;
-    private messageListener: (type: string, data: any) => void;
     private waitForSnapshot: boolean;
 
     constructor(options: MessageQueueConfig) {
@@ -83,7 +82,6 @@ export class MessageQueue extends Duplex {
         this.productId = options.product;
         this.targetQueueLength = options.targetQueueLength || 10;
         this.lastSequence = -1000;
-        this.messageListener = undefined;
         this.waitForSnapshot = options.waitForSnapshot;
         this.clearQueue();
     }
