@@ -96,6 +96,7 @@ export interface GDAXTickerMessage extends GDAXProductMessage {
     best_bid: string;
     best_ask: string;
     last_size: string;
+    volume_24h: string;
 }
 
 export interface GDAXSnapshotMessage extends GDAXProductMessage {

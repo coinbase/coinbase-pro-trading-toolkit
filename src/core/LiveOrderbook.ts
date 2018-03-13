@@ -200,8 +200,8 @@ export class LiveOrderbook extends Duplex implements Orderbook {
                 sequence: sequence
             };
             const diff: number = event.expected_sequence - event.sequence;
-            const msg = `LiveOrderbook detected a skipped message. Expected ${event.expected_sequence}, but received ${event.sequence}. Diff = ${diff}`;
             if (this.strictMode) {
+                const msg = `LiveOrderbook detected a skipped message. Expected ${event.expected_sequence}, but received ${event.sequence}. Diff = ${diff}`;
                 throw new Error(msg);
             }
             this.emit('LiveOrderbook.skippedMessage', event);

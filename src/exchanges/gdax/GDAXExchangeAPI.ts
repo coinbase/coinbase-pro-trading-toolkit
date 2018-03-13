@@ -21,7 +21,7 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
-import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, ProductInfo, ProductTicker, PublicClient } from 'gdax';
+import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, OrderResult, ProductInfo, ProductTicker, PublicClient } from 'gdax';
 import * as assert from 'assert';
 import { APIError, extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
@@ -242,13 +242,17 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             default:
                 return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
         }
-        const clientMethod = side === 'buy' ? this.authClient.buy.bind(this.authClient) : this.authClient.sell.bind(this.authClient);
-        return clientMethod(gdaxOrder).then((result: OrderInfo) => {
+
+        // TODO: use this.authClient.placeOrder() when gdax's
+        // index.d.ts adds it.
+        const promise = side === 'buy' ? this.authClient.buy(gdaxOrder) : this.authClient.sell(gdaxOrder);
+        return promise.then((result: OrderResult) => {
             // Check for error
-            if ((result as any).message) {
+            // TODO: Remove the first type assertion when https://github.com/coinbase/gdax-node/issues/269 is fixed.
+            if ((result as any).status === 'rejected' || (result as any).message) {
                 return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, result));
             }
-            return GDAXOrderToOrder(result);
+            return Promise.resolve(GDAXOrderResultToOrder(result));
         }, (err: GDAXHTTPError) => {
             const errMsg: any = err.response ? new HTTPError(`Placing order on ${order.productId} failed`, extractResponse(err.response)) : err;
             return Promise.reject(errMsg);
@@ -276,7 +280,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             return Promise.reject(new GTTError('No authentication details were given for this API'));
         }
         return this.authClient.getOrder(id).then((order: OrderInfo) => {
-            return GDAXOrderToOrder(order);
+            return GDAXOrderInfoToOrder(order);
         }).catch((err: GDAXHTTPError) => {
             return Promise.reject(new HTTPError('Error loading order details on GDAX', extractResponse(err.response)));
         });
@@ -287,7 +291,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         let allOrders: LiveOrder[] = [];
         const loop: (after: string) => Promise<LiveOrder[]> = (after: string) => {
             return self.loadNextOrders(product, after).then((result) => {
-                const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderToOrder);
+                const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderInfoToOrder);
                 allOrders = allOrders.concat(liveOrders);
                 if (result.after) {
                     return loop(result.after);
@@ -360,10 +364,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 
     handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
-        // then<T> is required to workaround bug in TS2.1 https://github.com/Microsoft/TypeScript/issues/10977
-        return req.then<T>((res: Response) => {
+        return req.then((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
-                return Promise.resolve<T>(res.body as T);
+                return Promise.resolve(res.body);
             }
             const err: HTTPError = new HTTPError(`Error handling GDAX request for ${(req as any).url}`, res);
             return Promise.reject(err);
@@ -521,7 +524,28 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     }
 }
 
-function GDAXOrderToOrder(order: OrderInfo): LiveOrder {
+function GDAXOrderResultToOrder(order: OrderResult): LiveOrder {
+    let size: BigJS;
+    let price: BigJS;
+    if (+order.size > 0) {
+        size = Big(order.size);
+    }
+    if (+order.price > 0) {
+        price = Big(order.price);
+    }
+    return {
+        price: price,
+        size: size,
+        side: order.side,
+        id: order.id,
+        time: new Date(order.created_at),
+        productId: order.product_id,
+        status: order.status,
+        extra: order
+    };
+}
+
+function GDAXOrderInfoToOrder(order: OrderInfo): LiveOrder {
     let size: BigJS;
     let price: BigJS;
     if (+order.size > 0) {
