@@ -39,7 +39,6 @@
     "@types/bintrees": "1.0.2",
     "@types/commander": "2.3.31",
     "@types/crypto-js": "3.1.32",
-    "@types/mocha": "2.2.33",
     "@types/nock": "8.2.0",
     "@types/node": "6.0.51",
     "@types/query-string": "3.0.30",
@@ -65,6 +64,7 @@
     "ws": "3.3.1"
   },
   "devDependencies": {
+    "@types/mocha": "2.2.33",
     "expect.js": "0.3.1",
     "markdown-magic": "0.1.20",
     "markdown-magic-github-contributors": "0.0.3",

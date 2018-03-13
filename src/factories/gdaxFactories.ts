@@ -60,20 +60,14 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<GD
         });
     }
     return new Promise((resolve) => {
-        if (feed.isConnecting) {
-            feed.once('websocket-open', () => {
-                feed.subscribe(products).then(() => {
-                    return resolve(feed);
-                });
-            });
-        } else {
+        if (!feed.isConnecting) {
             feed.reconnect(50);
-            feed.on('websocket-open', () => {
-                feed.subscribe(products).then(() => {
-                    return resolve(feed);
-                });
-            });
         }
+        feed.once('websocket-open', () => {
+            feed.subscribe(products).then(() => {
+                return resolve(feed);
+            });
+        });
     });
 }
 
@@ -89,7 +83,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAu
         secret: process.env.GDAX_SECRET,
         passphrase: process.env.GDAX_PASSPHRASE
     };
-    // Use the GAX API to get, and subscribe to all the endpoints
+    // Use the GDAX API to get, and subscribe to all the endpoints
     let productPromise: Promise<string[]>;
     if (productIDs) {
         productPromise = Promise.resolve(productIDs);
