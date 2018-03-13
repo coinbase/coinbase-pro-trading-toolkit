@@ -3,8 +3,7 @@ title: Contributing
 keywords: GTT, overview, contributing
 last_updated: July 14, 2017
 tags: [getting_started]
-summary: "Please contribute to this project. We accept PRs for bugfixes, new features and new exchanges. Please read our contribution guide
-lines first though."
+summary: "How to contribute to this project"
 sidebar: gtt_sidebar
 permalink: gtt_contributing.html
 folder: gtt
@@ -12,26 +11,30 @@ toc: true
 ---
 
 The GTT is an open-source project. While it was conceived and is maintained by Coinbase, our vision is to have the community actively
-contribute to the project.
+contribute to the project, but please note the following:
 
-To contribute to the GTT, [fork the project on GitHub](https://github.com/coinbase/gdax-tt/), make your changes and [submit them as a PR](https://github.com/coinbase/gdax-tt/pulls). The community will review and
-then hopefully merge your changes in, and it will form part of the next release of the GTT.
+# Before submitting any PRs, please take note
 
-We want this to be a community project, so the GTT should evolve to become what you want it to be. So we will accept pull requests for
-any and all of the following:
-* Bug fixes
-* New components and filters
-* New exchange support
-* Documentation
-* Tutorials
-* Working trading bot engines (that make use of the GTT, obviously)
-* Algorithm components
-* UI components (see the [gtt-ui](https://github.com/coinbase/gdax-tt/issues/52) project.
+This is an open-source project. This means that there are as many different ideas and thoughts on how to code, test and architect as there are contributors. This also means that getting code into production will often take longer than your average closed-source or corporate project and _way_ longer than any project that you run yourself.
 
-Please read and follow the contribution guidelines before you submit. This will smooth the flow for getting your code included in
-the project.
+All contributions must adhere to the [General Coinbase Contribution Guidelines](https://github.com/coinbase/gdax-tt/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/coinbase/code-of-conduct)
 
-## Contribution Guidelines
+To contribute to the GTT, [fork the project on GitHub](https://github.com/coinbase/gdax-tt/), make your changes and [submit them as a PR](https://github.com/coinbase/gdax-tt/pulls).
+
+In addition to the general Coinbase contribution guidelines, there are some additional guidelines for the GTT specifically.
+
+## Product Roadmap
+
+Check the [Product Roadmap](./gtt_roadmap.html) and see whether your contribution is within the scope of the project. If it is, great! If not, you still have a few options
+
+1. Open a new issue, outlining your proposal / feature-request, and _indicate that you are willing to code it up yourself_.
+1. If your idea sits in Layer 3 or 4 (as defined in the Roadmap), the best approach is actually to _start a new project_, use the GTT as a library, and then [open a new issue][1] so that we can link to your project or bot from our documentation.
+
+The following PR types are the most welcome and will almost certainly be merged:
+* Bug fixes!
+* Unit tests (see notes on tests below)
+
+## Coding language
 
 Pull requests must be written in [TypeScript](www.typescriptlang.org). If you're a Javascript programmer, don't fret, the learning curve is very flat.
 TypeScript is a superset of Javascript, but because it is statically typed, whole classes of bugs are eliminated from your
@@ -53,19 +56,27 @@ You can auto-fix many of the more typographic errors, assuming you've installed 
     tslint -p . --fix
 
 You can also make your life much easier by adding TSlint integration into your editor. WebStorm / IntelliJ for example,
-autofix many errors by running the Reformat-Code command.
+auto-fix many errors by running the Reformat-Code command.
 
 ### Unit tests
 
-Our goal is to reach >80% for Beta and ultimately 100% test coverage.
+We also welcome new tests to help move our test coverage towards 100%.
 
-For this reason we _highly encourage_ including unit tests in your PRs.
+As with the coding guidelines, we have standardised on some libraries and practices for testing, so here are some testing PR dos and don'ts.
 
-Our standard test runner is Mocha, and we use the standard `assert` module for assertions.
+To run the full battery of unit tests run `yarn test`
 
-To run the full battery of unit tests run
+To get coverage statistics, run `yarn run coverage`
 
-    yarn test
+#### Do
+* Include tests with your general PRs
+* Submit PRs that add new tests to improve test coverage (This is a great way to learn the API and uncover edge cases, BTW)
+* Use [Mocha](https://mochajs.org/) BDD syntax (`describe`, `it`) for defining tests
+* Use the standard `assert` module for assertions.
+
+#### Don't
+* Add new testing or assertion libraries as dependencies (e.g. chai, cucumber, etc.)
+* Don't let your unit tests make network calls (Use [nock](https://github.com/node-nock/nock) for HTTP request mocking)
 
 ### Documentation
 
@@ -76,3 +87,19 @@ directly from the code.
 
 {% include warning.html content="If you run TypeDoc locally to view your generated documentation, *do not check those changes into your PR*!
 For one, it adds too much noise to the PR and secondly, we will automatically update the API docs anyway." %}
+
+### PR hygiene
+
+* Try and keep your PRs contained to a single feature or bugfix. It makes them easier to review.
+
+* **Do not** commit IDE-specific files and metadata. Preferably, don't add those files to `.gitignore` either. You can locally ignore files by adding them to the `.git/info/exclude` file in your local working tree. This file follows the same rules as `.gitignore`. So for example, to exclude Webstorm metadata without changing the `.gitignore` file, I could run
+
+```
+$ echo ".idea" >> .git/info/exclude
+```
+
+* If you want to embark on a large-scale refactoring effort, please open an [issue][1] first to discuss this. In particular, breaking changes or wide-ranging changes to interfaces are likely to get rejected if they haven't gone through a preview and discussion first.
+
+
+
+[1]: https://github.com/coinbase/gdax-tt/issues

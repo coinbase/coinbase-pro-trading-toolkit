@@ -243,10 +243,7 @@ export class Trader extends Writable {
     private handleTradeFinalized(msg: TradeFinalizedMessage) {
         const id: string = msg.orderId;
         const order: Level3Order = this.myBook.remove(id);
-        if (!order) {
-            if (!this.unfilledMarketOrders.has(id)) {
-                return;
-            }
+        if (!order && this.unfilledMarketOrders.has(id)) {
             this.unfilledMarketOrders.delete(id);
         }
         this.emit('Trader.trade-finalized', msg);
