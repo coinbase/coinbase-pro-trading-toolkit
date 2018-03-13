@@ -59,7 +59,7 @@ export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
  * The channels array determines which types of messages are sent back down the feed. Leave this as null to receive
  * all messages, or specify any of
  *   - `level2` - The orderbook messages
- *   - `matches` - aLl trades
+ *   - `matches` - all trades
  *   - `ticker` - Ticker updates (these come after every trade, so specifying both `matches` and `ticker` may be redundant)
  *   - `user` - If you provided auth credentials, private messages will also be sent
  */
@@ -314,7 +314,8 @@ export class GDAXFeed extends ExchangeFeed {
             bid: Big(ticker.best_bid),
             ask: Big(ticker.best_ask),
             trade_id: String(ticker.trade_id),
-            size: Big(ticker.last_size)
+            size: Big(ticker.last_size),
+            volume: Big(ticker.volume_24h)
         } as TickerMessage;
     }
 
