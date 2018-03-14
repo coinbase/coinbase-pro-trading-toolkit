@@ -37,7 +37,7 @@ describe('Promise utilities', () => {
             };
             const start = Date.now();
             await eachSeries([20, 40, 60], iterator);
-            assert.ok(Date.now() - start > 120);
+            assert.ok(Date.now() - start >= 120);
             assert.equal(s, '4080120');
         });
     });
