@@ -257,7 +257,7 @@ export class DataFeed {
             type: 'snapshot',
             time: new Date(),
             productId: cmd.product,
-            ... book.state()
+            ...book.state()
         };
         this.send(wrapMessage(msg, cmd));
     }
