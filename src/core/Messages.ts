@@ -15,6 +15,9 @@
 import { OrderbookState } from '../lib/Orderbook';
 import { Side } from '../lib/sides';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
+
+export type OrderType = 'limit' | 'market' | 'stop';
+
 /**
  * Interfaces for the GTT Stream message types. These messages are generated and passed on my the GTT streaming
  * infrastructure. The `type` field is conventionally named after the interface, first letter lowercased,  with the word Message
@@ -177,15 +180,13 @@ export interface TickerMessage extends StreamMessage, Ticker {
 /**
  * A new order request message. Only the most common fields are specified here. Additional options can be specified
  * in the extra field, which can be handled by the target trade engine.
- *
- * `orderType` is limit, market, stop
  */
 export interface PlaceOrderMessage extends StreamMessage {
     type: 'placeOrder';
     productId: string;
     clientId?: string;
     side: Side;
-    orderType: string;
+    orderType: OrderType;
     price?: string;
     postOnly?: boolean;
     size?: string;
@@ -200,8 +201,6 @@ export interface CancelOrderRequestMessage extends StreamMessage {
 
 /**
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
- *
- * `orderType` is limit, market, stop
  */
 export interface TradeExecutedMessage extends StreamMessage {
     type: 'tradeExecuted';
@@ -209,7 +208,7 @@ export interface TradeExecutedMessage extends StreamMessage {
     orderId: string;
     side: Side;
     price: string;
-    orderType: string;
+    orderType: OrderType;
     tradeSize: string;
     remainingSize: string;
 }
