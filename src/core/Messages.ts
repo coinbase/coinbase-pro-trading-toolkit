@@ -180,7 +180,7 @@ export interface PlaceOrderMessage extends StreamMessage {
 }
 
 export interface CancelOrderRequestMessage extends StreamMessage {
-    type: string; // cancelOrder
+    type: 'cancelOrder';
     orderId: string;
 }
 
@@ -188,6 +188,7 @@ export interface CancelOrderRequestMessage extends StreamMessage {
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
  */
 export interface TradeExecutedMessage extends StreamMessage {
+    type: 'tradeExecuted';
     productId: string;
     orderId: string;
     side: string;
@@ -198,6 +199,7 @@ export interface TradeExecutedMessage extends StreamMessage {
 }
 
 export interface TradeFinalizedMessage extends StreamMessage {
+    type: 'tradeFinalized';
     productId: string;
     orderId: string;
     side: string;
@@ -207,6 +209,7 @@ export interface TradeFinalizedMessage extends StreamMessage {
 }
 
 export interface MyOrderPlacedMessage extends StreamMessage {
+    type: 'myOrderPlaced';
     productId: string;
     orderId: string;
     side: string;
