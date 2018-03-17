@@ -167,6 +167,7 @@ export interface TickerMessage extends StreamMessage, Ticker {
  * in the extra field, which can be handled by the target trade engine.
  */
 export interface PlaceOrderMessage extends StreamMessage {
+    type: 'placeOrder';
     productId: string;
     clientId?: string;
     side: string;
