@@ -36,7 +36,7 @@ for (let i = 0; i < 5; i++) {
     api.loadProducts().then((products) => {
         product = randomElement(products);
         if (!product) {
-            return Promise.resolve(null);
+            return null;
         }
         console.log(`Loading ticker for ${product.id} on ${api.owner}`);
         return api.loadTicker(product.id);

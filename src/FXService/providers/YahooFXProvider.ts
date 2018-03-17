@@ -46,7 +46,7 @@ export default class YahooFinanceFXProvider extends FXProvider {
                         SUPPORTED_PAIRS.push(tag.slice(0, tag.length - 2));
                     }
                 });
-                return Promise.resolve(this.isSupportedPair(pair));
+                return this.isSupportedPair(pair);
             }, (err: Error) => Promise.reject(err));
     }
 
@@ -73,12 +73,12 @@ export default class YahooFinanceFXProvider extends FXProvider {
                 } catch (err) {
                     return Promise.reject(error);
                 }
-                return Promise.resolve<FXObject>({
+                const r: FXObject = {
                     time: new Date(created),
                     from: pair.from,
                     to: pair.to,
-                    rate: Big(rate)
-                });
+                    rate: Big(rate)};
+                return r;
             }, (result: Response) => {
                 let details = {};
                 try {
