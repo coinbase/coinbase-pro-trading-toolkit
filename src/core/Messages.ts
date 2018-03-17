@@ -55,6 +55,7 @@ export function isErrorMessage(msg: any): boolean {
  * Any context-rich information can be extracted into the `extra` field, and the original message should be attached to the `origin` field as usual.
  */
 export interface UnknownMessage extends StreamMessage {
+    type: 'unknown';
     sequence?: number;
     productId?: string;
     tag?: string;
