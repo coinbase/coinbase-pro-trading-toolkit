@@ -136,7 +136,6 @@ export class OrderbookDiff {
     }
 
     readonly productId: string;
-    commands: StreamMessage[] = [];
     readonly initial: BookBuilder;
     readonly final: BookBuilder;
 
@@ -174,7 +173,6 @@ export class OrderbookDiff {
                 commands.push(order);
             });
         });
-        this.commands = commands;
         return commands;
     }
 
