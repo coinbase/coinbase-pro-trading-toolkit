@@ -73,12 +73,12 @@ export interface MessageQueueConfig {
  * Emitted if a message is about to be sent out, out of sequence and waiting would violate the `targetQueueLength` constraint
  */
 export class MessageQueue extends Duplex {
-    private logger: Logger;
+    private readonly logger: Logger;
     private readonly messages: RBTree<SequencedMessage>;
-    private targetQueueLength: number;
+    private readonly targetQueueLength: number;
     private lastSequence: number;
-    private productId: string;
-    private waitForSnapshot: boolean;
+    private readonly productId: string;
+    private readonly waitForSnapshot: boolean;
 
     constructor(options: MessageQueueConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });

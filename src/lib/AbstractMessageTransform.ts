@@ -26,7 +26,7 @@ export interface MessageTransformConfig {
  * will implement.
  */
 export abstract class AbstractMessageTransform extends stream.Transform {
-    protected logger: Logger;
+    protected readonly logger: Logger;
 
     constructor(config: MessageTransformConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });

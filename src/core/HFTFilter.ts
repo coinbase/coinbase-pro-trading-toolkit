@@ -48,7 +48,7 @@ export class HFTFilter extends Duplex {
     private messagesById: { [id: string]: BaseOrderMessage };
     private skippedMessages: number = 0;
     private tradesSkipped: number = 0;
-    private targetQueueLength: number;
+    private readonly targetQueueLength: number;
 
     constructor(config: HFTFilterConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });

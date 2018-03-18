@@ -56,15 +56,15 @@ export interface TraderConfig {
  *   Trader.cancel-order-failed - A Cancel request returned with an error status
  */
 export class Trader extends Writable {
-    private _productId: string;
-    private logger: Logger;
+    private readonly _productId: string;
+    private readonly logger: Logger;
      // Used to keep track of all non-market orders this trader has placed.
-    private myBook: BookBuilder;
-    private api: AuthenticatedExchangeAPI;
+    private readonly myBook: BookBuilder;
+    private readonly api: AuthenticatedExchangeAPI;
     private _fitOrders: boolean = true;
-    private sizePrecision: number;
-    private pricePrecision: number;
-    private unfilledMarketOrders: Set<string>;
+    private readonly sizePrecision: number;
+    private readonly pricePrecision: number;
+    private readonly unfilledMarketOrders: Set<string>;
 
     constructor(config: TraderConfig) {
         super({ objectMode: true });

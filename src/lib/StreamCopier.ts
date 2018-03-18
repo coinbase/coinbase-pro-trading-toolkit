@@ -25,10 +25,10 @@ import { EventEmitter } from 'events';
  * trapdoor).
  */
 export class StreamCopier extends EventEmitter {
-    private outputs: StreamConnection[];
-    private bufferStreams: PassThrough[];
+    private readonly outputs: StreamConnection[];
+    private readonly bufferStreams: PassThrough[];
     private numConnected: number;
-    private numOutputs: number;
+    private readonly numOutputs: number;
 
     /**
      * Create a new StreamCopier. `numOutputs` reserves that many outward conections for streams and will buffer messages

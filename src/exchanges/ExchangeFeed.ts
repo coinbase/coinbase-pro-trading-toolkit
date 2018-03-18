@@ -32,15 +32,15 @@ export const hooks = {
 };
 
 export abstract class ExchangeFeed extends Readable {
-    protected auth: ExchangeAuthConfig;
+    protected readonly auth: ExchangeAuthConfig;
     protected url: string;
     protected _isConnecting: boolean;
     // keys in this list will be sanitised in log messages
-    protected sensitiveKeys: string[];
+    protected readonly sensitiveKeys: string[];
     private lastHeartBeat: number = -1;
     private connectionChecker: Timer = null;
     private socket: WebSocket;
-    private _logger: Logger;
+    private readonly _logger: Logger;
 
     constructor(config: ExchangeFeedConfig) {
         super({ objectMode: true, highWaterMark: 1024 });
