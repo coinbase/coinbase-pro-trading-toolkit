@@ -13,11 +13,18 @@
  ***************************************************************************************************************************/
 
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
-import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
+import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AggregatedLevelWithOrders, BookBuilder } from '../../lib/BookBuilder';
 import * as BitfinexAuth from './BitfinexAuth';
 import {
-    BitfinexBalance, BitfinexOrderRequest, BitfinexOrderType, BitfinexResult, BitfinexSuccessfulOrderExecution, BitfinexTransferRequest, BitfinexWallet, isBFWallet
+    BitfinexBalance,
+    BitfinexOrderRequest,
+    BitfinexOrderType,
+    BitfinexResult,
+    BitfinexSuccessfulOrderExecution,
+    BitfinexTransferRequest,
+    BitfinexWallet,
+    isBFWallet
 } from './BitfinexAuth';
 import { Logger } from '../../utils/Logger';
 import { PRODUCT_MAP, REVERSE_CURRENCY_MAP, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
@@ -26,9 +33,9 @@ import { ExchangeAuthConfig } from '../AuthConfig';
 import { Big, BigJS } from '../../lib/types';
 import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder } from '../../lib/Orderbook';
+import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
 import Response = request.Response;
-import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
 
 const API_V1 = 'https://api.bitfinex.com/v1';
 
@@ -143,7 +150,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
         const product = BitfinexExchangeAPI.product(gdaxProduct);
         return request.get(`${API_V1}/book/${product}`)
-            .query({ grouped: 1 })
+            .query({grouped: 1})
             .accept('application/json')
             .then((res: Response) => {
                 if (res.status !== 200) {
@@ -269,6 +276,10 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                 return balances;
             });
         });
+    }
+
+    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+        return Promise.reject(new GTTError('Error loading products from Bitfinex'));
     }
 
     // -------------------------- Transfer methods -------------------------------------------------

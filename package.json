@@ -1,6 +1,6 @@
 {
   "name": "gdax-trading-toolkit",
-  "version": "0.2.2",
+  "version": "0.3.1",
   "description": "A trading toolkit for building advanced trading bots on the GDAX platform",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -60,6 +60,7 @@
     "crypto": "0.0.3",
     "gdax": "https://github.com/coinbase/gdax-node.git#32360ad73517f168054585a1b0fd6ae3d7e12a77",
     "guid": "0.0.12",
+    "gdax": "0.6.0",
     "limiter": "git://github.com/jhurliman/node-rate-limiter.git#58ce2fda6b5c2bc4ccb81ba3768c5b1bc06c91a5",
     "node-bittrex-api": "0.7.7",
     "pushbullet": "2.0.0",
@@ -74,10 +75,11 @@
     "ws": "3.3.1"
   },
   "devDependencies": {
+    "@types/mocha": "2.2.33",
     "expect.js": "0.3.1",
-    "markdown-magic": "^0.1.18",
-    "markdown-magic-github-contributors": "^0.0.3",
-    "markdown-magic-version-badge": "^1.1.1",
+    "markdown-magic": "0.1.20",
+    "markdown-magic-github-contributors": "0.0.3",
+    "markdown-magic-version-badge": "1.1.1",
     "mocha": "3.2.0",
     "nock": "9.0.2",
     "nyc": "11.1.0",
@@ -87,5 +89,8 @@
     "typedoc": "0.8.0",
     "typescript": "^2.5.3",
     "uuid": "3.0.0"
+  },
+  "resolutions": {
+    "deasync": "^0.1.12"
   }
 }
