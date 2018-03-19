@@ -169,6 +169,14 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         this.sequence = -1;
     }
 
+    get bidTree(): RBTree<AggregatedLevelWithOrders> {
+        return this.bids;
+    }
+
+    get askTree(): RBTree<AggregatedLevelWithOrders> {
+        return this.asks;
+    }
+
     get bidsTotal(): BigJS {
         return this._bidsTotal;
     }
