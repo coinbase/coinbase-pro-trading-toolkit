@@ -2,7 +2,7 @@ import { PlaceOrderMessage, isStreamMessage, TradeMessage, TradeExecutedMessage,
 import { BookBuilder, LiveOrder, AggregatedLevelWithOrders, Level3Order } from '../../lib';
 import { BigJS } from '../../lib/types';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
-import { Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
+import { Product, PublicExchangeAPI, Ticker, CandleRequestOptions, Candle } from '../PublicExchangeAPI';
 import { HTTPError, GTTError } from '../../lib/errors';
 import * as BigNumber from 'bignumber.js';
 import * as GUID from 'guid';
@@ -194,6 +194,10 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
 
     public loadTicker(gdaxProduct: string): Promise<Ticker> {
         throw new Error('Not implemented yet.');
+    }
+
+    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+        throw new Error('Method not implemented.');
     }
 
     // -------------------------------------------------------------------------------------------------------------------//
