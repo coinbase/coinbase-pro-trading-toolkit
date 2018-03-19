@@ -99,7 +99,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAu
         return getSubscribedFeeds({ auth: auth, logger: logger }, productIds);
     }).catch((err) => {
         if (logger) {
-            logger.error(err);
+            logger.log('error', 'Error subscribing to feed', err);
         } else {
             console.error(err);
         }
