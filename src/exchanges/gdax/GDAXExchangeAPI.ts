@@ -21,7 +21,15 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
-import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, OrderResult, ProductInfo, ProductTicker, PublicClient } from 'gdax';
+import { Account,
+         AuthenticatedClient,
+         CoinbaseAccount,
+         OrderInfo,
+         OrderParams,
+         OrderResult,
+         ProductInfo,
+         ProductTicker,
+         PublicClient } from 'gdax';
 import * as assert from 'assert';
 import { APIError, extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
@@ -33,7 +41,7 @@ export const GDAX_API_URL = 'https://api.gdax.com';
 
 interface OrderPage {
     after: string;
-    orders: BaseOrderInfo[];
+    orders: OrderInfo[];
 }
 
 export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
