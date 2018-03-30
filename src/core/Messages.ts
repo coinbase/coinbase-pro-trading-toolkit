@@ -28,7 +28,7 @@ export interface StreamMessage {
     origin?: any;
 }
 
-export function isStreamMessage(msg: any): boolean {
+export function isStreamMessage(msg: any): msg is StreamMessage {
     return !!msg.type;
 }
 

@@ -155,10 +155,10 @@ export class LiveOrderbook extends Duplex implements Orderbook {
         // Pass the msg on to downstream users
         this.push(msg);
         // Process the message for the orderbook state
-        if (!isStreamMessage(msg) || !msg.productId) {
+        if (msg.productId !== this.product) {
             return callback();
         }
-        if (msg.productId !== this.product) {
+        if (!isStreamMessage(msg)) {
             return callback();
         }
         switch (msg.type) {
@@ -178,7 +178,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
                 this.emit('LiveOrderbook.trade', msg);
                 break;
             default:
-                this.processLevel3Messages(msg);
+                this.processLevel3Messages(msg as OrderbookMessage);
                 this.emit('LiveOrderbook.update', msg);
                 break;
         }
