@@ -78,6 +78,7 @@ export function isSequencedMessage(msg: any): msg is SequencedMessage {
  * Root definition for messages that stem from a websocket feed
  */
 export interface OrderbookMessage extends SequencedMessage, StreamMessage {
+    type: 'newOrder' | 'orderDone' | 'changedOrder' | 'level';
     productId: string;
     side: string;
 }
@@ -92,6 +93,7 @@ export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
  * Message representing the common state for a resting order (for an order request, see PlaceOrderRequest)
  */
 export interface BaseOrderMessage extends OrderbookMessage {
+    type: 'newOrder' | 'orderDone' | 'changedOrder';
     orderId: string;
     price: string;
 }
