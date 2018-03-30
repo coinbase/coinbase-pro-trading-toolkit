@@ -89,8 +89,8 @@ export interface BaseOrderMessage extends OrderbookMessage {
     price: string;
 }
 
-export function isOrderMessage(msg: any): boolean {
-    return msg.orderId && msg.side && msg.price;
+export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
+    return msg.orderId && msg.price && isOrderbookMessage(msg);
 }
 
 /**
