@@ -65,18 +65,25 @@ export function isUnknownMessage(msg: any): msg is UnknownMessage {
     return msg.type === 'unknown';
 }
 
+export interface SequencedMessage {
+    sequence: number;
+    sourceSequence?: number;
+}
+
+export function isSequencedMessage(msg: any): msg is SequencedMessage {
+    return typeof msg.sequence === 'number';
+}
+
 /**
  * Root definition for messages that stem from a websocket feed
  */
-export interface OrderbookMessage extends StreamMessage {
-    sequence: number;
-    sourceSequence?: number;
+export interface OrderbookMessage extends SequencedMessage, StreamMessage {
     productId: string;
     side: string;
 }
 
 export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
-    return isStreamMessage(msg) && msg.sequence && msg.productId && msg.side;
+    return isStreamMessage(msg) && isSequencedMessage(msg) && !!(msg as OrderbookMessage).productId && !!(msg as OrderbookMessage).side;
 }
 
 // ---------------------------------------- Order-level (Level 3) Messages --------------------------------------------//
