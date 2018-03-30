@@ -13,7 +13,9 @@
  ***************************************************************************************************************************/
 
 import { Logger, ConsoleLoggerFactory } from '../utils/Logger';
-import { OrderbookMessage, BaseOrderMessage } from './Messages';
+import { isSnapshotMessage,
+         OrderbookMessage,
+         BaseOrderMessage } from './Messages';
 import { RBTree } from 'bintrees';
 import assert = require('assert');
 import { Duplex } from 'stream';
@@ -120,7 +122,7 @@ export class MessageQueue extends Duplex {
      * @param message
      */
     addMessage(message: OrderbookMessage): void {
-        if (message.type === 'snapshot' && this.waitForSnapshot) {
+        if (isSnapshotMessage(message) && this.waitForSnapshot) {
             this.lastSequence = message.sequence - 1;
         } else {
             this.messages.insert(message);
@@ -178,7 +180,7 @@ export class MessageQueue extends Duplex {
         const node = this.messages.min();
         if (node) {
             // If we haven't emitted any messages yet, and we're waiting for a snapshot, it must be the first message
-            if (node.sequence && expectedSequence < 0 && this.waitForSnapshot && node.type !== 'snapshot') {
+            if (node.sequence && expectedSequence < 0 && this.waitForSnapshot && !isSnapshotMessage(node)) {
                 return null;
             }
             // If we've received a snapshot, old messages can be discarded

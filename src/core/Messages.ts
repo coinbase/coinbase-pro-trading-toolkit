@@ -154,6 +154,10 @@ export interface SnapshotMessage extends StreamMessage, OrderbookState {
     productId: string;
 }
 
+export function isSnapshotMessage(msg: any): msg is SnapshotMessage {
+    return msg.type === 'snapshot';
+}
+
 export interface TickerMessage extends StreamMessage, Ticker {
     type: 'ticker';
     productId: string;
