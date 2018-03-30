@@ -46,7 +46,7 @@ export interface HTTPErrorMessage extends ErrorMessage {
 }
 
 export function isErrorMessage(msg: any): boolean {
-    return isStreamMessage(msg) && !!msg.message && typeof msg.message === 'string';
+    return msg.type === 'error';
 }
 
 /**
