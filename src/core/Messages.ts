@@ -61,8 +61,8 @@ export interface UnknownMessage extends StreamMessage {
     extra?: any;
 }
 
-export function isUnknownMessage(msg: any): boolean {
-    return isStreamMessage(msg) && !!msg.message && typeof msg.message !== 'string';
+export function isUnknownMessage(msg: any): msg is UnknownMessage {
+    return msg.type === 'unknown';
 }
 
 /**
