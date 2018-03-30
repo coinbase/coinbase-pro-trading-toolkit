@@ -75,8 +75,8 @@ export interface OrderbookMessage extends StreamMessage {
     side: string;
 }
 
-export function isOrderbookMessage(msg: any): boolean {
-    return msg.sequence && msg.productId && msg.side;
+export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
+    return isStreamMessage(msg) && msg.sequence && msg.productId && msg.side;
 }
 
 // ---------------------------------------- Order-level (Level 3) Messages --------------------------------------------//
