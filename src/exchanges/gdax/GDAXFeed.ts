@@ -322,9 +322,9 @@ export class GDAXFeed extends ExchangeFeed {
     private mapFullFeed(feedMessage: GDAXMessage): StreamMessage {
         if (feedMessage.user_id) {
             return this.mapAuthMessage(feedMessage);
+        } else {
+            return this.mapMessage(feedMessage);
         }
-        const message: StreamMessage = this.mapMessage(feedMessage);
-        return message;
     }
 
     private processSnapshot(snapshot: SnapshotMessage) {
