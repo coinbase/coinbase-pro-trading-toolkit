@@ -180,6 +180,9 @@ export class GDAXFeed extends ExchangeFeed {
                 case 'snapshot':
                     this.processSnapshot(this.createSnapshotMessage(feedMessage as GDAXSnapshotMessage));
                     return;
+                case 'error':
+                    message = this.mapError(feedMessage);
+                    break;
                 default:
                     message = this.mapFullFeed(feedMessage);
             }
@@ -290,6 +293,17 @@ export class GDAXFeed extends ExchangeFeed {
         });
     }
 
+    private mapError(errorMessage: GDAXErrorMessage): ErrorMessage {
+        const msg: ErrorMessage = {
+            type: 'error',
+            time: new Date(),
+            message: errorMessage.message,
+            cause: errorMessage.reason
+        };
+        this.emit('feed-error', msg);
+        return msg;
+    }
+
     private mapTicker(ticker: GDAXTickerMessage): StreamMessage {
         return {
             type: 'ticker',
@@ -375,17 +389,6 @@ export class GDAXFeed extends ExchangeFeed {
                     price: change.price,
                     newSize: change.new_size
                 };
-                return msg;
-            }
-            case 'error': {
-                const error: GDAXErrorMessage = feedMessage as GDAXErrorMessage;
-                const msg: ErrorMessage = {
-                    type: 'error',
-                    time: new Date(),
-                    message: error.message,
-                    cause: error.reason
-                };
-                this.emit('feed-error', msg);
                 return msg;
             }
             case 'received': {
