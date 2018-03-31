@@ -33,12 +33,10 @@ import { OrderPool } from '../../lib/BookBuilder';
 import {
     GDAXChangeMessage,
     GDAXChannel,
-    GDAXDoneMessage,
     GDAXErrorMessage,
     GDAXL2UpdateMessage,
     GDAXMatchMessage,
     GDAXMessage,
-    GDAXOpenMessage,
     GDAXSnapshotMessage,
     GDAXSubscriptionsMessage,
     GDAXTickerMessage,
@@ -174,19 +172,19 @@ export class GDAXFeed extends ExchangeFeed {
             let message: StreamMessage;
             switch (feedMessage.type) {
                 case 'subscriptions':
-                    this.setProducts(feedMessage as any);
+                    this.setProducts(feedMessage);
                     return;
                 case 'heartbeat':
                     this.confirmAlive();
                     return;
                 case 'ticker':
-                    message = this.mapTicker(feedMessage as GDAXTickerMessage);
+                    message = this.mapTicker(feedMessage);
                     break;
                 case 'l2update':
-                    this.processUpdate(feedMessage as GDAXL2UpdateMessage);
+                    this.processUpdate(feedMessage);
                     return;
                 case 'snapshot':
-                    this.processSnapshot(this.createSnapshotMessage(feedMessage as GDAXSnapshotMessage));
+                    this.processSnapshot(this.createSnapshotMessage(feedMessage));
                     return;
                 case 'error':
                     message = this.mapError(feedMessage);
@@ -367,13 +365,13 @@ export class GDAXFeed extends ExchangeFeed {
             case 'open': {
                 const msg: NewOrderMessage = {
                     type: 'newOrder',
-                    time: new Date((feedMessage as GDAXOpenMessage).time),
-                    sequence: (feedMessage as GDAXOpenMessage).sequence,
-                    productId: (feedMessage as GDAXOpenMessage).product_id,
-                    orderId: (feedMessage as GDAXOpenMessage).order_id,
-                    side: (feedMessage as GDAXOpenMessage).side,
-                    price: (feedMessage as GDAXOpenMessage).price,
-                    size: (feedMessage as GDAXOpenMessage).remaining_size
+                    time: new Date(feedMessage.time),
+                    sequence: feedMessage.sequence,
+                    productId: feedMessage.product_id,
+                    orderId: feedMessage.order_id,
+                    side: feedMessage.side,
+                    price: feedMessage.price,
+                    size: feedMessage.remaining_size
                 };
                 return msg;
             }
@@ -383,25 +381,25 @@ export class GDAXFeed extends ExchangeFeed {
                 // or rounding, but the accounting is nevertheless correct. So if reason is 'filled' we can set the size
                 // to zero before removing the order. Otherwise if cancelled, remaining_size refers to the size
                 // that was on the order book
-                const size = (feedMessage as GDAXDoneMessage).reason === 'filled' ? '0' : (feedMessage as GDAXDoneMessage).remaining_size;
+                const size = feedMessage.reason === 'filled' ? '0' : feedMessage.remaining_size;
                 const msg: OrderDoneMessage = {
                     type: 'orderDone',
-                    time: new Date((feedMessage as GDAXDoneMessage).time),
-                    sequence: (feedMessage as GDAXDoneMessage).sequence,
-                    productId: (feedMessage as GDAXDoneMessage).product_id,
-                    orderId: (feedMessage as GDAXDoneMessage).order_id,
+                    time: new Date(feedMessage.time),
+                    sequence: feedMessage.sequence,
+                    productId: feedMessage.product_id,
+                    orderId: feedMessage.order_id,
                     remainingSize: size,
-                    price: (feedMessage as GDAXDoneMessage).price,
-                    side: (feedMessage as GDAXDoneMessage).side,
-                    reason: (feedMessage as GDAXDoneMessage).reason
+                    price: feedMessage.price,
+                    side: feedMessage.side,
+                    reason: feedMessage.reason
                 };
                 return msg;
             }
             case 'match': {
-                return this.mapMatchMessage(feedMessage as GDAXMatchMessage);
+                return this.mapMatchMessage(feedMessage);
             }
             case 'change': {
-                const change: GDAXChangeMessage = feedMessage as GDAXChangeMessage;
+                const change: GDAXChangeMessage = feedMessage;
                 if (change.new_funds && !change.new_size) {
                     change.new_size = (Big(change.new_funds).div(change.price).toString());
                 }
@@ -451,19 +449,19 @@ export class GDAXFeed extends ExchangeFeed {
                 const isTaker: boolean = !!feedMessage.taker_user_id;
                 let side: Side;
                 if (!isTaker) {
-                    side = (feedMessage as GDAXMatchMessage).side;
+                    side = feedMessage.side;
                 } else {
-                    side = (feedMessage as GDAXMatchMessage).side === 'buy' ? 'sell' : 'buy';
+                    side = feedMessage.side === 'buy' ? 'sell' : 'buy';
                 }
                 const msg: TradeExecutedMessage = {
                     type: 'tradeExecuted',
                     time: time,
-                    productId: (feedMessage as GDAXMatchMessage).product_id,
-                    orderId: isTaker ? (feedMessage as GDAXMatchMessage).taker_order_id : (feedMessage as GDAXMatchMessage).maker_order_id,
+                    productId: feedMessage.product_id,
+                    orderId: isTaker ? feedMessage.taker_order_id : feedMessage.maker_order_id,
                     orderType: isTaker ? 'market' : 'limit',
                     side: side,
-                    price: (feedMessage as GDAXMatchMessage).price,
-                    tradeSize: (feedMessage as GDAXMatchMessage).size,
+                    price: feedMessage.price,
+                    tradeSize: feedMessage.size,
                     remainingSize: null
                 };
                 return msg;
@@ -472,12 +470,12 @@ export class GDAXFeed extends ExchangeFeed {
                 const msg: TradeFinalizedMessage = {
                     type: 'tradeFinalized',
                     time: time,
-                    productId: (feedMessage as GDAXDoneMessage).product_id,
-                    orderId: (feedMessage as GDAXDoneMessage).order_id,
-                    reason: (feedMessage as GDAXDoneMessage).reason,
-                    side: (feedMessage as GDAXDoneMessage).side,
-                    price: (feedMessage as GDAXDoneMessage).price,
-                    remainingSize: (feedMessage as GDAXDoneMessage).remaining_size
+                    productId: feedMessage.product_id,
+                    orderId: feedMessage.order_id,
+                    reason: feedMessage.reason,
+                    side: feedMessage.side,
+                    price: feedMessage.price,
+                    remainingSize: feedMessage.remaining_size
                 };
                 return msg;
             }
@@ -485,13 +483,13 @@ export class GDAXFeed extends ExchangeFeed {
                 const msg: MyOrderPlacedMessage = {
                     type: 'myOrderPlaced',
                     time: time,
-                    productId: (feedMessage as GDAXOpenMessage).product_id,
-                    orderId: (feedMessage as GDAXOpenMessage).order_id,
-                    side: (feedMessage as GDAXOpenMessage).side,
-                    price: (feedMessage as GDAXOpenMessage).price,
-                    orderType: (feedMessage as GDAXOpenMessage).type,
-                    size: (feedMessage as GDAXOpenMessage).remaining_size,
-                    sequence: (feedMessage as GDAXOpenMessage).sequence
+                    productId: feedMessage.product_id,
+                    orderId: feedMessage.order_id,
+                    side: feedMessage.side,
+                    price: feedMessage.price,
+                    orderType: feedMessage.type,
+                    size: feedMessage.remaining_size,
+                    sequence: feedMessage.sequence
                 };
                 return msg;
             }
