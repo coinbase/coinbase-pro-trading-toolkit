@@ -31,11 +31,14 @@ import {
 } from '../../core/Messages';
 import { OrderPool } from '../../lib/BookBuilder';
 import {
+    GDAXChangeMessage,
     GDAXChannel,
+    GDAXDoneMessage,
     GDAXErrorMessage,
     GDAXL2UpdateMessage,
     GDAXMatchMessage,
-    GDAXMessage,
+    GDAXOpenMessage,
+    GDAXReceivedMessage,
     GDAXSnapshotMessage,
     GDAXSubscriptionsMessage,
     GDAXTickerMessage,
@@ -49,6 +52,13 @@ import { ExchangeAuthConfig } from '../AuthConfig';
 import { AuthHeaders, GDAXAuthConfig } from './GDAXInterfaces';
 
 export const GDAX_WS_FEED = 'wss://ws-feed.gdax.com';
+
+type GDAXTradingMessage =
+    GDAXReceivedMessage |
+    GDAXOpenMessage |
+    GDAXDoneMessage |
+    GDAXMatchMessage |
+    GDAXChangeMessage;
 
 /**
  * Configuration interface for a GDAX websocket feed stream. `wsUrl` is used to override the default websocket URL.
@@ -342,7 +352,7 @@ export class GDAXFeed extends ExchangeFeed {
         } as TickerMessage;
     }
 
-    private mapFullFeed(feedMessage: GDAXMessage): StreamMessage {
+    private mapFullFeed(feedMessage: GDAXTradingMessage): StreamMessage {
         if (feedMessage.user_id) {
             return this.mapAuthMessage(feedMessage);
         } else {
@@ -359,7 +369,7 @@ export class GDAXFeed extends ExchangeFeed {
      * Converts GDAX messages into standardised GTT messages. Unknown messages are passed on as_is
      * @param feedMessage
      */
-    private mapMessage(feedMessage: GDAXMessage): StreamMessage {
+    private mapMessage(feedMessage: GDAXTradingMessage): StreamMessage {
         switch (feedMessage.type) {
             case 'open': {
                 const msg: NewOrderMessage = {
@@ -440,7 +450,7 @@ export class GDAXFeed extends ExchangeFeed {
      * When the user_id field is set, these are authenticated messages only we receive and so deserve special
      * consideration
      */
-    private mapAuthMessage(feedMessage: GDAXMessage): StreamMessage {
+    private mapAuthMessage(feedMessage: GDAXTradingMessage): StreamMessage {
         const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
         switch (feedMessage.type) {
             case 'match': {
