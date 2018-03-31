@@ -503,7 +503,12 @@ export class GDAXFeed extends ExchangeFeed {
                 };
                 return msg;
             }
+            case 'change':
+            case 'received': {
+                return this.mapUnknown(feedMessage);
+            }
             default: {
+                staticAssertNever(feedMessage);
                 return this.mapUnknown(feedMessage);
             }
         }
