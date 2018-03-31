@@ -45,7 +45,7 @@ export interface HTTPErrorMessage extends ErrorMessage {
     };
 }
 
-export function isErrorMessage(msg: any): boolean {
+export function isErrorMessage(msg: any): msg is ErrorMessage {
     return msg.type === 'error';
 }
 
