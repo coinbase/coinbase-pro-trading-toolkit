@@ -31,7 +31,6 @@ import {
 } from '../../core/Messages';
 import { OrderPool } from '../../lib/BookBuilder';
 import {
-    GDAXChangeMessage,
     GDAXChannel,
     GDAXErrorMessage,
     GDAXL2UpdateMessage,
@@ -399,19 +398,18 @@ export class GDAXFeed extends ExchangeFeed {
                 return this.mapMatchMessage(feedMessage);
             }
             case 'change': {
-                const change: GDAXChangeMessage = feedMessage;
-                if (change.new_funds && !change.new_size) {
-                    change.new_size = (Big(change.new_funds).div(change.price).toString());
+                if (feedMessage.new_funds && !feedMessage.new_size) {
+                    feedMessage.new_size = (Big(feedMessage.new_funds).div(feedMessage.price).toString());
                 }
                 const msg: ChangedOrderMessage = {
                     type: 'changedOrder',
-                    time: new Date(change.time),
-                    sequence: change.sequence,
-                    productId: change.product_id,
-                    orderId: change.order_id,
-                    side: change.side,
-                    price: change.price,
-                    newSize: change.new_size
+                    time: new Date(feedMessage.time),
+                    sequence: feedMessage.sequence,
+                    productId: feedMessage.product_id,
+                    orderId: feedMessage.order_id,
+                    side: feedMessage.side,
+                    price: feedMessage.price,
+                    newSize: feedMessage.new_size
                 };
                 return msg;
             }
