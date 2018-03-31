@@ -45,6 +45,7 @@ import {
     isGDAXMessage
 } from './GDAXMessages';
 import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
+import { staticAssertNever } from '../../lib/asserts';
 import { Side, SIDES } from '../../lib/sides';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
@@ -427,6 +428,7 @@ export class GDAXFeed extends ExchangeFeed {
                 return this.mapUnknown(feedMessage);
             }
             default: {
+                staticAssertNever(feedMessage);
                 return this.mapUnknown(feedMessage);
             }
         }
