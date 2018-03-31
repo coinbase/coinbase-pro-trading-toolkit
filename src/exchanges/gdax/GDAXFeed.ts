@@ -41,7 +41,8 @@ import {
     GDAXOpenMessage,
     GDAXSnapshotMessage,
     GDAXSubscriptionsMessage,
-    GDAXTickerMessage
+    GDAXTickerMessage,
+    isGDAXMessage
 } from './GDAXMessages';
 import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
 import { Side, SIDES } from '../../lib/sides';
@@ -162,7 +163,14 @@ export class GDAXFeed extends ExchangeFeed {
      */
     protected handleMessage(msg: string): void {
         try {
-            const feedMessage: GDAXMessage = JSON.parse(msg);
+            const feedMessage = JSON.parse(msg);
+            if (!isGDAXMessage(feedMessage)) {
+                const m = this.mapUnknown(feedMessage);
+                this.attachSequence(m, feedMessage);
+                this.push(m);
+                return;
+            }
+
             let message: StreamMessage;
             switch (feedMessage.type) {
                 case 'subscriptions':
@@ -187,9 +195,7 @@ export class GDAXFeed extends ExchangeFeed {
                     message = this.mapFullFeed(feedMessage);
             }
             if (message) {
-                if ((feedMessage as any).sequence) {
-                    (message as any).sourceSequence = (feedMessage as any).sequence;
-                }
+                this.attachSequence(message, feedMessage);
                 message.origin = feedMessage;
                 this.push(message);
             }
@@ -291,6 +297,13 @@ export class GDAXFeed extends ExchangeFeed {
             };
             this.push(message);
         });
+    }
+
+    private attachSequence(streamMessage: StreamMessage,
+                           feedMessage: any): void {
+        if ((feedMessage as any).sequence) {
+            (streamMessage as any).sourceSequence = (feedMessage as any).sequence;
+        }
     }
 
     private mapError(errorMessage: GDAXErrorMessage): ErrorMessage {
