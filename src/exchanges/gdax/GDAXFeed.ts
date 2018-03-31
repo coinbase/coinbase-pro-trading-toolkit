@@ -304,6 +304,19 @@ export class GDAXFeed extends ExchangeFeed {
         return msg;
     }
 
+    private mapUnknown(unknown: any): UnknownMessage {
+        const time = unknown.time ? new Date(unknown.time) : new Date();
+        const product = unknown.product_id;
+        const sequence = unknown.sequence || (product && this.getSequence(product));
+        const msg: UnknownMessage = {
+            type: 'unknown',
+            time: time,
+            sequence: sequence,
+            productId: product
+        };
+        return msg;
+    }
+
     private mapTicker(ticker: GDAXTickerMessage): StreamMessage {
         return {
             type: 'ticker',
@@ -392,23 +405,10 @@ export class GDAXFeed extends ExchangeFeed {
                 return msg;
             }
             case 'received': {
-                const msg: UnknownMessage = {
-                    type: 'unknown',
-                    time: new Date(),
-                    sequence: (feedMessage as any).sequence,
-                    productId: (feedMessage as any).product_id
-                };
-                return msg;
+                return this.mapUnknown(feedMessage);
             }
             default: {
-                const product: string = (feedMessage as any).product_id;
-                const msg: UnknownMessage = {
-                    type: 'unknown',
-                    time: new Date(),
-                    sequence: this.getSequence(product),
-                    productId: product
-                };
-                return msg;
+                return this.mapUnknown(feedMessage);
             }
         }
     }
@@ -483,12 +483,7 @@ export class GDAXFeed extends ExchangeFeed {
                 return msg;
             }
             default: {
-                const msg: UnknownMessage = {
-                    type: 'unknown',
-                    time: time,
-                    productId: (feedMessage as any).product_id
-                };
-                return msg;
+                return this.mapUnknown(feedMessage);
             }
         }
     }
