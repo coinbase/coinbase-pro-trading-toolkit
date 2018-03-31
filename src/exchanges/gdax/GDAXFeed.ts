@@ -453,7 +453,6 @@ export class GDAXFeed extends ExchangeFeed {
      * consideration
      */
     private mapAuthMessage(feedMessage: GDAXTradingMessage): StreamMessage {
-        const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
         switch (feedMessage.type) {
             case 'match': {
                 const isTaker: boolean = !!feedMessage.taker_user_id;
@@ -465,7 +464,7 @@ export class GDAXFeed extends ExchangeFeed {
                 }
                 const msg: TradeExecutedMessage = {
                     type: 'tradeExecuted',
-                    time: time,
+                    time: new Date(feedMessage.time),
                     productId: feedMessage.product_id,
                     orderId: isTaker ? feedMessage.taker_order_id : feedMessage.maker_order_id,
                     orderType: isTaker ? 'market' : 'limit',
@@ -479,7 +478,7 @@ export class GDAXFeed extends ExchangeFeed {
             case 'done': {
                 const msg: TradeFinalizedMessage = {
                     type: 'tradeFinalized',
-                    time: time,
+                    time: new Date(feedMessage.time),
                     productId: feedMessage.product_id,
                     orderId: feedMessage.order_id,
                     reason: feedMessage.reason,
@@ -492,7 +491,7 @@ export class GDAXFeed extends ExchangeFeed {
             case 'open': {
                 const msg: MyOrderPlacedMessage = {
                     type: 'myOrderPlaced',
-                    time: time,
+                    time: new Date(feedMessage.time),
                     productId: feedMessage.product_id,
                     orderId: feedMessage.order_id,
                     side: feedMessage.side,
