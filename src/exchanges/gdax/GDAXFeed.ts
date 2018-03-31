@@ -432,7 +432,7 @@ export class GDAXFeed extends ExchangeFeed {
         const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
         switch (feedMessage.type) {
             case 'match': {
-                const isTaker: boolean = !!(feedMessage as any).taker_user_id;
+                const isTaker: boolean = !!feedMessage.taker_user_id;
                 let side: Side;
                 if (!isTaker) {
                     side = (feedMessage as GDAXMatchMessage).side;

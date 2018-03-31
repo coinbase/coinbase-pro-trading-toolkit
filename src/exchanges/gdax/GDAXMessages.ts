@@ -89,6 +89,8 @@ export interface GDAXMatchMessage extends ProductIdAndOptionalUserId {
     trade_id: string;
     maker_order_id: string;
     taker_order_id: string;
+    maker_user_id?: string;
+    taker_user_id?: string;
     size: string;
     price: string;
     side: Side;
