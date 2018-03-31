@@ -338,8 +338,8 @@ export class GDAXFeed extends ExchangeFeed {
         return msg;
     }
 
-    private mapTicker(ticker: GDAXTickerMessage): StreamMessage {
-        return {
+    private mapTicker(ticker: GDAXTickerMessage): TickerMessage {
+        const msg: TickerMessage = {
             type: 'ticker',
             time: ticker.time ? new Date(ticker.time) : new Date(),
             productId: ticker.product_id,
@@ -350,7 +350,8 @@ export class GDAXFeed extends ExchangeFeed {
             trade_id: String(ticker.trade_id),
             size: Big(ticker.last_size),
             volume: Big(ticker.volume_24h)
-        } as TickerMessage;
+        };
+        return msg;
     }
 
     private mapFullFeed(feedMessage: GDAXTradingMessage): StreamMessage {
