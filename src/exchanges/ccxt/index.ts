@@ -329,19 +329,19 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     cancelOrder(id: string): Promise<string> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     cancelAllOrders(gdaxProduct?: string): Promise<string[]> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     loadOrder(id: string): Promise<LiveOrder> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     loadBalances(): Promise<Balances> {
@@ -369,19 +369,19 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     requestCryptoAddress(cur: string): Promise<CryptoAddress> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     requestTransfer(request: TransferRequest): Promise<TransferResult> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     requestWithdrawal(request: WithdrawalRequest): Promise<TransferResult> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
-        throw new Error('Not implemented yet');
+        return Promise.reject(new Error('Not implemented yet'));
     }
 
     /**
