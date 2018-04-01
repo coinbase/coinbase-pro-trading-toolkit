@@ -247,7 +247,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 } as OrderParams; // Override for incomplete definition in GDAX lib
                 break;
             default:
-                return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
+                return Promise.reject(new GTTError(`Invalid order type: ${order.type}`));
         }
 
         return this.authClient.placeOrder(gdaxOrder).then((result: OrderResult) => {

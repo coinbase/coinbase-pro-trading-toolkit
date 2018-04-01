@@ -280,7 +280,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     }
 
     loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
-        return Promise.reject(new GTTError('Error loading products from Bitfinex'));
+        return Promise.reject(new GTTError('Not implemented'));
     }
 
     // -------------------------- Transfer methods -------------------------------------------------
