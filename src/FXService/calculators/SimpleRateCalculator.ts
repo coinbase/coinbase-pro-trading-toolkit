@@ -34,9 +34,9 @@ export default class SimpleRateCalculator extends FXRateCalculator {
         const promises: Promise<FXObject>[] = pairs.map((pair: CurrencyPair) => {
             return this.provider.fetchCurrentRate(pair)
                 .catch((err: Error) => {
-                this.logger.log('warn', err.message, (err as any).details || null);
-                return null;
-            });
+                    this.logger.log('warn', err.message, (err as any).details || null);
+                    return null;
+                });
         });
         // Wait for all promises to resolve before sending results back
         return Promise.all(promises);
