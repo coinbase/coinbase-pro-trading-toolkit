@@ -88,14 +88,33 @@ describe('Errors', () => {
             assert.deepEqual(msg.meta.body.message, 'Invalid API key');
         });
 
-        it('accepts a null response', () => {
-            const err = new HTTPError('HTTP Error Test 2', null);
+        it('accepts a response and a cause', () => {
+            const cause = new Error('Unit test');
+            const response: ResponseLike = {
+                status: 403, body: {
+                    message: 'Invalid API key'
+                }
+            };
+            const err = new HTTPError('HTTP Error Test 2', response, cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'HTTP Error Test 2');
+            assert.deepEqual(msg.meta.status, 403);
+            assert.deepEqual(msg.meta.body.message, 'Invalid API key');
+            assert.strictEqual(err.cause, cause);
+        });
+
+        it('accepts a null response and a non-null cause', () => {
+            const cause = new Error('Unit test');
+            const err = new HTTPError('HTTP Error Test 3', null, cause);
+            const msg: ErrorMessage = err.asMessage();
+            assert.equal(msg.type, 'error');
+            assert.ok(msg.time);
+            assert.equal(msg.message, 'HTTP Error Test 3');
             assert.deepEqual(msg.meta.status, undefined);
             assert.deepEqual(msg.meta.body, undefined);
+            assert.strictEqual(err.cause, cause);
         });
     });
 });
