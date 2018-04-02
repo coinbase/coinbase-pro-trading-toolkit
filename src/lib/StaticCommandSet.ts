@@ -49,6 +49,6 @@ export class StaticCommandSet extends Readable {
         this.push(null);
     }
 
-    _read(size: number): void { /* no-op */
+    _read(_size: number): void { /* no-op */
     }
 }

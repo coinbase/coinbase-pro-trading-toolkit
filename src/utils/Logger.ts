@@ -45,9 +45,9 @@ export function ConsoleLoggerFactory(options?: winston.ConsoleTransportOptions):
 }
 
 export const NullLogger = {
-    log(level: string, message: string, meta?: any): void {  /* no-op */
+    log(_level: string, _message: string, _meta?: any): void {  /* no-op */
     },
-    error(err: Error): void { /* no-op */
+    error(_err: Error): void { /* no-op */
     }
 };
 

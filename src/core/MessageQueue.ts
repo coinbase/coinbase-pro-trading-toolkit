@@ -137,7 +137,7 @@ export class MessageQueue extends Duplex {
         this.messages.clear();
     }
 
-    _write(inputMessage: any, encoding: string, callback: (err: Error) => void): void {
+    _write(inputMessage: any, _encoding: string, callback: (err: Error) => void): void {
         if (this.defaultMessageHandler(inputMessage)) {
             setImmediate(() => {
                 this._read();

@@ -328,19 +328,19 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     }
 
-    cancelOrder(id: string): Promise<string> {
+    cancelOrder(_id: string): Promise<string> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    cancelAllOrders(gdaxProduct?: string): Promise<string[]> {
+    cancelAllOrders(_gdaxProduct?: string): Promise<string[]> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    loadOrder(id: string): Promise<LiveOrder> {
+    loadOrder(_id: string): Promise<LiveOrder> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]> {
+    loadAllOrders(_gdaxProduct?: string): Promise<LiveOrder[]> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
@@ -368,19 +368,19 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }).catch((err: Error) => rejectWithError(`Error loading balances on ${this.instance.name} (CCXT)`, err));
     }
 
-    requestCryptoAddress(cur: string): Promise<CryptoAddress> {
+    requestCryptoAddress(_cur: string): Promise<CryptoAddress> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    requestTransfer(request: TransferRequest): Promise<TransferResult> {
+    requestTransfer(_request: TransferRequest): Promise<TransferResult> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    requestWithdrawal(request: WithdrawalRequest): Promise<TransferResult> {
+    requestWithdrawal(_request: WithdrawalRequest): Promise<TransferResult> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
+    transfer(_cur: string, _amount: BigJS, _from: string, _to: string, _options: any): Promise<TransferResult> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
@@ -391,10 +391,10 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
             const rawTrades = await this.instance.fetchTrades(sourceSymbol, since, limit, params);
-            return rawTrades.map(({info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount}) => ({
+            return rawTrades.map(({id, timestamp, symbol: productId, side, price, amount}) => ({
                 type: 'trade' as 'trade',
                 time: new Date(timestamp),
-                productId: _symbol,
+                productId,
                 side,
                 tradeId: id,
                 price: price.toString(),

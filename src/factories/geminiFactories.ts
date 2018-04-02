@@ -19,7 +19,7 @@ import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
 
 export function getSubscribedFeeds(options: any, symbol: string): Promise<GeminiMarketFeed> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const config: GI.GeminiMarketFeedConfig = {
             wsUrl: (options.wsUrl || GEMINI_WS_FEED) + symbol,
             auth: null,

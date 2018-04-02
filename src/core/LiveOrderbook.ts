@@ -158,7 +158,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
 
     _read() { /* no-op */ }
 
-    _write(msg: any, encoding: string, callback: () => void): void {
+    _write(msg: any, _encoding: string, callback: () => void): void {
         // Pass the msg on to downstream users
         this.push(msg);
         // Process the message for the orderbook state

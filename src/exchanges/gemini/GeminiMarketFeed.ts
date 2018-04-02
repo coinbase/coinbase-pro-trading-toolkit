@@ -146,7 +146,7 @@ export class GeminiMarketFeed extends ExchangeFeed {
         return message;
     }
 
-    private processAuction(event: GI.GeminiAuctionEvent, update: GI.GeminiUpdateMessage): StreamMessage {
+    private processAuction(_event: GI.GeminiAuctionEvent, _update: GI.GeminiUpdateMessage): StreamMessage {
         // TODO: Are auctions unique to Gemini?
         return undefined;
     }

@@ -118,7 +118,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         this.orderIdMap = newIdMap;
 
         const mapLevelUpdates: (date: PriceData) => PriceLevelWithOrders =
-            ({ id, price, size, side }) => PriceLevelFactory(price, size, Side(side));
+            ({ price, size, side }) => PriceLevelFactory(price, size, Side(side));
 
         const asks: PriceLevelWithOrders[] = snapshot.data
             .filter( ({ side }) => side === 'Sell' )
@@ -194,7 +194,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         });
     }
 
-    private handleSubscriptionSuccess(successMsg: SubscriptionResponseMessage) {
+    private handleSubscriptionSuccess(_successMsg: SubscriptionResponseMessage) {
         // TODO
     }
 }

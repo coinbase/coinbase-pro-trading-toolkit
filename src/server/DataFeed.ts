@@ -39,7 +39,7 @@ export function dataFeedFactory(): Server {
     if (server === undefined) {
         server = new Server(serverOptions);
         logger.log('info', `Websocket server listening on port ${server.options.port}`);
-        server.on('connection', (socket: WebSocket) => {
+        server.on('connection', (_socket: WebSocket) => {
             logger.log('debug', 'Websocket connection made to ' + server.options.host);
         });
     }

@@ -24,7 +24,7 @@ import { extractResponse, HTTPError } from '../lib/errors';
  * @param meta
  * @returns {Promise<Response>}
  */
-export function handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
+export function handleResponse<T>(req: Promise<Response>, _meta: any): Promise<T> {
     return req.then<T>((res: Response) => {
         if (res.status >= 200 && res.status < 300) {
             return res.body as T;

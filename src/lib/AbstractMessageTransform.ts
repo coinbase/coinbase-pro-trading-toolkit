@@ -44,7 +44,7 @@ export abstract class AbstractMessageTransform extends stream.Transform {
         return super.read(size) as StreamMessage;
     }
 
-    _transform(chunk: any, encoding: string, callback: (err: Error, chunk?: any) => void) {
+    _transform(chunk: any, _encoding: string, callback: (err: Error, chunk?: any) => void) {
         if (typeof chunk === 'object' && isStreamMessage(chunk)) {
             const msg = chunk as StreamMessage;
             const transformed = this.transformMessage(msg);

@@ -14,6 +14,11 @@
       "member-access": false,
       "no-console": false,
       "no-trailing-whitespace": [true, "ignore-comments", "ignore-jsdoc"],
+      "no-unused-variable": [
+        true,
+        "check-parameters",
+        {"ignore-pattern": "^_"}
+      ],
       "object-literal-shorthand": false,
       "object-literal-sort-keys": false,
       "ordered-imports": false,
