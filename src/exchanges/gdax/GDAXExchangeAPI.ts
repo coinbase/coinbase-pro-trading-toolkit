@@ -265,7 +265,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
             return Promise.resolve(ids[0]);
         });
-
     }
 
     cancelAllOrders(product: string): Promise<string[]> {
