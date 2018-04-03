@@ -223,7 +223,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    cancelAllOrders(): Promise<string[]> {
+    cancelAllOrders(gdaxProduct?: string): Promise<string[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.cancelAllOrders(auth).then((result: BitfinexResult) => {
                 if (this.logger) {

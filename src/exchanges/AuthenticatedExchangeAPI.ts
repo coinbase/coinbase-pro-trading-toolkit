@@ -36,9 +36,9 @@ export interface AuthenticatedExchangeAPI {
     cancelOrder(id: string): Promise<string>;
 
     /**
-     * Cancel all orders. If product is not null, only cancel orders from that book
+     * Cancel all orders. If product is truthy, only cancel orders from that book
      */
-    cancelAllOrders(product: string): Promise<string[]>;
+    cancelAllOrders(gdaxProduct?: string): Promise<string[]>;
 
     /**
      * Load details for a user-placed order on the exchange

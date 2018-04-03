@@ -267,7 +267,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
 
     }
 
-    cancelAllOrders(product: string): Promise<string[]> {
+    cancelAllOrders(product?: string): Promise<string[]> {
         const apiCall = this.authCall('DELETE', `/orders`, {});
         const options = product ? {product_id: product} : null;
         return this.handleResponse<string[]>(apiCall, options).then((ids: string[]) => {

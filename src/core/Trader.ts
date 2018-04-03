@@ -134,7 +134,7 @@ export class Trader extends Writable {
      * listed in the in-memory orderbook, use `cancelMyOrders`
      */
     cancelAllOrders(): Promise<string[]> {
-        return this.api.cancelAllOrders(null).then((ids: string[]) => {
+        return this.api.cancelAllOrders().then((ids: string[]) => {
             this.myBook.clear();
             this.emitMessageAsync('Trader.all-orders-cancelled', ids);
             return ids;
