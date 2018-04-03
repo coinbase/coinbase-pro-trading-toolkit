@@ -286,10 +286,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    loadAllOrders(product: string): Promise<LiveOrder[]> {
+    loadAllOrders(product?: string): Promise<LiveOrder[]> {
         const self = this;
         let allOrders: LiveOrder[] = [];
-        const loop: (after: string) => Promise<LiveOrder[]> = (after: string) => {
+        const loop: (after?: string) => Promise<LiveOrder[]> = (after?: string) => {
             return self.loadNextOrders(product, after).then((result) => {
                 const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderInfoToOrder);
                 allOrders = allOrders.concat(liveOrders);
@@ -300,7 +300,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 }
             });
         };
-        return loop(null);
+        return loop();
     }
 
     loadBalances(): Promise<Balances> {
@@ -503,7 +503,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return book;
     }
 
-    private loadNextOrders(product: string, after: string): Promise<OrderPage> {
+    private loadNextOrders(product?: string, after?: string): Promise<OrderPage> {
         const qs: any = {
             status: ['open', 'pending', 'active']
         };
