@@ -13,7 +13,6 @@
  **********************************************************************************************************************/
 
 import * as ccxt from 'ccxt';
-import { Market as CCXTMarket, OHLCV as CCXTOHLCV, OrderBook as CCXTOrderbook } from 'ccxt';
 import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
@@ -167,7 +166,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return result;
     }
 
-    static getGDAXSymbol(m: CCXTMarket): string {
+    static getGDAXSymbol(m: ccxt.Market): string {
         return `${m.base}-${m.quote}`;
     }
 
@@ -239,7 +238,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
         return this.getSourceSymbol(gdaxProduct).then((id: string) => {
             return this.instance.fetchOrderBook(id);
-        }).then((ccxtBook: CCXTOrderbook) => {
+        }).then((ccxtBook: ccxt.OrderBook) => {
             const book: BookBuilder = new BookBuilder(this.logger);
             const addSide = (side: string, orders: number[][]) => {
                 orders.forEach((o) => {
@@ -290,8 +289,8 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
         return this.getSourceSymbol(product).then((id: string) => {
             return this.instance.fetchOHLCV(id, options.interval);
-        }).then((data: CCXTOHLCV[]) => {
-            const candles = data.map((d: CCXTOHLCV) => {
+        }).then((data: ccxt.OHLCV[]) => {
+            const candles = data.map((d: ccxt.OHLCV) => {
                 return {
                     timestamp: new Date(d[0]),
                     open: Big(d[1]),
@@ -405,7 +404,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
     }
 
-    async fetchOHLCV(symbol: string, timeframe?: string, since?: number, limit?: number, params?: any): Promise<CCXTOHLCV[] | null> {
+    async fetchOHLCV(symbol: string, timeframe?: string, since?: number, limit?: number, params?: any): Promise<ccxt.OHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
             return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
         }
