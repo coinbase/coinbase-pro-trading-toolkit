@@ -305,7 +305,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         throw new Error('Not implemented yet');
     }
 
-    loadAllOrders(gdaxProduct: string): Promise<LiveOrder[]> {
+    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]> {
         throw new Error('Not implemented yet');
     }
 
