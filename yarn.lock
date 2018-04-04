@@ -80,9 +80,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/winston@2.3.8":
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/@types/winston/-/winston-2.3.8.tgz#88964f45ecb5ed1feb4bfb38a24316bee8bf8768"
+"@types/winston@2.3.9":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@types/winston/-/winston-2.3.9.tgz#1ff9f1bb57952fe3d88c1b21c4899ede316a35bc"
   dependencies:
     "@types/node" "*"
 
