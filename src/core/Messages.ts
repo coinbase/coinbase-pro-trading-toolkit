@@ -237,7 +237,7 @@ export interface MyOrderPlacedMessage extends StreamMessage {
  * Keys are searched recursively.
  * The original message is not modified.
  */
-export function sanitizeMessage(msg: { [index: string]: any }, sensitiveKeys: string[]) {
+export function sanitizeMessage(msg: { [index: string]: any }, sensitiveKeys: string[]): any {
     const clean: any = {};
     for (const key in msg) {
         if (msg.hasOwnProperty(key)) {
