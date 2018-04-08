@@ -38,23 +38,36 @@ describe('Errors', () => {
     });
 
     describe('APIError', () => {
-        it('accepts a cause', () => {
-            const cause: any = { reason: 'That thing' };
-            const err = new APIError('API Error Test 1', cause);
+        it('accepts a meta', () => {
+            const meta = { reason: 'That thing' };
+            const err = new APIError('API Error Test 1', null, meta);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'API Error Test 1');
-            assert.deepEqual(msg.cause, cause);
+            assert.deepEqual(msg.cause, null);
+            assert.deepEqual(msg.meta, meta);
         });
 
-        it('acts like a standard Error', () => {
-            const err = new APIError('API Error Test 2', null);
+        it('accepts a cause', () => {
+            const cause = new Error('That thing');
+            const err = new APIError('API Error Test 2', cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'API Error Test 2');
+            assert.deepEqual(msg.cause, cause.message);
+            assert.deepEqual(msg.meta, null);
+        });
+
+        it('acts like a standard Error', () => {
+            const err = new APIError('API Error Test 3', null);
+            const msg: ErrorMessage = err.asMessage();
+            assert.equal(msg.type, 'error');
+            assert.ok(msg.time);
+            assert.equal(msg.message, 'API Error Test 3');
             assert.deepEqual(msg.cause, null);
+            assert.deepEqual(msg.meta, null);
         });
     });
 

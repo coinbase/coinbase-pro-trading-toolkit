@@ -40,6 +40,7 @@ export interface ErrorMessage extends StreamMessage {
     type: 'error';
     message: string;
     cause: any;
+    meta?: any;
 }
 
 export interface HTTPErrorMessage extends ErrorMessage {

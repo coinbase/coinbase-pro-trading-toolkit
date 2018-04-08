@@ -44,12 +44,14 @@ export class GTTError extends Error implements StreamError {
  * Errors raised or captured as a result of errors coming from external network sources, such as WS Feeds or REST APIs
  */
 export class APIError extends Error implements StreamError {
-    readonly cause: any;
+    readonly cause: undefined | Error;
+    readonly meta: any;
     readonly time: Date;
 
-    constructor(msg: string, cause: any) {
+    constructor(msg: string, cause?: Error, meta?: any) {
         super(msg);
         this.cause = cause;
+        this.meta = meta;
         this.time = new Date();
     }
 
@@ -58,7 +60,8 @@ export class APIError extends Error implements StreamError {
             type: 'error',
             time: this.time,
             message: this.message,
-            cause: this.cause
+            cause: this.cause ? this.cause.message : undefined,
+            meta: this.meta
         };
     }
 }
