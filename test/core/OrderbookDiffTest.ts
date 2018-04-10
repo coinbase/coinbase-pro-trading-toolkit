@@ -15,13 +15,16 @@
 import { OrderbookDiff } from '../../src/lib/OrderbookDiff';
 import { BookBuilder } from '../../src/lib/BookBuilder';
 import assert = require('assert');
-import { PriceLevel } from '../../src/lib/Orderbook';
+import { PriceLevelWithOrders } from '../../src/lib/Orderbook';
 import { Biglike, Big } from '../../src/lib/types';
 import { NullLogger } from '../../src/utils/Logger';
 
-function assertPriceLevel(actual: PriceLevel, price: Biglike, size: Biglike, numOrders?: number) {
+function assertPriceLevel(actual: PriceLevelWithOrders, price: Biglike, size: Biglike, numOrders?: number) {
     assert.equal(+actual.totalSize, +size, 'size');
     assert.equal(+actual.price, +price, 'price');
+    if (typeof numOrders === 'number') {
+        assert.equal(actual.orders.length, numOrders);
+    }
     return true;
 }
 describe('OrderbookDiff', () => {
