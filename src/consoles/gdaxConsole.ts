@@ -144,11 +144,11 @@ if (program.newMarketOrder && hasAuth()) {
     }
     const vals = program.newMarketOrder.split(',');
     const params: PlaceOrderMessage = {
+        type: 'placeOrder',
         time: new Date(),
         clientId: null,
         side: vals[0],
         size: vals[1],
-        type: 'market',
         productId: program.product,
         price: null,
         orderType: 'market'
@@ -167,11 +167,11 @@ if (program.newLimitOrder && hasAuth()) {
     }
     const [side, size, price] = program.newLimitOrder.split(',');
     const params: PlaceOrderMessage = {
+        type: 'placeOrder',
         time: new Date(),
         clientId: null,
         side: side,
         size: size,
-        type: 'market',
         productId: program.product,
         price: price,
         orderType: 'limit'
