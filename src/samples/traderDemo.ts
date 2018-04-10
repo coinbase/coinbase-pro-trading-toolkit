@@ -18,7 +18,8 @@ import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
 import { Trader, TraderConfig } from '../core/Trader';
 import Limiter from '../core/RateLimiter';
 import {
-    CancelOrderRequestMessage, ErrorMessage,
+    CancelOrderRequestMessage,
+    ErrorMessage,
     PlaceOrderMessage,
     StreamMessage,
     TradeExecutedMessage,
