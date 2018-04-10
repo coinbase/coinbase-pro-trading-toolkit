@@ -27,7 +27,7 @@ export interface GDAXChannel {
 }
 
 export interface GDAXErrorMessage extends GDAXMessage {
-    type: string;
+    type: 'error';
     message: string;
     reason: string;
 }
@@ -37,11 +37,12 @@ export interface GDAXProductMessage extends GDAXMessage {
 }
 
 export interface GDAXSubscriptionsMessage extends GDAXMessage {
-    type: string;
+    type: 'subscriptions';
     channels: GDAXChannel[];
 }
 
 export interface GDAXOpenMessage extends GDAXProductMessage {
+    type: 'open';
     sequence: number;
     time: string;
     order_id: string;
@@ -51,6 +52,7 @@ export interface GDAXOpenMessage extends GDAXProductMessage {
 }
 
 export interface GDAXDoneMessage extends GDAXProductMessage {
+    type: 'done';
     sequence: number;
     time: string;
     price: string;
@@ -61,6 +63,7 @@ export interface GDAXDoneMessage extends GDAXProductMessage {
 }
 
 export interface GDAXMatchMessage extends GDAXProductMessage {
+    type: 'match';
     sequence: number;
     time: string;
     trade_id: string;
@@ -72,6 +75,7 @@ export interface GDAXMatchMessage extends GDAXProductMessage {
 }
 
 export interface GDAXChangeMessage extends GDAXProductMessage {
+    type: 'change';
     sequence: number;
     time: string;
     order_id: string;
@@ -84,10 +88,12 @@ export interface GDAXChangeMessage extends GDAXProductMessage {
 }
 
 export interface GDAXL2UpdateMessage extends GDAXProductMessage {
+    type: 'l2update';
     changes: string[][]; // [ [ side, price, newSize ] ]
 }
 
 export interface GDAXTickerMessage extends GDAXProductMessage {
+    type: 'ticker';
     trade_id: number;
     sequence: number;
     time: string;
@@ -100,6 +106,7 @@ export interface GDAXTickerMessage extends GDAXProductMessage {
 }
 
 export interface GDAXSnapshotMessage extends GDAXProductMessage {
+    type: 'snapshot';
     bids: [string, string][]; // [ [price, size] ]
     asks: [string, string][]; // [ [price, size] ]
 }

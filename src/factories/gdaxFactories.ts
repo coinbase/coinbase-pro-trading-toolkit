@@ -12,14 +12,30 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
-import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAX_WS_FEED,
+         GDAXFeed,
+         GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
+import { GDAX_API_URL,
+         GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';
 import { GDAXAuthConfig } from '../exchanges/gdax/GDAXInterfaces';
 
 let publicAPIInstance: GDAXExchangeAPI;
+
+function getAuthFromEnv(): null | GDAXAuthConfig {
+    const env = process.env;
+    if (env.GDAX_KEY && env.GDAX_SECRET && env.GDAX_PASSPHRASE) {
+        return {
+            key: process.env.GDAX_KEY,
+            secret: process.env.GDAX_SECRET,
+            passphrase: process.env.GDAX_PASSPHRASE
+        };
+    } else {
+        return null;
+    }
+}
 
 /**
  * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
@@ -30,11 +46,7 @@ export function DefaultAPI(logger: Logger): GDAXExchangeAPI {
         publicAPIInstance = new GDAXExchangeAPI({
             logger: logger,
             apiUrl: GDAX_API_URL,
-            auth: {
-                key: process.env.GDAX_KEY,
-                secret: process.env.GDAX_SECRET,
-                passphrase: process.env.GDAX_PASSPHRASE
-            }
+            auth: getAuthFromEnv()
         });
     }
     return publicAPIInstance;
@@ -78,11 +90,7 @@ export function getSubscribedFeeds(options: any, products: string[]): Promise<GD
  * It is assumed that your API keys are stored in the GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars
  */
 export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAuthConfig): Promise<GDAXFeed> {
-    auth = auth || {
-        key: process.env.GDAX_KEY,
-        secret: process.env.GDAX_SECRET,
-        passphrase: process.env.GDAX_PASSPHRASE
-    };
+    auth = auth || getAuthFromEnv();
     // Use the GDAX API to get, and subscribe to all the endpoints
     let productPromise: Promise<string[]>;
     if (productIDs) {
@@ -92,7 +100,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAu
             .loadProducts()
             .then((products: Product[]) => {
                 const ids = products.map((p) => p.id);
-                return Promise.resolve(ids);
+                return ids;
             });
     }
     return productPromise.then((productIds: string[]) => {

@@ -23,7 +23,7 @@ import { sanitizeMessage } from '../core/Messages';
 export class ExchangeFeedConfig {
     wsUrl: string;
     logger: Logger;
-    auth: ExchangeAuthConfig;
+    auth?: ExchangeAuthConfig;
 }
 
 // hooks for replacing libraries if desired

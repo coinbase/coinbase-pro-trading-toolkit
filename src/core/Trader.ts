@@ -17,7 +17,13 @@ import { Logger } from '../utils/Logger';
 import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
-import { CancelOrderRequestMessage, isStreamMessage, MyOrderPlacedMessage, PlaceOrderMessage, StreamMessage, TradeExecutedMessage, TradeFinalizedMessage } from './Messages';
+import { CancelOrderRequestMessage,
+         isStreamMessage,
+         MyOrderPlacedMessage,
+         PlaceOrderMessage,
+         StreamMessage,
+         TradeExecutedMessage,
+         TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
 import { StreamError } from '../lib/errors';
@@ -104,15 +110,14 @@ export class Trader extends Writable {
             // We pass the message along, but let the user decide what to do
             // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
             this.emitMessageAsync('Trader.place-order-failed', err.asMessage());
-            return Promise.resolve(null);
+            return null;
         });
     }
 
     cancelOrder(orderId: string): Promise<string> {
-        return this.api.cancelOrder(orderId).then((id: string) => {
-            // To avoid race conditions, we only actually remove the order when the tradeFinalized message arrives
-            return id;
-        });
+        // To avoid race conditions, we only actually remove the order
+        // when the tradeFinalized message arrives.
+        return this.api.cancelOrder(orderId);
     }
 
     cancelMyOrders(): Promise<string[]> {
@@ -134,7 +139,7 @@ export class Trader extends Writable {
      * listed in the in-memory orderbook, use `cancelMyOrders`
      */
     cancelAllOrders(): Promise<string[]> {
-        return this.api.cancelAllOrders(null).then((ids: string[]) => {
+        return this.api.cancelAllOrders().then((ids: string[]) => {
             this.myBook.clear();
             this.emitMessageAsync('Trader.all-orders-cancelled', ids);
             return ids;
@@ -159,8 +164,7 @@ export class Trader extends Writable {
             actualOrders.forEach((order: LiveOrder) => {
                 book.add(order);
             });
-            const diff = OrderbookDiff.compareByOrder(this.myBook, book);
-            return Promise.resolve(diff);
+            return OrderbookDiff.compareByOrder(this.myBook, book);
         });
     }
 
@@ -211,7 +215,7 @@ export class Trader extends Writable {
 
     private handleCancelOrder(request: CancelOrderRequestMessage) {
         this.cancelOrder(request.orderId).then((result: string) => {
-            return this.emitMessageAsync('Trader.order-cancelled', result);
+            this.emitMessageAsync('Trader.order-cancelled', result);
         }, (err: Error) => {
             this.emitMessageAsync('Trader.cancel-order-failed', err);
         });
@@ -228,7 +232,8 @@ export class Trader extends Writable {
         const order: Level3Order = this.myBook.getOrder(msg.orderId);
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
-            this.emit('Trader.outOfSyncWarning', 'Traded order not in my book');
+            this.emit('Trader.outOfSyncWarning',
+                      `Traded order ${msg.orderId} not in my book`);
             return;
         }
         let newSize: BigJS;

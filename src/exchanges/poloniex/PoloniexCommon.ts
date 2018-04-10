@@ -78,13 +78,13 @@ export function getProductInfo(id: number, refresh: boolean, logger?: Logger): P
         products.forEach((p: Product) => {
             productInfo[p.sourceData.id] = p;
         });
-        return Promise.resolve(productInfo[id]);
+        return productInfo[id];
     });
 }
 
 export function getAllProductInfo(refresh: boolean, logger?: Logger): Promise<PoloniexProducts> {
     return getProductInfo(0, refresh, logger).then(() => {
-        return Promise.resolve(productInfo);
+        return productInfo;
     });
 }
 

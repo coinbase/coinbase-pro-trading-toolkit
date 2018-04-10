@@ -63,7 +63,7 @@ export default class OpenExchangeProvider extends FXProvider {
             .then((res: Response) => {
                 const curs: { [cur: string]: string } = res.body;
                 supportedCurrencies = Object.keys(curs);
-                return Promise.resolve(isSupported(pair));
+                return isSupported(pair);
             });
     }
 

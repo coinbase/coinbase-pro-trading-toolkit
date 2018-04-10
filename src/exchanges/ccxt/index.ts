@@ -18,7 +18,7 @@ import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
-import { Big, BigJS } from '../../lib/types';
+import { Big, BigJS, ZERO } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
@@ -161,17 +161,17 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             for (const id in markets) {
                 const m: CCXTMarket = markets[id];
                 if (m.base === base && m.quote === quote) {
-                    return Promise.resolve(m.symbol);
+                    return m.symbol;
                 }
             }
-            return Promise.resolve(null);
+            return null;
         }).catch((err: Error) => rejectWithError(`Error loading symbols for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     loadProducts(): Promise<Product[]> {
         return this.instance.loadMarkets(true).then((markets: ccxt.CCXTMarket[]) => {
             if (!markets) {
-                return Promise.resolve([]);
+                return [];
             }
             const result: Product[] = [];
             for (const id in markets) {
@@ -188,7 +188,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 };
                 result.push(product);
             }
-            return Promise.resolve(result);
+            return result;
         }).catch((err: Error) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
     }
 
@@ -222,7 +222,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             };
             addSide('buy', ccxtBook.bids);
             addSide('sell', ccxtBook.asks);
-            return Promise.resolve(book);
+            return book;
         }).catch((err: Error) => rejectWithError(`Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
@@ -231,17 +231,17 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             return this.instance.fetchTicker(id);
         }).then((ticker: any) => {
             if (!ticker) {
-                return Promise.resolve(null);
+                return null;
             }
             const t: Ticker = {
                 productId: gdaxProduct,
-                price: Big(0),
+                price: ZERO,
                 time: new Date(ticker.timestamp),
                 ask: Big(ticker.bid),
                 bid: Big(ticker.ask),
                 volume: Big(ticker.baseVolume)
             };
-            return Promise.resolve(t);
+            return t;
         }).catch((err: Error) => rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
@@ -266,14 +266,14 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                     volume: Big(d[5])
                 };
             });
-            return Promise.resolve(candles);
+            return candles;
         }).catch((err: Error) => rejectWithError(`Error loading candles for ${product} on ${this.instance.name} (CCXT)`, err));
     }
 
     placeOrder(order: PlaceOrderMessage): Promise<LiveOrder> {
         return this.getSourceSymbol(order.productId).then((id: string) => {
             if (!id) {
-                return Promise.resolve(null);
+                return null;
             }
             const args = Object.assign({postOnly: order.postOnly, funds: order.funds, clientId: order.clientId}, order.extra);
             return this.instance.createOrder(id, order.orderType, order.side, order.size.toString(), order.price.toString(), args).then((res: any) => {
@@ -287,7 +287,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                     extra: res.info,
                     status: 'active'
                 };
-                return Promise.resolve(result);
+                return result;
             }).catch((err: Error) => rejectWithError(`Error placing order for ${order.productId} on ${this.instance.name} (CCXT)`, err));
         });
 
@@ -297,7 +297,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         throw new Error('Not implemented yet');
     }
 
-    cancelAllOrders(product: string): Promise<string[]> {
+    cancelAllOrders(gdaxProduct?: string): Promise<string[]> {
         throw new Error('Not implemented yet');
     }
 
@@ -305,7 +305,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         throw new Error('Not implemented yet');
     }
 
-    loadAllOrders(gdaxProduct: string): Promise<LiveOrder[]> {
+    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]> {
         throw new Error('Not implemented yet');
     }
 
@@ -315,7 +315,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
         return this.instance.fetchBalance().then((balances: any) => {
             if (!balances) {
-                return Promise.resolve(null);
+                return null;
             }
             const result: Balances = {default: {}};
             for (const cur in balances) {
@@ -329,7 +329,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                     available: isFinite(available) ? Big(available) : null
                 };
             }
-            return Promise.resolve(result);
+            return result;
         }).catch((err: Error) => rejectWithError(`Error loading balances on ${this.instance.name} (CCXT)`, err));
     }
 

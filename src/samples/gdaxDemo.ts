@@ -12,8 +12,9 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AvailableBalance, Balances } from '../exchanges/AuthenticatedExchangeAPI';
-import { Big, BigJS } from '../lib/types';
+import { AvailableBalance,
+         Balances } from '../exchanges/AuthenticatedExchangeAPI';
+import { BigJS, ZERO } from '../lib/types';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { LiveOrder, Orderbook } from '../lib/Orderbook';
 import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
@@ -46,7 +47,7 @@ gdax.loadBalances().then((balances: Balances) => {
 }).catch(logError);
 
 gdax.loadAllOrders(product).then((orders) => {
-    let total: BigJS = Big(0);
+    let total = ZERO;
     orders.forEach((o: LiveOrder) => {
         total = total.plus(o.size);
     });

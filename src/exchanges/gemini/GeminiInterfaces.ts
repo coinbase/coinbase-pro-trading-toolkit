@@ -69,6 +69,7 @@ export interface GeminiHeartbeatMessage extends GeminiMessage {
 }
 
 export interface GeminiUpdateMessage extends GeminiMessage {
+    type: 'update';
     socket_sequence: number;
     eventId: string;
     events: GeminiEvent[];
@@ -81,6 +82,7 @@ export interface GeminiEvent {
 }
 
 export interface GeminiChangeEvent extends GeminiEvent {
+    type: 'change';
     price: string;
     side: 'bid' | 'ask';
     reason: string;
@@ -89,6 +91,7 @@ export interface GeminiChangeEvent extends GeminiEvent {
 }
 
 export interface GeminiTradeEvent extends GeminiEvent {
+    type: 'trade';
     tid: number;
     price: string;
     amount: string;
@@ -96,7 +99,7 @@ export interface GeminiTradeEvent extends GeminiEvent {
 }
 
 export interface GeminiAuctionEvent extends GeminiEvent {
-    type: string;
+    type: 'auction';
 }
 
 export interface GeminiAuctionOpenEvent extends GeminiAuctionEvent {

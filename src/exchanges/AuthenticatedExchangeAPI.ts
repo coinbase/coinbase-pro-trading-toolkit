@@ -36,9 +36,9 @@ export interface AuthenticatedExchangeAPI {
     cancelOrder(id: string): Promise<string>;
 
     /**
-     * Cancel all orders. If product is not null, only cancel orders from that book
+     * Cancel all orders. If product is truthy, only cancel orders from that book
      */
-    cancelAllOrders(product: string): Promise<string[]>;
+    cancelAllOrders(gdaxProduct?: string): Promise<string[]>;
 
     /**
      * Load details for a user-placed order on the exchange
@@ -46,10 +46,10 @@ export interface AuthenticatedExchangeAPI {
     loadOrder(id: string): Promise<LiveOrder>;
 
     /**
-     * Loads all currently active orders placed by the user (i.e. not the full orderbook). If product is null, load
+     * Loads all currently active orders placed by the user (i.e. not the full orderbook). If product is undefined, load
      * all orders from all books
      */
-    loadAllOrders(gdaxProduct: string): Promise<LiveOrder[]>;
+    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]>;
 
     /**
      * Return the balances for all the accounts the user has associated with the current authentication credentials
@@ -62,6 +62,10 @@ export interface AvailableBalance {
     available: BigJS;
 }
 
+export interface AvailableBalances {
+    [currency: string]: AvailableBalance;
+}
+
 export interface Balances {
-    [profileId: string]: { [currency: string]: AvailableBalance };
+    [profileId: string]: AvailableBalances;
 }
