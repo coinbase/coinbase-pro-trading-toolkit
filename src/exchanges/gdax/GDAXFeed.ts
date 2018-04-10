@@ -291,7 +291,7 @@ export class GDAXFeed extends ExchangeFeed {
     private mapTicker(ticker: GDAXTickerMessage): StreamMessage {
         return {
             type: 'ticker',
-            time: new Date(ticker.time),
+            time: ticker.time ? new Date(ticker.time) : new Date(),
             productId: ticker.product_id,
             sequence: ticker.sequence,
             price: Big(ticker.price),
