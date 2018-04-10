@@ -271,16 +271,17 @@ export class GDAXFeed extends ExchangeFeed {
 
     private processUpdate(update: GDAXL2UpdateMessage) {
         const product: string = update.product_id;
+        const time = new Date();
         update.changes.forEach(([side, price, newSize]) => {
             this.internalSequence[product] = this.getSequence(product) + 1;
             const message: LevelMessage = {
                 type: 'level',
-                time: new Date(),
+                time: time,
                 price: price,
                 size: newSize,
                 count: 1,
                 sequence: this.getSequence(product),
-                productId: update.product_id,
+                productId: product,
                 side: side,
                 origin: update
             };
