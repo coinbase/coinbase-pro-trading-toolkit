@@ -73,7 +73,7 @@ export class FXService extends EventEmitter {
     /**
      * Replaces the [[FXRateCalculator]] instance and returns `this` so that you can chain setter calls.
      */
-    setCalculator(value: FXRateCalculator) {
+    setCalculator(value: FXRateCalculator): this {
         this._calculator = value;
         return this;
     }
@@ -88,7 +88,7 @@ export class FXService extends EventEmitter {
     /**
      * Sets a logger for the service  and returns `this` so that you can chain setter calls.
      */
-    setLogger(value: Logger) {
+    setLogger(value: Logger): this {
         this._logger = value;
         return this;
     }
@@ -103,7 +103,7 @@ export class FXService extends EventEmitter {
     /**
      * Assigns a new polling interval for calculating exchange rates (in ms). Returns `this` so that you can chain setter calls.
      */
-    setRefreshInterval(value: number) {
+    setRefreshInterval(value: number): this {
         this._refreshInterval = value;
         if (this.timer) {
             clearInterval(this.timer);
@@ -124,7 +124,7 @@ export class FXService extends EventEmitter {
     /**
      * Replace all current pairs with the array of pairs provided. Returns `this` so that you can chain setter calls.
      */
-    setActivePairs(pairs: CurrencyPair[]) {
+    setActivePairs(pairs: CurrencyPair[]): this {
         this._currencyPairs = [];
         pairs.forEach((pair) => this.addCurrencyPair(pair));
         return this;
@@ -134,7 +134,7 @@ export class FXService extends EventEmitter {
      * Adds a single currency pair to the service without removing any that are already being queried. If the pair is already
      * in the list, this function has no effect. Returns `this` so that you can chain setter calls.
      */
-    addCurrencyPair(pair: CurrencyPair) {
+    addCurrencyPair(pair: CurrencyPair): this {
         if (this.indexOf(pair) >= 0) {
             return this;
         }
