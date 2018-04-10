@@ -107,8 +107,8 @@ export interface GDAXTickerMessage extends GDAXProductMessage {
 
 export interface GDAXSnapshotMessage extends GDAXProductMessage {
     type: 'snapshot';
-    bids: string[][]; // [ [price, size] ]
-    asks: string[][]; // [ [price, size] ]
+    bids: [string, string][]; // [ [price, size] ]
+    asks: [string, string][]; // [ [price, size] ]
 }
 
 export interface GDAXSubscriptionRequest {

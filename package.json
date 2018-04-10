@@ -51,7 +51,7 @@
     "ccxt": "1.10.641",
     "commander": "2.9.0",
     "gdax": "0.6.0",
-    "limiter": "git://github.com/jhurliman/node-rate-limiter.git#58ce2fda6b5c2bc4ccb81ba3768c5b1bc06c91a5",
+    "limiter": "1.1.2",
     "node-bittrex-api": "0.7.7",
     "pushbullet": "2.0.0",
     "querystring": "0.2.0",

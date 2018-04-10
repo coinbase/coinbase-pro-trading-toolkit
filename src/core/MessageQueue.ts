@@ -74,7 +74,7 @@ export interface MessageQueueConfig {
  */
 export class MessageQueue extends Duplex {
     private logger: Logger;
-    private messages: RBTree<SequencedMessage>;
+    private readonly messages: RBTree<SequencedMessage>;
     private targetQueueLength: number;
     private lastSequence: number;
     private productId: string;
@@ -87,7 +87,9 @@ export class MessageQueue extends Duplex {
         this.targetQueueLength = options.targetQueueLength || 10;
         this.lastSequence = -1000;
         this.waitForSnapshot = options.waitForSnapshot;
-        this.clearQueue();
+        this.messages = new RBTree<BaseOrderMessage>((a: BaseOrderMessage, b: BaseOrderMessage) => {
+            return a.sequence - b.sequence;
+        });
     }
 
     get product(): string {
@@ -132,9 +134,7 @@ export class MessageQueue extends Duplex {
     }
 
     clearQueue() {
-        this.messages = new RBTree<BaseOrderMessage>((a: BaseOrderMessage, b: BaseOrderMessage) => {
-            return a.sequence - b.sequence;
-        });
+        this.messages.clear();
     }
 
     _write(inputMessage: any, encoding: string, callback: (err: Error) => void): void {

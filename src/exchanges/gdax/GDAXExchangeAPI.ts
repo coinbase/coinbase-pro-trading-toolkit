@@ -73,7 +73,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.publicClient.getProducts()
             .then((products: ProductInfo[]) => {
                 return products.map((prod: ProductInfo) => {
-                    return {
+                    const p: Product = {
                         id: prod.id,
                         sourceId: prod.id,
                         baseCurrency: prod.base_currency,
@@ -82,7 +82,8 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                         baseMaxSize: Big(prod.base_max_size),
                         quoteIncrement: Big(prod.quote_increment),
                         sourceData: prod
-                    } as Product;
+                    };
+                    return p;
                 });
             }).catch((err: GDAXHTTPError) => {
                 return Promise.reject(new HTTPError('Error loading products from GDAX', extractResponse(err.response)));
@@ -261,10 +262,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
             return ids[0];
         });
-
     }
 
-    cancelAllOrders(product: string): Promise<string[]> {
+    cancelAllOrders(product?: string): Promise<string[]> {
         const apiCall = this.authCall('DELETE', `/orders`, {});
         const options = product ? {product_id: product} : null;
         return this.handleResponse<string[]>(apiCall, options);
@@ -281,10 +281,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    loadAllOrders(product: string): Promise<LiveOrder[]> {
+    loadAllOrders(product?: string): Promise<LiveOrder[]> {
         const self = this;
         let allOrders: LiveOrder[] = [];
-        const loop: (after: string) => Promise<LiveOrder[]> = (after: string) => {
+        const loop: (after?: string) => Promise<LiveOrder[]> = (after?: string) => {
             return self.loadNextOrders(product, after).then((result) => {
                 const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderInfoToOrder);
                 allOrders = allOrders.concat(liveOrders);
@@ -295,7 +295,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 }
             });
         };
-        return loop(null);
+        return loop();
     }
 
     loadBalances(): Promise<Balances> {
@@ -498,7 +498,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return book;
     }
 
-    private loadNextOrders(product: string, after: string): Promise<OrderPage> {
+    private loadNextOrders(product?: string, after?: string): Promise<OrderPage> {
         const qs: any = {
             status: ['open', 'pending', 'active']
         };
