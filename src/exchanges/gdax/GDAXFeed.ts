@@ -322,8 +322,8 @@ export class GDAXFeed extends ExchangeFeed {
      */
     private mapMessage(feedMessage: GDAXMessage): StreamMessage {
         switch (feedMessage.type) {
-            case 'open':
-                return {
+            case 'open': {
+                const msg: NewOrderMessage = {
                     type: 'newOrder',
                     time: new Date((feedMessage as GDAXOpenMessage).time),
                     sequence: (feedMessage as GDAXOpenMessage).sequence,
@@ -332,15 +332,17 @@ export class GDAXFeed extends ExchangeFeed {
                     side: (feedMessage as GDAXOpenMessage).side,
                     price: (feedMessage as GDAXOpenMessage).price,
                     size: (feedMessage as GDAXOpenMessage).remaining_size
-                } as NewOrderMessage;
-            case 'done':
+                };
+                return msg;
+            }
+            case 'done': {
                 // remaining size is usually 0 -- and the corresponding match messages will have adjusted the orderbook
                 // There are cases when market orders are filled but remaining size is non-zero. This is as a result of STP
                 // or rounding, but the accounting is nevertheless correct. So if reason is 'filled' we can set the size
                 // to zero before removing the order. Otherwise if cancelled, remaining_size refers to the size
                 // that was on the order book
                 const size = (feedMessage as GDAXDoneMessage).reason === 'filled' ? '0' : (feedMessage as GDAXDoneMessage).remaining_size;
-                return {
+                const msg: OrderDoneMessage = {
                     type: 'orderDone',
                     time: new Date((feedMessage as GDAXDoneMessage).time),
                     sequence: (feedMessage as GDAXDoneMessage).sequence,
@@ -350,15 +352,18 @@ export class GDAXFeed extends ExchangeFeed {
                     price: (feedMessage as GDAXDoneMessage).price,
                     side: (feedMessage as GDAXDoneMessage).side,
                     reason: (feedMessage as GDAXDoneMessage).reason
-                } as OrderDoneMessage;
-            case 'match':
+                };
+                return msg;
+            }
+            case 'match': {
                 return this.mapMatchMessage(feedMessage as GDAXMatchMessage);
-            case 'change':
+            }
+            case 'change': {
                 const change: GDAXChangeMessage = feedMessage as GDAXChangeMessage;
                 if (change.new_funds && !change.new_size) {
                     change.new_size = (Big(change.new_funds).div(change.price).toString());
                 }
-                return {
+                const msg: ChangedOrderMessage = {
                     type: 'changedOrder',
                     time: new Date(change.time),
                     sequence: change.sequence,
@@ -367,34 +372,41 @@ export class GDAXFeed extends ExchangeFeed {
                     side: change.side,
                     price: change.price,
                     newSize: change.new_size
-                } as ChangedOrderMessage;
-            case 'error':
+                };
+                return msg;
+            }
+            case 'error': {
                 const error: GDAXErrorMessage = feedMessage as GDAXErrorMessage;
                 const msg: ErrorMessage = {
                     type: 'error',
                     time: new Date(),
                     message: error.message,
                     cause: error.reason
-                } as ErrorMessage;
+                };
                 this.emit('feed-error', msg);
                 return msg;
-            case 'received':
-                return {
+            }
+            case 'received': {
+                const msg: UnknownMessage = {
                     type: 'unknown',
                     time: new Date(),
                     sequence: (feedMessage as any).sequence,
                     productId: (feedMessage as any).product_id,
-                    message: feedMessage
-                } as UnknownMessage;
-            default:
+                    extra: feedMessage
+                };
+                return msg;
+            }
+            default: {
                 const product: string = (feedMessage as any).product_id;
-                return {
+                const msg: UnknownMessage = {
                     type: 'unknown',
                     time: new Date(),
                     sequence: this.getSequence(product),
                     productId: product,
-                    message: feedMessage
-                } as UnknownMessage;
+                    extra: feedMessage
+                };
+                return msg;
+            }
         }
     }
 
@@ -419,7 +431,7 @@ export class GDAXFeed extends ExchangeFeed {
     private mapAuthMessage(feedMessage: GDAXMessage): StreamMessage {
         const time = (feedMessage as any).time ? new Date((feedMessage as any).time) : new Date();
         switch (feedMessage.type) {
-            case 'match':
+            case 'match': {
                 const isTaker: boolean = !!(feedMessage as any).taker_user_id;
                 let side: string;
                 if (!isTaker) {
@@ -427,7 +439,7 @@ export class GDAXFeed extends ExchangeFeed {
                 } else {
                     side = (feedMessage as GDAXMatchMessage).side === 'buy' ? 'sell' : 'buy';
                 }
-                return {
+                const msg: TradeExecutedMessage = {
                     type: 'tradeExecuted',
                     time: time,
                     productId: (feedMessage as GDAXMatchMessage).product_id,
@@ -437,21 +449,24 @@ export class GDAXFeed extends ExchangeFeed {
                     price: (feedMessage as GDAXMatchMessage).price,
                     tradeSize: (feedMessage as GDAXMatchMessage).size,
                     remainingSize: null
-                } as TradeExecutedMessage;
-            case 'done':
-                return {
+                };
+                return msg;
+            }
+            case 'done': {
+                const msg: TradeFinalizedMessage = {
                     type: 'tradeFinalized',
                     time: time,
                     productId: (feedMessage as GDAXDoneMessage).product_id,
                     orderId: (feedMessage as GDAXDoneMessage).order_id,
                     reason: (feedMessage as GDAXDoneMessage).reason,
                     side: (feedMessage as GDAXDoneMessage).side,
-                    price: (feedMessage as GDAXMatchMessage).price,
-                    filledSize: (feedMessage as GDAXMatchMessage).size,
+                    price: (feedMessage as GDAXDoneMessage).price,
                     remainingSize: (feedMessage as GDAXDoneMessage).remaining_size
-                } as TradeFinalizedMessage;
-            case 'open':
-                return {
+                };
+                return msg;
+            }
+            case 'open': {
+                const msg: MyOrderPlacedMessage = {
                     type: 'myOrderPlaced',
                     time: time,
                     productId: (feedMessage as GDAXOpenMessage).product_id,
@@ -461,12 +476,17 @@ export class GDAXFeed extends ExchangeFeed {
                     orderType: (feedMessage as GDAXOpenMessage).type,
                     size: (feedMessage as GDAXOpenMessage).remaining_size,
                     sequence: (feedMessage as GDAXOpenMessage).sequence
-                } as MyOrderPlacedMessage;
-            default:
-                return {
+                };
+                return msg;
+            }
+            default: {
+                const msg: UnknownMessage = {
                     type: 'unknown',
+                    time: time,
                     productId: (feedMessage as any).product_id
-                } as UnknownMessage;
+                };
+                return msg;
+            }
         }
     }
 
