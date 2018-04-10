@@ -373,9 +373,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    checkAuth(): Promise<GDAXAuthConfig> {
+    checkAuth(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this.auth === null) {
+            if (!this.auth) {
                 return reject(new GTTError('You cannot make authenticated requests if a GDAXAuthConfig object was not provided to the GDAXExchangeAPI constructor'));
             }
             if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {
