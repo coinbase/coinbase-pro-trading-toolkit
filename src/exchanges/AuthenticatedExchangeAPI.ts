@@ -62,6 +62,10 @@ export interface AvailableBalance {
     available: BigJS;
 }
 
+export interface AvailableBalances {
+    [currency: string]: AvailableBalance;
+}
+
 export interface Balances {
-    [profileId: string]: { [currency: string]: AvailableBalance };
+    [profileId: string]: AvailableBalances;
 }

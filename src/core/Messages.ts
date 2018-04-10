@@ -55,6 +55,7 @@ export function isErrorMessage(msg: any): boolean {
  * Any context-rich information can be extracted into the `extra` field, and the original message should be attached to the `origin` field as usual.
  */
 export interface UnknownMessage extends StreamMessage {
+    type: 'unknown';
     sequence?: number;
     productId?: string;
     tag?: string;
@@ -166,6 +167,7 @@ export interface TickerMessage extends StreamMessage, Ticker {
  * in the extra field, which can be handled by the target trade engine.
  */
 export interface PlaceOrderMessage extends StreamMessage {
+    type: 'placeOrder';
     productId: string;
     clientId?: string;
     side: string;
@@ -178,7 +180,7 @@ export interface PlaceOrderMessage extends StreamMessage {
 }
 
 export interface CancelOrderRequestMessage extends StreamMessage {
-    type: string; // cancelOrder
+    type: 'cancelOrder';
     orderId: string;
 }
 
@@ -186,6 +188,7 @@ export interface CancelOrderRequestMessage extends StreamMessage {
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
  */
 export interface TradeExecutedMessage extends StreamMessage {
+    type: 'tradeExecuted';
     productId: string;
     orderId: string;
     side: string;
@@ -196,6 +199,7 @@ export interface TradeExecutedMessage extends StreamMessage {
 }
 
 export interface TradeFinalizedMessage extends StreamMessage {
+    type: 'tradeFinalized';
     productId: string;
     orderId: string;
     side: string;
@@ -205,6 +209,7 @@ export interface TradeFinalizedMessage extends StreamMessage {
 }
 
 export interface MyOrderPlacedMessage extends StreamMessage {
+    type: 'myOrderPlaced';
     productId: string;
     orderId: string;
     side: string;
