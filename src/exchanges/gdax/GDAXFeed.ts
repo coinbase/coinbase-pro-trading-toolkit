@@ -75,7 +75,7 @@ export interface GDAXFeedConfig extends ExchangeFeedConfig {
  * It handles automatically reconnects on errors and tracks the connection by monitoring a heartbeat.
  * You can create the feeds from here, but it's preferable to use the `getFeed` or `FeedFactory` functions to get a
  * connection from the pool.
- * Error messages from the Websocket feed are passed down the stream and also emitted as 'feederror' events.
+ * Error messages from the Websocket feed are passed down the stream and also emitted as 'feed-error' events.
  */
 export class GDAXFeed extends ExchangeFeed {
     private products: Set<string>;
