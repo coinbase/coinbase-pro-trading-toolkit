@@ -21,7 +21,7 @@ import { StreamMessage } from './Messages';
  * the message was actually sent
  */
 export default class RateLimiter extends Transform {
-    private limiter: any;
+    private readonly limiter: Limiter;
 
     /**
      * Limit outgoing message to `limit` per `interval`
