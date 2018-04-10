@@ -46,10 +46,10 @@ export interface AuthenticatedExchangeAPI {
     loadOrder(id: string): Promise<LiveOrder>;
 
     /**
-     * Loads all currently active orders placed by the user (i.e. not the full orderbook). If product is null, load
+     * Loads all currently active orders placed by the user (i.e. not the full orderbook). If product is undefined, load
      * all orders from all books
      */
-    loadAllOrders(gdaxProduct: string): Promise<LiveOrder[]>;
+    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]>;
 
     /**
      * Return the balances for all the accounts the user has associated with the current authentication credentials
