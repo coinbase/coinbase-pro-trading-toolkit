@@ -409,7 +409,6 @@ describe('GDAX feed with channels', () => {
             wsUrl: GDAX_WS_FEED,
             channels: null
         });
-        (gdaxFeed as any).queueing['BTC-EUR'] = false;
         book = new LiveOrderbook({
             logger: NullLogger,
             strictMode: true,
