@@ -44,8 +44,7 @@
     "@types/query-string": "3.0.30",
     "@types/simple-mock": "0.0.27",
     "@types/superagent": "2.0.35",
-    "@types/uuid": "2.0.29",
-    "@types/winston": "2.2.0",
+    "@types/winston": "2.3.8",
     "@types/ws": "0.0.37",
     "bignumber.js": "4.0.2",
     "bintrees": "1.0.1",
@@ -72,11 +71,10 @@
     "nock": "9.0.2",
     "nyc": "11.1.0",
     "source-map-support": "0.4.16",
-    "ts-node": "^3.3.0",
-    "tslint": "5.6.0",
+    "ts-node": "^5.0.1",
+    "tslint": "^5.9.1",
     "typedoc": "0.8.0",
-    "typescript": "^2.5.3",
-    "uuid": "3.0.0"
+    "typescript": "^2.7.2"
   },
   "resolutions": {
     "deasync": "^0.1.12"
