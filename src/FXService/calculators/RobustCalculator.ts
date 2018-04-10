@@ -113,7 +113,7 @@ export class RobustCalculator extends FXRateCalculator {
                 rate: rate && Big(rate),
                 change: null
             };
-            return Promise.resolve(result);
+            return result;
         });
     }
 

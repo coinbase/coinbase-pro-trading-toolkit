@@ -259,7 +259,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     cancelOrder(id: string): Promise<string> {
         const apiCall = this.authCall('DELETE', `/orders/${id}`, {});
         return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
-            return Promise.resolve(ids[0]);
+            return ids[0];
         });
 
     }
@@ -267,9 +267,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     cancelAllOrders(product: string): Promise<string[]> {
         const apiCall = this.authCall('DELETE', `/orders`, {});
         const options = product ? {product_id: product} : null;
-        return this.handleResponse<string[]>(apiCall, options).then((ids: string[]) => {
-            return Promise.resolve(ids);
-        });
+        return this.handleResponse<string[]>(apiCall, options);
     }
 
     loadOrder(id: string): Promise<LiveOrder> {
@@ -341,7 +339,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             if (opts.headers) {
                 req = req.set(opts.headers);
             }
-            return Promise.resolve(req);
+            return req;
         });
     }
 
@@ -363,7 +361,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
         return req.then((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
-                return Promise.resolve(res.body);
+                return res.body;
             }
             const err: HTTPError = new HTTPError(`Error handling GDAX request for ${(req as any).url}`, res);
             return Promise.reject(err);
@@ -444,7 +442,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         }
         return this.authClient.getCoinbaseAccounts().then((accounts: CoinbaseAccount[]) => {
             this.coinbaseAccounts = accounts;
-            return Promise.resolve(accounts);
+            return accounts;
         }).catch((err: GDAXHTTPError) => {
             return Promise.reject(new HTTPError('Error loading Coinbase accounts', extractResponse(err.response)));
         });

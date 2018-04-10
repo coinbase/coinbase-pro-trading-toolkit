@@ -228,7 +228,6 @@ export class FXService extends EventEmitter {
                 this._rates[index] = Object.assign({ change: change }, rate);
             });
             this.errorState = false;
-            return Promise.resolve();
         }, (err: Error) => {
             this.log('warn', 'An error occurred fetching latest exchange rates', err.message);
             this.errorState = true;
@@ -239,7 +238,7 @@ export class FXService extends EventEmitter {
             // because we emit a message above, client errors will be caught and returned here.
             this.log('error', 'A client error has caused an FXUpdate failure', err);
             this.errorState = true;
-            return Promise.resolve(null);
+            return null;
         });
     }
 }

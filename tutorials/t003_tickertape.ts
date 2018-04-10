@@ -68,7 +68,6 @@ function getAndPrintTickers(exchanges: PublicExchangeAPI[], product: string) {
             printTicker(exchanges[i], tickers[i]);
         }
         console.log();
-        return Promise.resolve();
     });
 }
 
