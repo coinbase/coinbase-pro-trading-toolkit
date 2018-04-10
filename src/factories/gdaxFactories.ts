@@ -12,8 +12,11 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
-import { GDAX_API_URL, GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { GDAX_WS_FEED,
+         GDAXFeed,
+         GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
+import { GDAX_API_URL,
+         GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { Logger } from '../utils/Logger';
 import { getFeed } from '../exchanges/ExchangeFeed';

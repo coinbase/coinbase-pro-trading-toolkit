@@ -17,7 +17,13 @@ import { Logger } from '../utils/Logger';
 import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
-import { CancelOrderRequestMessage, isStreamMessage, MyOrderPlacedMessage, PlaceOrderMessage, StreamMessage, TradeExecutedMessage, TradeFinalizedMessage } from './Messages';
+import { CancelOrderRequestMessage,
+         isStreamMessage,
+         MyOrderPlacedMessage,
+         PlaceOrderMessage,
+         StreamMessage,
+         TradeExecutedMessage,
+         TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
 import { StreamError } from '../lib/errors';
