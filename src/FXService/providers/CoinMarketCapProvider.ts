@@ -83,12 +83,11 @@ export default class CoinMarketCapProvider extends FXProvider {
                         REVERSE_MAP[currency.id] = currency.symbol;
                         SUPPORTED_BASE_CURRENCIES.push(currency.symbol);
                     });
-                    return Promise.resolve();
                 });
             this.initializing = initCodeMap;
         }
         return initCodeMap.then(() => {
-            return Promise.resolve(SUPPORTED_BASE_CURRENCIES.includes(pair.from));
+            return SUPPORTED_BASE_CURRENCIES.includes(pair.from);
         });
     }
 

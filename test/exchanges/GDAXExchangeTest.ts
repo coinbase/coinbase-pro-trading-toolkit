@@ -86,12 +86,12 @@ describe('GDAX Exchange API', () => {
             ]);
         gdax.loadCandles({gdaxProduct: 'BTC-USD', interval: '1h', limit: 3, from: null, extra: null}).then((candles: Candle[]) => {
             assert.equal(candles.length, 3);
-            assert.ok(candles[0].timestamp.valueOf(), 1519037640000);
-            assert.ok(candles[0].open.toFixed(2), 10911.82);
-            assert.ok(candles[1].high.toFixed(2), 10924.99);
-            assert.ok(candles[2].low.toFixed(2), 10910.33);
-            assert.ok(candles[0].close.toFixed(2), 10911.82);
-            assert.ok(candles[1].volume.toFixed(2), 2.33);
+            assert.equal(candles[0].timestamp.valueOf(), 1519037640000);
+            assert.equal(candles[0].open.toFixed(2), 10911.82);
+            assert.equal(candles[1].high.toFixed(2), 10924.99);
+            assert.equal(candles[2].low.toFixed(2), 10910.33);
+            assert.equal(candles[0].close.toFixed(2), 10911.82);
+            assert.equal(candles[1].volume.toFixed(2), 2.33);
             done();
         });
     });

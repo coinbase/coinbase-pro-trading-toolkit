@@ -32,18 +32,18 @@ export class Trigger<T extends StreamMessage> {
         this.feed = feed;
     }
 
-    setAction(action: Action<T>): Trigger<T> {
+    setAction(action: Action<T>): this {
         this.action = action;
         return this;
     }
 
-    setFilter(filter: TriggerFilter): Trigger<T> {
+    setFilter(filter: TriggerFilter): this {
         this.filter = filter;
         this.feed.on('data', filter);
         return this;
     }
 
-    execute(event: T): Trigger<T> {
+    execute(event: T): this {
         this.action(event);
         return this;
     }

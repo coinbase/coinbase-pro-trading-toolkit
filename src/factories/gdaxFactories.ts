@@ -100,7 +100,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[], auth?: GDAXAu
             .loadProducts()
             .then((products: Product[]) => {
                 const ids = products.map((p) => p.id);
-                return Promise.resolve(ids);
+                return ids;
             });
     }
     return productPromise.then((productIds: string[]) => {
