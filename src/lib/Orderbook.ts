@@ -13,6 +13,7 @@
  ***************************************************************************************************************************/
 
 import { RBTree } from 'bintrees';
+import { SequencedMessage } from '../core/Messages';
 import { OrderPool } from './BookBuilder';
 import { Big, BigJS } from './types';
 
@@ -85,9 +86,7 @@ export interface CumulativePriceLevel extends PriceLevelWithOrders {
     cumValue: BigJS;
 }
 
-export interface OrderbookState {
-    sequence: number;
-    sourceSequence?: number;
+export interface OrderbookState extends SequencedMessage {
     asks: PriceLevelWithOrders[];
     bids: PriceLevelWithOrders[];
     orderPool: OrderPool;

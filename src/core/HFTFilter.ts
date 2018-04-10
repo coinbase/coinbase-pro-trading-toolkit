@@ -14,7 +14,7 @@
 
 import { BaseOrderMessage,
          ChangedOrderMessage,
-         isOrderMessage,
+         isBaseOrderMessage,
          isStreamMessage,
          NewOrderMessage,
          StreamMessage } from './Messages';
@@ -84,9 +84,8 @@ export class HFTFilter extends Duplex {
      * Add the message to the queue
      */
     addMessage(message: StreamMessage): boolean {
-        if (isOrderMessage(message)) {
-            const order = message as BaseOrderMessage;
-            this.messagesById[order.orderId] = order;
+        if (isBaseOrderMessage(message)) {
+            this.messagesById[message.orderId] = message;
         }
         this.messages.insert(message);
         return true;
@@ -143,8 +142,8 @@ export class HFTFilter extends Duplex {
         const node = this.messages.min();
         if (node) {
             assert(this.messages.remove(node));
-            if (isOrderMessage(node)) {
-                delete this.messagesById[(node as BaseOrderMessage).orderId];
+            if (isBaseOrderMessage(node)) {
+                delete this.messagesById[node.orderId];
             }
         }
         return node;

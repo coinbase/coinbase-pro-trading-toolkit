@@ -28,7 +28,7 @@ export interface StreamMessage {
     origin?: any;
 }
 
-export function isStreamMessage(msg: any): boolean {
+export function isStreamMessage(msg: any): msg is StreamMessage {
     return !!msg.type;
 }
 
@@ -45,8 +45,8 @@ export interface HTTPErrorMessage extends ErrorMessage {
     };
 }
 
-export function isErrorMessage(msg: any): boolean {
-    return isStreamMessage(msg) && !!msg.message && typeof msg.message === 'string';
+export function isErrorMessage(msg: any): msg is ErrorMessage {
+    return msg.type === 'error';
 }
 
 /**
@@ -62,22 +62,30 @@ export interface UnknownMessage extends StreamMessage {
     extra?: any;
 }
 
-export function isUnknownMessage(msg: any): boolean {
-    return isStreamMessage(msg) && !!msg.message && typeof msg.message !== 'string';
+export function isUnknownMessage(msg: any): msg is UnknownMessage {
+    return msg.type === 'unknown';
+}
+
+export interface SequencedMessage {
+    sequence: number;
+    sourceSequence?: number;
+}
+
+export function isSequencedMessage(msg: any): msg is SequencedMessage {
+    return typeof msg.sequence === 'number';
 }
 
 /**
  * Root definition for messages that stem from a websocket feed
  */
-export interface OrderbookMessage extends StreamMessage {
-    sequence: number;
-    sourceSequence?: number;
+export interface OrderbookMessage extends SequencedMessage, StreamMessage {
+    type: 'newOrder' | 'orderDone' | 'changedOrder' | 'level';
     productId: string;
     side: string;
 }
 
-export function isOrderbookMessage(msg: any): boolean {
-    return msg.sequence && msg.productId && msg.side;
+export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
+    return isStreamMessage(msg) && isSequencedMessage(msg) && !!(msg as OrderbookMessage).productId && !!(msg as OrderbookMessage).side;
 }
 
 // ---------------------------------------- Order-level (Level 3) Messages --------------------------------------------//
@@ -86,12 +94,13 @@ export function isOrderbookMessage(msg: any): boolean {
  * Message representing the common state for a resting order (for an order request, see PlaceOrderRequest)
  */
 export interface BaseOrderMessage extends OrderbookMessage {
+    type: 'newOrder' | 'orderDone' | 'changedOrder';
     orderId: string;
     price: string;
 }
 
-export function isOrderMessage(msg: any): boolean {
-    return msg.orderId && msg.side && msg.price;
+export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
+    return msg.orderId && msg.price && isOrderbookMessage(msg);
 }
 
 /**
@@ -153,6 +162,10 @@ export interface TradeMessage extends StreamMessage {
 export interface SnapshotMessage extends StreamMessage, OrderbookState {
     type: 'snapshot';
     productId: string;
+}
+
+export function isSnapshotMessage(msg: any): msg is SnapshotMessage {
+    return msg.type === 'snapshot';
 }
 
 export interface TickerMessage extends StreamMessage, Ticker {
