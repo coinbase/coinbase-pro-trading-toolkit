@@ -173,7 +173,7 @@ export class PoloniexFeed extends ExchangeFeed {
         }
         // I don't know what these messages are yet, so just log them for now
         const message: UnknownMessage = {
-            type: 'poloniex-user',
+            type: 'unknown',
             time: new Date(),
             productId: null,
             sequence: null,

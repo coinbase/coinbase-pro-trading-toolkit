@@ -243,10 +243,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
         }
 
-        // TODO: use this.authClient.placeOrder() when gdax's
-        // index.d.ts adds it.
-        const promise = side === 'buy' ? this.authClient.buy(gdaxOrder) : this.authClient.sell(gdaxOrder);
-        return promise.then((result: OrderResult) => {
+        return this.authClient.placeOrder(gdaxOrder).then((result: OrderResult) => {
             // Check for error
             // TODO: Remove the first type assertion when https://github.com/coinbase/gdax-node/issues/269 is fixed.
             if ((result as any).status === 'rejected' || (result as any).message) {
@@ -376,9 +373,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    checkAuth(): Promise<GDAXAuthConfig> {
+    checkAuth(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this.auth === null) {
+            if (!this.auth) {
                 return reject(new GTTError('You cannot make authenticated requests if a GDAXAuthConfig object was not provided to the GDAXExchangeAPI constructor'));
             }
             if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {

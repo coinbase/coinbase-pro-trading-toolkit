@@ -13,8 +13,12 @@
  ***************************************************************************************************************************/
 
 import { Logger } from '../utils/Logger';
-import { PoloniexFeed, PoloniexFeedConfig } from '../exchanges/poloniex/PoloniexFeed';
-import { gdaxToPolo, getAllProductInfo, POLONIEX_WS_FEED, PoloniexProducts } from '../exchanges/poloniex/PoloniexCommon';
+import { PoloniexFeed,
+         PoloniexFeedConfig } from '../exchanges/poloniex/PoloniexFeed';
+import { gdaxToPolo,
+         getAllProductInfo,
+         POLONIEX_WS_FEED,
+         PoloniexProducts } from '../exchanges/poloniex/PoloniexCommon';
 import { ExchangeFeedConfig, getFeed } from '../exchanges/ExchangeFeed';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 import CCXTExchangeWrapper from '../exchanges/ccxt';

@@ -12,7 +12,14 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState, PriceComparable, PriceLevel, PriceLevelWithOrders, PriceTreeFactory } from './Orderbook';
+import { CumulativePriceLevel,
+         Level3Order,
+         Orderbook,
+         OrderbookState,
+         PriceComparable,
+         PriceLevel,
+         PriceLevelWithOrders,
+         PriceTreeFactory } from './Orderbook';
 import { Big, BigJS, Biglike, ZERO } from './types';
 import { RBTree } from 'bintrees';
 import { EventEmitter } from 'events';

@@ -18,7 +18,7 @@ import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
-import { Big, BigJS } from '../../lib/types';
+import { Big, BigJS, ZERO } from '../../lib/types';
 import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
@@ -235,7 +235,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             }
             const t: Ticker = {
                 productId: gdaxProduct,
-                price: Big(0),
+                price: ZERO,
                 time: new Date(ticker.timestamp),
                 ask: Big(ticker.bid),
                 bid: Big(ticker.ask),

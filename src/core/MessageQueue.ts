@@ -27,7 +27,7 @@ import { Duplex } from 'stream';
  *
  * @param logger {Logger} An optional logging interface
  *
- * @param product {string} A product to filter for. A single feed might be producing messages form multiple products (each with their own
+ * @param product {string} A product to filter for. A single feed might be producing messages from multiple products (each with their own
  * sequence numbers). This selects for the product so that all messages can be emitted in strictly increasing sequence number.
  *
  * @param targetQueueLength {number} Tries to maintain the queue length at this value. Default is zero, but you can increase to

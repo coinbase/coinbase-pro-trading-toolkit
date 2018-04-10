@@ -14,9 +14,11 @@
 
 import { BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { Logger } from '../utils/Logger';
-import { BitfinexFeed, BitfinexFeedConfig } from '../exchanges/bitfinex/BitfinexFeed';
+import { BitfinexFeed,
+         BitfinexFeedConfig } from '../exchanges/bitfinex/BitfinexFeed';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
-import { BITFINEX_WS_FEED, PRODUCT_MAP } from '../exchanges/bitfinex/BitfinexCommon';
+import { BITFINEX_WS_FEED,
+         PRODUCT_MAP } from '../exchanges/bitfinex/BitfinexCommon';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { getFeed } from '../exchanges/ExchangeFeed';
 

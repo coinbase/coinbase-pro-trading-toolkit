@@ -46,7 +46,7 @@ export abstract class AbstractMessageTransform extends stream.Transform {
 
     _transform(chunk: any, encoding: string, callback: (err: Error, chunk?: any) => void) {
         if (typeof chunk === 'object' && isStreamMessage(chunk)) {
-            const msg: StreamMessage = chunk as StreamMessage;
+            const msg = chunk as StreamMessage;
             const transformed = this.transformMessage(msg);
             if (transformed) {
                 this.push(transformed);
@@ -56,5 +56,5 @@ export abstract class AbstractMessageTransform extends stream.Transform {
         return callback(null, chunk);
     }
 
-    abstract transformMessage(msg: StreamMessage): StreamMessage;
+    abstract transformMessage(msg: StreamMessage): null | StreamMessage;
 }

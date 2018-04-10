@@ -16,7 +16,9 @@ import { ConsoleLoggerFactory } from '../utils/Logger';
 import { printTicker } from '../utils/printers';
 import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
 import { DefaultAPI, getSubscribedFeeds } from '../factories/gdaxFactories';
-import { LiveBookConfig, LiveOrderbook, SkippedMessageEvent } from '../core/LiveOrderbook';
+import { LiveBookConfig,
+         LiveOrderbook,
+         SkippedMessageEvent } from '../core/LiveOrderbook';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { TradeMessage } from '../core/Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';

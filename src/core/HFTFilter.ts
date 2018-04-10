@@ -12,7 +12,12 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { BaseOrderMessage, ChangedOrderMessage, isBaseOrderMessage, isStreamMessage, NewOrderMessage, StreamMessage } from './Messages';
+import { BaseOrderMessage,
+         ChangedOrderMessage,
+         isBaseOrderMessage,
+         isStreamMessage,
+         NewOrderMessage,
+         StreamMessage } from './Messages';
 import { RBTree } from 'bintrees';
 import { Duplex } from 'stream';
 import { MessageTransformConfig } from '../lib/AbstractMessageTransform';
