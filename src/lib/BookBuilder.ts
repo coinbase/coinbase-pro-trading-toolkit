@@ -150,8 +150,8 @@ export class AggregatedLevelWithOrders extends AggregatedLevel implements PriceL
  */
 export class BookBuilder extends EventEmitter implements Orderbook {
     public sequence: number = -1;
-    protected bids: RBTree<AggregatedLevelWithOrders>;
-    protected asks: RBTree<AggregatedLevelWithOrders>;
+    protected readonly bids: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
+    protected readonly asks: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
     protected _bidsTotal: BigJS = ZERO;
     protected _bidsValueTotal: BigJS = ZERO;
     protected _asksTotal: BigJS = ZERO;
@@ -166,8 +166,8 @@ export class BookBuilder extends EventEmitter implements Orderbook {
     }
 
     clear() {
-        this.bids = PriceTreeFactory<AggregatedLevelWithOrders>();
-        this.asks = PriceTreeFactory<AggregatedLevelWithOrders>();
+        this.bids.clear();
+        this.asks.clear();
         this._bidsTotal = ZERO;
         this._asksTotal = ZERO;
         this._bidsValueTotal = ZERO;
