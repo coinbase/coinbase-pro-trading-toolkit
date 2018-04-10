@@ -232,7 +232,8 @@ export class Trader extends Writable {
         const order: Level3Order = this.myBook.getOrder(msg.orderId);
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
-            this.emit('Trader.outOfSyncWarning', 'Traded order not in my book');
+            this.emit('Trader.outOfSyncWarning',
+                      `Traded order ${msg.orderId} not in my book`);
             return;
         }
         let newSize: BigJS;
