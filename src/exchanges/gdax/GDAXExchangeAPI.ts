@@ -73,7 +73,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.publicClient.getProducts()
             .then((products: ProductInfo[]) => {
                 return products.map((prod: ProductInfo) => {
-                    return {
+                    const p: Product = {
                         id: prod.id,
                         sourceId: prod.id,
                         baseCurrency: prod.base_currency,
@@ -82,7 +82,8 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                         baseMaxSize: Big(prod.base_max_size),
                         quoteIncrement: Big(prod.quote_increment),
                         sourceData: prod
-                    } as Product;
+                    };
+                    return p;
                 });
             }).catch((err: GDAXHTTPError) => {
                 return Promise.reject(new HTTPError('Error loading products from GDAX', extractResponse(err.response)));
@@ -261,7 +262,6 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
             return ids[0];
         });
-
     }
 
     cancelAllOrders(product?: string): Promise<string[]> {
