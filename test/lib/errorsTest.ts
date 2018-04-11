@@ -83,8 +83,8 @@ describe('Errors', () => {
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'HTTP Error Test 1');
-            assert.deepEqual(msg.cause.status, 403);
-            assert.deepEqual(msg.cause.body.message, 'Invalid API key');
+            assert.deepEqual(msg.meta.status, 403);
+            assert.deepEqual(msg.meta.body.message, 'Invalid API key');
         });
 
         it('accepts a null response', () => {
@@ -93,8 +93,8 @@ describe('Errors', () => {
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'HTTP Error Test 2');
-            assert.deepEqual(msg.cause.status, undefined);
-            assert.deepEqual(msg.cause.body, undefined);
+            assert.deepEqual(msg.meta.status, undefined);
+            assert.deepEqual(msg.meta.body, undefined);
         });
     });
 });

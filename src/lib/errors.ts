@@ -72,14 +72,18 @@ export interface ResponseLike {
 }
 
 /**
- * Errors raised due to failures from REST API calls. The response status and body are returned in the `cause` object.
+ * Errors raised due to failures from REST API calls. The response
+ * status and body are returned in the `response` property or in
+ * asMessage()'s `meta` property.
  */
 export class HTTPError extends Error implements StreamError {
+    readonly cause: undefined | Error;
     readonly response: ResponseLike;
     readonly time: Date;
 
-    constructor(msg: string, res: ResponseLike) {
+    constructor(msg: string, res: ResponseLike, cause?: Error) {
         super(msg);
+        this.cause = cause;
         this.time = new Date();
         this.response = res || { status: undefined, body: undefined };
     }
@@ -89,7 +93,8 @@ export class HTTPError extends Error implements StreamError {
             type: 'error',
             time: this.time,
             message: this.message,
-            cause: {
+            cause: this.cause ? this.cause.message : undefined,
+            meta: {
                 status: this.response.status,
                 body: this.response.body
             }

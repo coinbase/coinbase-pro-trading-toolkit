@@ -44,7 +44,7 @@ export interface ErrorMessage extends StreamMessage {
 }
 
 export interface HTTPErrorMessage extends ErrorMessage {
-    cause: {
+    meta: {
         status: number;
         body: any;
     };
