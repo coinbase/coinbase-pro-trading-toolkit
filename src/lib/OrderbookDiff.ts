@@ -17,7 +17,6 @@ import { CancelOrderRequestMessage,
          StreamMessage } from '../core/Messages';
 import { Level3Order,
          OrderbookState,
-         PriceLevel,
          PriceLevelWithOrders } from './Orderbook';
 import { AggregatedLevel,
          AggregatedLevelWithOrders,
@@ -190,7 +189,7 @@ export class OrderbookDiff {
             diff = OrderbookDiff.compareByLevel(this.initial, this.final, true, true);
         }
         ['bids', 'asks'].forEach((side: string) => {
-            const diffLevels: PriceLevel[] = (diff as any)[side];
+            const diffLevels = side === 'bids' ? diff.bids : diff.asks;
             diffLevels.forEach((diffLevel: PriceLevelWithOrders) => {
                 // Cancel all existing orders on this price level
                 diffLevel.orders.forEach((order: Level3Order) => {
