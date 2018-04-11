@@ -15,6 +15,7 @@
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { BittrexAPI } from './BittrexAPI';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
@@ -176,7 +177,7 @@ export class BittrexFeed extends ExchangeFeed {
 
     private updateExchangeState(states: BittrexExchangeState[]) {
 
-        const createUpdateMessage = (product: string, side: string, nonce: number, delta: BittrexOrder): LevelMessage => {
+        const createUpdateMessage = (product: string, side: Side, nonce: number, delta: BittrexOrder): LevelMessage => {
             const seq = this.nextSequence(product);
             const message: LevelMessage = {
                 type: 'level',
@@ -217,7 +218,7 @@ export class BittrexFeed extends ExchangeFeed {
                     tradeId: '0',
                     price: fill.Rate,
                     size: fill.Quantity,
-                    side: fill.OrderType.toLowerCase()
+                    side: Side(fill.OrderType)
                 };
                 this.push(message);
             });
@@ -259,7 +260,7 @@ export class BittrexFeed extends ExchangeFeed {
         this.setSnapshotSequence(product, state.Nounce);
         return snapshotMessage;
 
-        function addOrder(order: BittrexOrder, side: string, levelArray: PriceLevelWithOrders[]) {
+        function addOrder(order: BittrexOrder, side: Side, levelArray: PriceLevelWithOrders[]) {
             const size = Big(order.Quantity);
             const newOrder: Level3Order = {
                 id: String(order.Rate),

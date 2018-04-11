@@ -17,7 +17,7 @@ export type ActionType =
     | 'insert'
     | 'delete';
 
-export type Side = 'Buy' | 'Sell';
+export type BitmexSide = 'Buy' | 'Sell';
 
 export interface SubscriptionRequestMessage {
     op: 'subscribe';
@@ -64,7 +64,7 @@ export interface DataMessage extends BitmexMessage {
 export interface PriceData {
     symbol: string;
     id: number;
-    side: Side;
+    side: BitmexSide;
     size: number;
     price: number;
 }
@@ -78,7 +78,7 @@ export interface OrderbookSnapshotMessage extends DataMessage {
 export interface LevelUpdate {
     symbol: string;
     id: number;
-    side: Side;
+    side: BitmexSide;
     size?: number;
     price?: number;
 }
@@ -110,7 +110,7 @@ export type TickDirection = 'MinusTick' | 'PlusTick' | 'ZeroMinusTick' | 'ZeroPl
 export interface TradeData {
     timestamp: string;
     symbol: string;
-    side: Side;
+    side: BitmexSide;
     size: number;
     price: number;
     tickDirection: TickDirection;

@@ -15,6 +15,7 @@
 import { RBTree } from 'bintrees';
 import { SequencedMessage } from '../core/Messages';
 import { OrderPool } from './BookBuilder';
+import { Side } from './sides';
 import { Big, BigJS } from './types';
 
 export interface Orderbook {
@@ -38,7 +39,7 @@ export interface PriceLevelWithOrders extends PriceLevel {
     orders: Level3Order[];
 }
 
-export function PriceLevelFactory(price: number, size: number, side: string): PriceLevelWithOrders {
+export function PriceLevelFactory(price: number, size: number, side: Side): PriceLevelWithOrders {
     const p: BigJS = Big(price);
     const s: BigJS = Big(size);
     return {
@@ -63,7 +64,7 @@ export function PriceTreeFactory<T extends PriceComparable>() {
 export interface BasicOrder {
     price: BigJS;
     size: BigJS;
-    side: string;
+    side: Side;
 }
 
 export interface Level3Order extends BasicOrder {

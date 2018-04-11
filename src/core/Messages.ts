@@ -13,6 +13,7 @@
  ***************************************************************************************************************************/
 
 import { OrderbookState } from '../lib/Orderbook';
+import { Side } from '../lib/sides';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 /**
  * Interfaces for the GTT Stream message types. These messages are generated and passed on my the GTT streaming
@@ -81,7 +82,7 @@ export function isSequencedMessage(msg: any): msg is SequencedMessage {
 export interface OrderbookMessage extends SequencedMessage, StreamMessage {
     type: 'newOrder' | 'orderDone' | 'changedOrder' | 'level';
     productId: string;
-    side: string;
+    side: Side;
 }
 
 export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
@@ -153,7 +154,7 @@ export interface LevelMessage extends OrderbookMessage {
 export interface TradeMessage extends StreamMessage {
     type: 'trade';
     productId: string;
-    side: string;
+    side: Side;
     tradeId: string;
     price: string;
     size: string;
@@ -183,7 +184,7 @@ export interface PlaceOrderMessage extends StreamMessage {
     type: 'placeOrder';
     productId: string;
     clientId?: string;
-    side: string;
+    side: Side;
     orderType: string;
     price?: string;
     postOnly?: boolean;
@@ -204,7 +205,7 @@ export interface TradeExecutedMessage extends StreamMessage {
     type: 'tradeExecuted';
     productId: string;
     orderId: string;
-    side: string;
+    side: Side;
     price: string;
     orderType: string;
     tradeSize: string;
@@ -215,7 +216,7 @@ export interface TradeFinalizedMessage extends StreamMessage {
     type: 'tradeFinalized';
     productId: string;
     orderId: string;
-    side: string;
+    side: Side;
     price: string;
     remainingSize: string;
     reason: string;
@@ -225,7 +226,7 @@ export interface MyOrderPlacedMessage extends StreamMessage {
     type: 'myOrderPlaced';
     productId: string;
     orderId: string;
-    side: string;
+    side: Side;
     price: string;
     orderType: string;
     size: string;

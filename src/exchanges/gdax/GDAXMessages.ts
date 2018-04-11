@@ -12,6 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
+import { Side } from '../../lib/sides';
+
 /**
  * Glossary of GDAX Websocket messages
  */
@@ -48,7 +50,7 @@ export interface GDAXOpenMessage extends GDAXProductMessage {
     order_id: string;
     price: string;
     remaining_size: string;
-    side: string;
+    side: Side;
 }
 
 export interface GDAXDoneMessage extends GDAXProductMessage {
@@ -58,7 +60,7 @@ export interface GDAXDoneMessage extends GDAXProductMessage {
     price: string;
     order_id: string;
     reason: string;
-    side: string;
+    side: Side;
     remaining_size: string;
 }
 
@@ -71,7 +73,7 @@ export interface GDAXMatchMessage extends GDAXProductMessage {
     taker_order_id: string;
     size: string;
     price: string;
-    side: string;
+    side: Side;
 }
 
 export interface GDAXChangeMessage extends GDAXProductMessage {
@@ -84,12 +86,12 @@ export interface GDAXChangeMessage extends GDAXProductMessage {
     new_funds?: string;
     old_funds?: string;
     price: string;
-    side: string;
+    side: Side;
 }
 
 export interface GDAXL2UpdateMessage extends GDAXProductMessage {
     type: 'l2update';
-    changes: string[][]; // [ [ side, price, newSize ] ]
+    changes: [Side, string, string][]; // [ [ side, price, newSize ] ]
 }
 
 export interface GDAXTickerMessage extends GDAXProductMessage {
@@ -98,7 +100,7 @@ export interface GDAXTickerMessage extends GDAXProductMessage {
     sequence: number;
     time: string;
     price: string;
-    side: string;
+    side: Side;
     best_bid: string;
     best_ask: string;
     last_size: string;
@@ -129,7 +131,7 @@ export interface GDAXOrderRequest {
     product_id: string;
     size: string;
     price: string;
-    side: string;
+    side: Side;
     type: string;
     client_oid?: string;
     post_only?: boolean;
@@ -147,7 +149,7 @@ export interface GDAXOrder {
     product_id: string;
     size: string;
     price: string;
-    side: 'buy' | 'sell';
+    side: Side;
     post_only?: boolean;
     time_in_force?: string;
     status?: string;

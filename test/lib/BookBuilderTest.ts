@@ -15,6 +15,7 @@
 import { AggregatedLevelWithOrders, BookBuilder } from '../../src/lib/BookBuilder';
 import * as assert from 'assert';
 import { CumulativePriceLevel, Level3Order, OrderbookState } from '../../src/lib/Orderbook';
+import { SIDES } from '../../src/lib/sides';
 import { Big, BigJS, ZERO } from '../../src/lib/types';
 import { NullLogger } from '../../src/utils/Logger';
 
@@ -85,7 +86,7 @@ describe('BookBuilder:', () => {
 
         it('Every order in the levels is linked on the order pool', () => {
             let count = 0;
-            ['buy', 'sell'].forEach((side: string) => {
+            SIDES.forEach((side) => {
                 const tree = book.getTree(side);
                 tree.each((level: AggregatedLevelWithOrders) => {
                     level.orders.forEach((order: Level3Order) => {

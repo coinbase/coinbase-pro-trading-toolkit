@@ -16,6 +16,7 @@
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { SnapshotMessage, LevelMessage, TradeMessage, ErrorMessage, UnknownMessage } from '../../core/Messages';
 import { BITMEX_WS_FEED } from './BitmexCommon';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelFactory, PriceLevelWithOrders } from '../../lib/Orderbook';
@@ -117,7 +118,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         this.orderIdMap = newIdMap;
 
         const mapLevelUpdates: (date: PriceData) => PriceLevelWithOrders =
-            ({ id, price, size, side }) => PriceLevelFactory(price, size, side.toLowerCase());
+            ({ id, price, size, side }) => PriceLevelFactory(price, size, Side(side));
 
         const asks: PriceLevelWithOrders[] = snapshot.data
             .filter( ({ side }) => side === 'Sell' )
@@ -129,7 +130,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
         const priceDataToLvl3: (pd: PriceData) => Level3Order = ({ price, size, side, id }) => ({
             price: Big(price),
             size: Big(size),
-            side: side.toLowerCase(),
+            side: Side(side),
             id: id.toString(),
         });
 
@@ -169,7 +170,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
                 productId: update.symbol,
                 price: (price ? price : update.price).toString(),
                 size: update.size ? update.size.toString() : '0',
-                side: update.side.toLowerCase(),
+                side: Side(update.side),
                 count: 1,
             };
 
@@ -186,7 +187,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
                 tradeId: trade.trdMatchID,
                 price: trade.price.toString(),
                 size: trade.size.toString(),
-                side: trade.side.toLowerCase(),
+                side: Side(trade.side),
             };
 
             this.push(message);

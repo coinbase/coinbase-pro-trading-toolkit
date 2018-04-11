@@ -13,6 +13,7 @@
  ***************************************************************************************************************************/
 
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { Side } from '../../lib/sides';
 import { Logger } from '../../utils/Logger';
 import { ExchangeFeedConfig } from '../ExchangeFeed';
 
@@ -37,7 +38,7 @@ export interface GeminiOrderMessage extends GeminiMessage {
     api_session: string;
     client_order_id: string;
     symbol: string;
-    side: 'buy' | 'sell';
+    side: Side;
     behavior: string;
     order_type: string;
     timestamp: string;

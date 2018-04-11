@@ -22,6 +22,7 @@ import { AggregatedLevel,
          AggregatedLevelWithOrders,
          BookBuilder } from './BookBuilder';
 import { RBTree } from 'bintrees';
+import { SIDES } from './sides';
 import { BigJS, ZERO } from './types';
 
 /**
@@ -46,7 +47,7 @@ export class OrderbookDiff {
             bids: [],
             asks: []
         };
-        ['buy', 'sell'].forEach((side: string) => {
+        SIDES.forEach((side) => {
             const diff: PriceLevelWithOrders[] = side === 'buy' ? diffs.bids : diffs.asks;
             const initialOrders: RBTree<AggregatedLevelWithOrders> = initial.getTree(side);
             const finalOrders: RBTree<AggregatedLevelWithOrders> = final.getTree(side);
@@ -154,7 +155,7 @@ export class OrderbookDiff {
         const commands: StreamMessage[] = [];
         const now = new Date();
         commands.push({ type: 'cancelAllOrders', time: now });
-        ['buy', 'sell'].forEach((side: string) => {
+        SIDES.forEach((side) => {
             const levels: RBTree<AggregatedLevel> = this.final.getTree(side);
             const iterFn: string = side === 'buy' ? 'reach' : 'each';
             (levels as any)[iterFn]((level: AggregatedLevel) => {
