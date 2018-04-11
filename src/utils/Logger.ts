@@ -11,9 +11,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the                      *
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
+import * as winston from 'winston';
 import { sanitizeMessage } from '../core/Messages';
-
-const winston = require('winston');
 
 export interface Logger {
     log(level: string, message: string, meta?: any): void;
@@ -21,19 +20,28 @@ export interface Logger {
     error(err: Error): void;
 }
 
-export function ConsoleLoggerFactory(options?: any): Logger {
-    const logOptions: any = Object.assign({
+export function ConsoleLoggerFactory(options?: winston.ConsoleTransportOptions): Logger {
+    const consoleOptions: winston.ConsoleTransportOptions = {
+        colorize: 'all',
+        json: false,
+        timestamp: true
+    };
+    const logOptions: winston.LoggerOptions = {
         level: 'debug',
         transports: [
-            new winston.transports.Console({
-                colorize: 'all',
-                json: false,
-                timestamp: true
-            })
+            new winston.transports.Console(consoleOptions)
         ],
-        colorize: true
-    }, options || {});
-    return new winston.Logger(logOptions);
+        colorize: true,
+        ...(options || {})};
+    const logger = new winston.Logger(logOptions);
+    return {
+        log: (level: string, message: string, meta?: any) => {
+            logger.log(level, message, meta);
+        },
+        error: (err: Error): void => {
+            logger.error(err.stack || err.message);
+        }
+    };
 }
 
 export const NullLogger = {
@@ -46,7 +54,7 @@ export const NullLogger = {
 /**
  * Utility function that acts exactly like ConsoleLogger, except that it runs any metadata through messageSanitizer first to blank out sensitive data
  */
-export function SanitizedLoggerFactory(sensitiveKeys: string[], options?: any): Logger {
+export function SanitizedLoggerFactory(sensitiveKeys: string[], options?: winston.ConsoleTransportOptions): Logger {
     const logger: Logger = ConsoleLoggerFactory(options);
     return {
         log: (level: string, message: string, meta?: any) => {
