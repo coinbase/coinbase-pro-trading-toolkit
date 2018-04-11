@@ -16,6 +16,7 @@ import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { ChannelSubscription, PoloniexSnapshotLevel, PoloniexSnapshotMessage, PoloniexTrollboxMessage } from './PoloniexMessages';
 import { getProductInfo } from './PoloniexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage, UnknownMessage } from '../../core/Messages';
+import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
 import Timer = NodeJS.Timer;
 import { OrderPool } from '../../lib/BookBuilder';
@@ -354,7 +355,7 @@ export class PoloniexFeed extends ExchangeFeed {
             const levelArray: PoloniexSnapshotLevel = snapshot.orderBook[i];
             const sideArray: PriceLevelWithOrders[] = i === 0 ? snapshotMessage.asks : snapshotMessage.bids;
             for (const price in snapshot.orderBook[i]) {
-                const side: string = i === 0 ? 'sell' : 'buy';
+                const side: Side = i === 0 ? 'sell' : 'buy';
                 const size: BigJS = Big(levelArray[price]);
                 const newOrder: Level3Order = {
                     id: String(price),

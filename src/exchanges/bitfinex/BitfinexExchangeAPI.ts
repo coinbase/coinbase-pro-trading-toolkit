@@ -30,6 +30,7 @@ import { Logger } from '../../utils/Logger';
 import { PRODUCT_MAP, REVERSE_CURRENCY_MAP, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
 import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder } from '../../lib/Orderbook';
@@ -339,7 +340,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         book.sequence = 0;
         return book;
 
-        function addToLevel(side: string, order: BitfinexRESTOrder) {
+        function addToLevel(side: Side, order: BitfinexRESTOrder) {
             try {
                 book.addLevel(side, convertOrder(side, order));
             } catch (err) {
@@ -349,7 +350,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
             }
         }
 
-        function convertOrder(side: string, order: BitfinexRESTOrder): AggregatedLevelWithOrders {
+        function convertOrder(side: Side, order: BitfinexRESTOrder): AggregatedLevelWithOrders {
             const price: BigJS = Big(order.price);
             const size: BigJS = Big(order.amount).abs();
             const level = new AggregatedLevelWithOrders(price);

@@ -44,6 +44,7 @@ import {
     GDAXTickerMessage
 } from './GDAXMessages';
 import { AuthenticatedExchangeAPI } from '../AuthenticatedExchangeAPI';
+import { Side, SIDES } from '../../lib/sides';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { ExchangeAuthConfig } from '../AuthConfig';
@@ -245,7 +246,7 @@ export class GDAXFeed extends ExchangeFeed {
             bids: [],
             orderPool: orders
         };
-        ['buy', 'sell'].forEach((side: string) => {
+        SIDES.forEach((side) => {
             const levelArray = side === 'buy' ? 'bids' : 'asks';
             snapshot[levelArray].forEach(([price, size]) => {
                 if (+size === 0) {
@@ -412,7 +413,7 @@ export class GDAXFeed extends ExchangeFeed {
     }
 
     private mapMatchMessage(msg: GDAXMatchMessage): TradeMessage {
-        const takerSide: string = msg.side === 'buy' ? 'sell' : 'buy';
+        const takerSide: Side = msg.side === 'buy' ? 'sell' : 'buy';
         const trade: TradeMessage = {
             type: 'trade',
             time: new Date(msg.time),
@@ -434,7 +435,7 @@ export class GDAXFeed extends ExchangeFeed {
         switch (feedMessage.type) {
             case 'match': {
                 const isTaker: boolean = !!(feedMessage as any).taker_user_id;
-                let side: string;
+                let side: Side;
                 if (!isTaker) {
                     side = (feedMessage as GDAXMatchMessage).side;
                 } else {

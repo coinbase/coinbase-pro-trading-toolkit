@@ -12,6 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
+import { Side } from '../lib/sides';
 import { Big, BigJS, Biglike, ZERO } from '../lib/types';
 import { CumulativePriceLevel,
          Level3Order,
@@ -151,7 +152,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
      * Return an array of (aggregated) orders whose sum is equal to or greater than `value`. The side parameter is from
      * the perspective of the purchaser, so 'buy' returns asks and 'sell' bids.
      */
-    ordersForValue(side: string, value: Biglike, useQuote: boolean, startPrice?: StartPoint): CumulativePriceLevel[] {
+    ordersForValue(side: Side, value: Biglike, useQuote: boolean, startPrice?: StartPoint): CumulativePriceLevel[] {
         return this._book.ordersForValue(side, Big(value), useQuote, startPrice);
     }
 
@@ -311,7 +312,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
             return;
         }
         let newSize: BigJS;
-        const newSide: string = msg.side;
+        const newSide: Side = msg.side;
         if (msg.changedAmount) {
             const order: Level3Order = this.book.getOrder(msg.orderId);
             newSize = order.size.plus(msg.changedAmount);

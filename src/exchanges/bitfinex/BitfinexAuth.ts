@@ -14,6 +14,7 @@
 
 import request = require('superagent');
 import Response = request.Response;
+import { Side } from '../../lib/sides';
 import { ExchangeAuthConfig } from '../AuthConfig';
 import { getSignature, handleResponse } from '../utils';
 
@@ -53,7 +54,7 @@ export interface BitfinexSuccessfulOrderExecution {
     exchange: string;
     price: string;
     avg_execution_price: string;
-    side: 'buy' | 'sell';
+    side: Side;
     type: string;
     timestamp: string;
     is_live: boolean;

@@ -21,8 +21,15 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
-import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, OrderResult, ProductInfo, ProductTicker, PublicClient } from 'gdax';
-import * as assert from 'assert';
+import { Account,
+         AuthenticatedClient,
+         CoinbaseAccount,
+         OrderInfo,
+         OrderParams,
+         OrderResult,
+         ProductInfo,
+         ProductTicker,
+         PublicClient } from 'gdax';
 import { APIError, extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
 import querystring = require('querystring');
@@ -33,7 +40,7 @@ export const GDAX_API_URL = 'https://api.gdax.com';
 
 interface OrderPage {
     after: string;
-    orders: BaseOrderInfo[];
+    orders: OrderInfo[];
 }
 
 export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
@@ -200,15 +207,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             return Promise.reject(new GTTError('No authentication details were given for this API'));
         }
         let gdaxOrder: OrderParams;
-        assert(order.side === 'buy' || order.side === 'sell');
-        const side: 'buy' | 'sell' = order.side === 'buy' ? 'buy' : 'sell';
         switch (order.orderType) {
             case 'limit':
                 gdaxOrder = {
                     product_id: order.productId,
                     size: order.size,
                     price: order.price,
-                    side: side,
+                    side: order.side,
                     type: 'limit',
                     client_oid: order.clientId,
                     post_only: order.postOnly,
@@ -221,7 +226,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 gdaxOrder = {
                     type: 'market',
                     product_id: order.productId,
-                    side: side,
+                    side: order.side,
                     size: order.size,
                     client_oid: order.clientId,
                     funds: order.funds,
@@ -232,7 +237,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 gdaxOrder = {
                     type: 'stop',
                     product_id: order.productId,
-                    side: side,
+                    side: order.side,
                     size: order.size,
                     price: order.price,
                     funds: order.funds,
