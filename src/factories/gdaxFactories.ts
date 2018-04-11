@@ -28,9 +28,9 @@ function getAuthFromEnv(): null | GDAXAuthConfig {
     const env = process.env;
     if (env.GDAX_KEY && env.GDAX_SECRET && env.GDAX_PASSPHRASE) {
         return {
-            key: process.env.GDAX_KEY,
-            secret: process.env.GDAX_SECRET,
-            passphrase: process.env.GDAX_PASSPHRASE
+            key: env.GDAX_KEY,
+            secret: env.GDAX_SECRET,
+            passphrase: env.GDAX_PASSPHRASE
         };
     } else {
         return null;
