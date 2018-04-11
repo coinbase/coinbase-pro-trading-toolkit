@@ -39,7 +39,7 @@ export function isStreamMessage(msg: any): msg is StreamMessage {
 export interface ErrorMessage extends StreamMessage {
     type: 'error';
     message: string;
-    cause: any;
+    cause?: Error;
     meta?: any;
 }
 

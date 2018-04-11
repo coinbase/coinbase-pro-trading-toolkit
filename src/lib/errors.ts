@@ -37,7 +37,7 @@ export class BaseError extends Error implements StreamError {
             type: 'error',
             time: this.time,
             message: this.message,
-            cause: this.cause ? this.cause.message : undefined
+            cause: this.cause
         };
     }
 }

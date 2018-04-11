@@ -67,8 +67,8 @@ export class BitmexMarketFeed extends ExchangeFeed {
             const errMsg: ErrorMessage = {
                 type: 'error',
                 time: new Date(),
-                message: `Error while subscribing to symbols`,
-                cause: msg.error
+                message: `Error while subscribing to symbols: ${msg.error}`,
+                meta: msg
             };
 
             this.push(errMsg);

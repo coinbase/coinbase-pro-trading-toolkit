@@ -19,12 +19,13 @@ import { ErrorMessage } from '../../src/core/Messages';
 describe('Errors', () => {
     describe('GTTError', () => {
         it('accepts an error as metadata', () => {
-            const err = new GTTError('GTT Error Test 1', new Error('a bug'));
+            const cause = new Error('a bug');
+            const err = new GTTError('GTT Error Test 1', cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'GTT Error Test 1');
-            assert.equal(msg.cause, 'a bug');
+            assert.deepEqual(msg.cause, cause);
         });
 
         it('behaves like a standard error', () => {
@@ -56,7 +57,7 @@ describe('Errors', () => {
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'API Error Test 2');
-            assert.deepEqual(msg.cause, cause.message);
+            assert.deepEqual(msg.cause, cause);
             assert.deepEqual(msg.meta, null);
         });
 
