@@ -13,7 +13,6 @@
  **********************************************************************************************************************/
 
 import * as ccxt from 'ccxt';
-import { CCXTHistTrade, CCXTMarket, CCXTOHLCV, CCXTOrderbook } from 'ccxt';
 import { Candle, CandleRequestOptions, Product, PublicExchangeAPI, Ticker } from '../PublicExchangeAPI';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
@@ -29,83 +28,118 @@ import { GTTError, HTTPError } from '../../lib/errors';
 type ExchangeDefinition = [string, new (opts: any) => ccxt.Exchange];
 // Supported exchanges, minus those with native support
 const exchanges: { [index: string]: ExchangeDefinition } = {
-    _1broker: ['1 Broker', ccxt._1broker],
-    _1btcxe: ['BTC XE', ccxt._1btcxe],
-    anxpro: ['ANX Pro', ccxt.anxpro],
+    _1broker: ['1Broker', ccxt._1broker],
+    _1btcxe: ['1BTCXE', ccxt._1btcxe],
+    acx: ['ACX', ccxt.acx],
+    allcoin: ['Allcoin', ccxt.allcoin],
+    anxpro: ['ANXPro', ccxt.anxpro],
+    bibox: ['Bibox', ccxt.bibox],
     binance: ['Binance', ccxt.binance],
-    bit2c: ['Bit2c', ccxt.bit2c],
-    bitbay: ['Bitbay', ccxt.bitbay],
-    bitbays: ['Bitbays', ccxt.bitbays],
-    bitcoincoid: ['Bitcoincoid', ccxt.bitcoincoid],
-    bitfinex: ['bitfinex', ccxt.bitfinex],
-    bitfinex2: ['bitfinex2', ccxt.bitfinex2],
-    bitflyer: ['Bitflyer', ccxt.bitflyer],
+    bit2c: ['Bit2C', ccxt.bit2c],
+    bitbank: ['bitbank', ccxt.bitbank],
+    bitbay: ['BitBay', ccxt.bitbay],
+    bitfinex: ['Bitfinex', ccxt.bitfinex],
+    bitfinex2: ['Bitfinex', ccxt.bitfinex2],
+    bitflyer: ['bitFlyer', ccxt.bitflyer],
+    bithumb: ['Bithumb', ccxt.bithumb],
     bitlish: ['Bitlish', ccxt.bitlish],
-    bitmarket: ['Bitmarket', ccxt.bitmarket],
-    bitmex: ['Bitmex', ccxt.bitmex],
+    bitmarket: ['BitMarket', ccxt.bitmarket],
+    bitmex: ['BitMEX', ccxt.bitmex],
     bitso: ['Bitso', ccxt.bitso],
     bitstamp: ['Bitstamp', ccxt.bitstamp],
-    bittrex: ['bittrex', ccxt.bittrex],
+    bitstamp1: ['Bitstamp', ccxt.bitstamp1],
+    bittrex: ['Bittrex', ccxt.bittrex],
+    bitz: ['Bit-Z', ccxt.bitz],
     bl3p: ['BL3P', ccxt.bl3p],
-    btcchina: ['BTCchina', ccxt.btcchina],
-    btce: ['BTC-e', ccxt.btce],
-    btcexchange: ['BTC exchange', ccxt.btcexchange],
-    btcmarkets: ['BTC markets', ccxt.btcmarkets],
-    btctradeua: ['BTC tradeua', ccxt.btctradeua],
-    btcturk: ['BTC Turk', ccxt.btcturk],
-    btcx: ['BTC-x', ccxt.btcx],
-    bter: ['Bter', ccxt.bter],
-    bxinth: ['Bxinth', ccxt.bxinth],
-    ccex: ['C-cex', ccxt.ccex],
-    cex: ['Cex', ccxt.cex],
-    chbtc: ['Ch Btc', ccxt.chbtc],
-    chilebit: ['Chilebit', ccxt.chilebit],
-    coincheck: ['Coincheck', ccxt.coincheck],
-    coinfloor: ['Coinfloor', ccxt.coinfloor],
+    bleutrade: ['Bleutrade', ccxt.bleutrade],
+    braziliex: ['Braziliex', ccxt.braziliex],
+    btcbox: ['BtcBox', ccxt.btcbox],
+    btcchina: ['BTCChina', ccxt.btcchina],
+    btcexchange: ['BTCExchange', ccxt.btcexchange],
+    btcmarkets: ['BTC', ccxt.btcmarkets],
+    btctradeim: ['BtcTrade.im', ccxt.btctradeim],
+    btctradeua: ['BTC', ccxt.btctradeua],
+    btcturk: ['BTCTurk', ccxt.btcturk],
+    btcx: ['BTCX', ccxt.btcx],
+    bxinth: ['BX.in.th', ccxt.bxinth],
+    ccex: ['C-CEX', ccxt.ccex],
+    cex: ['CEX.IO', ccxt.cex],
+    chbtc: ['CHBTC', ccxt.chbtc],
+    chilebit: ['ChileBit', ccxt.chilebit],
+    cobinhood: ['COBINHOOD', ccxt.cobinhood],
+    coincheck: ['coincheck', ccxt.coincheck],
+    coinegg: ['CoinEgg', ccxt.coinegg],
+    coinex: ['CoinEx', ccxt.coinex],
+    coinexchange: ['CoinExchange', ccxt.coinexchange],
+    coinfloor: ['coinfloor', ccxt.coinfloor],
     coingi: ['Coingi', ccxt.coingi],
-    coinmarketcap: ['Coinmarketcap', ccxt.coinmarketcap],
-    coinmate: ['Coinmate', ccxt.coinmate],
+    coinmarketcap: ['CoinMarketCap', ccxt.coinmarketcap],
+    coinmate: ['CoinMate', ccxt.coinmate],
+    coinnest: ['coinnest', ccxt.coinnest],
+    coinone: ['CoinOne', ccxt.coinone],
     coinsecure: ['Coinsecure', ccxt.coinsecure],
-    coinspot: ['Coinspot', ccxt.coinspot],
+    coinspot: ['CoinSpot', ccxt.coinspot],
+    coolcoin: ['CoolCoin', ccxt.coolcoin],
     cryptopia: ['Cryptopia', ccxt.cryptopia],
-    dsx: ['Dsx', ccxt.dsx],
-    exmo: ['Exmo', ccxt.exmo],
-    flowbtc: ['Flowbtc', ccxt.flowbtc],
-    foxbit: ['Foxbit', ccxt.foxbit],
-    fybse: ['Fybse', ccxt.fybse],
-    fybsg: ['Fybsg', ccxt.fybsg],
+    dsx: ['DSX', ccxt.dsx],
+    ethfinex: ['Ethfinex', ccxt.ethfinex],
+    exmo: ['EXMO', ccxt.exmo],
+    exx: ['EXX', ccxt.exx],
+    flowbtc: ['flowBTC', ccxt.flowbtc],
+    foxbit: ['FoxBit', ccxt.foxbit],
+    fybse: ['FYB-SE', ccxt.fybse],
+    fybsg: ['FYB-SG', ccxt.fybsg],
     gatecoin: ['Gatecoin', ccxt.gatecoin],
-    // gdax: ['gdax', ccxt.gdax],
+    gateio: ['Gate.io', ccxt.gateio],
+    // gdax: ['GDAX', ccxt.gdax],
     gemini: ['Gemini', ccxt.gemini],
-    hitbtc: ['Hitbtc', ccxt.hitbtc],
-    hitbtc2: ['Hitbtc2', ccxt.hitbtc2],
+    getbtc: ['GetBTC', ccxt.getbtc],
+    hadax: ['HADAX', ccxt.hadax],
+    hitbtc: ['HitBTC', ccxt.hitbtc],
+    hitbtc2: ['HitBTC', ccxt.hitbtc2],
     huobi: ['Huobi', ccxt.huobi],
-    itbit: ['Itbit', ccxt.itbit],
-    jubi: ['Jubi', ccxt.jubi],
+    huobicny: ['Huobi', ccxt.huobicny],
+    huobipro: ['Huobi', ccxt.huobipro],
+    ice3x: ['ICE3X', ccxt.ice3x],
+    independentreserve: ['Independent', ccxt.independentreserve],
+    indodax: ['INDODAX', ccxt.indodax],
+    itbit: ['itBit', ccxt.itbit],
+    jubi: ['jubi.com', ccxt.jubi],
     kraken: ['Kraken', ccxt.kraken],
+    kucoin: ['Kucoin', ccxt.kucoin],
+    kuna: ['Kuna', ccxt.kuna],
     lakebtc: ['LakeBTC', ccxt.lakebtc],
-    livecoin: ['Livecoin', ccxt.livecoin],
+    lbank: ['LBank', ccxt.lbank],
     liqui: ['Liqui', ccxt.liqui],
-    luno: ['Luno', ccxt.luno],
+    livecoin: ['LiveCoin', ccxt.livecoin],
+    luno: ['luno', ccxt.luno],
+    lykke: ['Lykke', ccxt.lykke],
     mercado: ['Mercado', ccxt.mercado],
-    okcoincny: ['Okcoincny', ccxt.okcoincny],
-    okcoinusd: ['Okcoinusd', ccxt.okcoinusd],
-    okex: ['Okex', ccxt.okex],
+    mixcoins: ['MixCoins', ccxt.mixcoins],
+    negociecoins: ['NegocieCoins', ccxt.negociecoins],
+    nova: ['Novaexchange', ccxt.nova],
+    okcoincny: ['OKCoin', ccxt.okcoincny],
+    okcoinusd: ['OKCoin', ccxt.okcoinusd],
+    okex: ['OKEX', ccxt.okex],
     paymium: ['Paymium', ccxt.paymium],
-    poloniex: ['poloniex', ccxt.poloniex],
-    quadrigacx: ['Quadrigacx', ccxt.quadrigacx],
-    quoine: ['Quoine', ccxt.quoine],
-    southxchange: ['Southxchange', ccxt.southxchange],
-    surbitcoin: ['Surbitcoin', ccxt.surbitcoin],
-    therock: ['Therock', ccxt.therock],
-    urdubit: ['Urdubit', ccxt.urdubit],
+    poloniex: ['Poloniex', ccxt.poloniex],
+    qryptos: ['QRYPTOS', ccxt.qryptos],
+    quadrigacx: ['QuadrigaCX', ccxt.quadrigacx],
+    quoinex: ['QUOINEX', ccxt.quoinex],
+    southxchange: ['SouthXchange', ccxt.southxchange],
+    surbitcoin: ['SurBitcoin', ccxt.surbitcoin],
+    therock: ['TheRockTrading', ccxt.therock],
+    tidex: ['Tidex', ccxt.tidex],
+    urdubit: ['UrduBit', ccxt.urdubit],
     vaultoro: ['Vaultoro', ccxt.vaultoro],
     vbtc: ['VBTC', ccxt.vbtc],
-    virwox: ['Virwox', ccxt.virwox],
-    xbtce: ['Xbtce', ccxt.xbtce],
-    yobit: ['Yobit', ccxt.yobit],
-    yunbi: ['Yunbi', ccxt.yunbi],
-    zaif: ['Zaif', ccxt.zaif]
+    virwox: ['VirWoX', ccxt.virwox],
+    wex: ['WEX', ccxt.wex],
+    xbtce: ['xBTCe', ccxt.xbtce],
+    yobit: ['YoBit', ccxt.yobit],
+    yunbi: ['YUNBI', ccxt.yunbi],
+    zaif: ['Zaif', ccxt.zaif],
+    zb: ['ZB', ccxt.zb],
 };
 
 export default class CCXTExchangeWrapper implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
@@ -133,7 +167,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return result;
     }
 
-    static getGDAXSymbol(m: CCXTMarket): string {
+    static getGDAXSymbol(m: ccxt.Market): string {
         return `${m.base}-${m.quote}`;
     }
 
@@ -158,9 +192,9 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     getSourceSymbol(gdaxProduct: string): Promise<string> {
         const [base, quote] = gdaxProduct.split('-');
-        return this.instance.loadMarkets(false).then((markets: CCXTMarket[]) => {
+        return this.instance.loadMarkets(false).then((markets) => {
             for (const id in markets) {
-                const m: CCXTMarket = markets[id];
+                const m = markets[id];
                 if (m.base === base && m.quote === quote) {
                     return m.symbol;
                 }
@@ -170,7 +204,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     loadProducts(): Promise<Product[]> {
-        return this.instance.loadMarkets(true).then((markets: ccxt.CCXTMarket[]) => {
+        return this.instance.loadMarkets(true).then((markets) => {
             if (!markets) {
                 return [];
             }
@@ -205,7 +239,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
         return this.getSourceSymbol(gdaxProduct).then((id: string) => {
             return this.instance.fetchOrderBook(id);
-        }).then((ccxtBook: CCXTOrderbook) => {
+        }).then((ccxtBook: ccxt.OrderBook) => {
             const book: BookBuilder = new BookBuilder(this.logger);
             const addSide = (side: Side, orders: number[][]) => {
                 orders.forEach((o) => {
@@ -256,8 +290,8 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
         return this.getSourceSymbol(product).then((id: string) => {
             return this.instance.fetchOHLCV(id, options.interval);
-        }).then((data: CCXTOHLCV[]) => {
-            const candles = data.map((d: CCXTOHLCV) => {
+        }).then((data: ccxt.OHLCV[]) => {
+            const candles = data.map((d: ccxt.OHLCV) => {
                 return {
                     timestamp: new Date(d[0]),
                     open: Big(d[1]),
@@ -353,10 +387,10 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     /**
      * Attempts to fetch historical trade data from the exchange and return it in
      */
-    async fetchHistTrades(symbol: string, params?: {}): Promise<TradeMessage[]> {
+    async fetchHistTrades(symbol: string, since?: number, limit?: number, params?: {}): Promise<TradeMessage[]> {
         const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
-            const rawTrades: CCXTHistTrade[] = await this.instance.fetchTrades(sourceSymbol, params);
+            const rawTrades = await this.instance.fetchTrades(sourceSymbol, since, limit, params);
             return rawTrades.map(({info, id, timestamp, datetime, symbol: _symbol, order, type, side, price, amount}) => ({
                 type: 'trade' as 'trade',
                 time: new Date(timestamp),
@@ -371,13 +405,13 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }
     }
 
-    async fetchOHLCV(symbol: string, params?: {}): Promise<CCXTOHLCV[] | null> {
+    async fetchOHLCV(symbol: string, timeframe?: string, since?: number, limit?: number, params?: any): Promise<ccxt.OHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
             return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
         }
         const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
-            return await this.instance.fetchOHLCV(sourceSymbol, params);
+            return await this.instance.fetchOHLCV(sourceSymbol, timeframe, since, limit, params);
         } catch (err) {
             return rejectWithError(`Error loading candles for ${symbol} on ${this.instance.name} (CCXT)`, err);
         }
