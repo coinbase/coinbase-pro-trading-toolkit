@@ -114,8 +114,8 @@ export class BitmexMarketFeed extends ExchangeFeed {
 
     private handleSnapshot(snapshot: OrderbookSnapshotMessage) {
         // (re)initialize our order id map
-        const newIdMap = snapshot.data.reduce((acc, { id, price }) => ({...acc, [id]: price }), {});
-        this.orderIdMap = newIdMap;
+        const initOrderIdMap: { [orderId: number]: number } = {};
+        this.orderIdMap = snapshot.data.reduce((acc, { id, price }) => ({...acc, [id]: price }), initOrderIdMap);
 
         const mapLevelUpdates: (date: PriceData) => PriceLevelWithOrders =
             ({ price, size, side }) => PriceLevelFactory(price, size, Side(side));
@@ -134,10 +134,11 @@ export class BitmexMarketFeed extends ExchangeFeed {
             id: id.toString(),
         });
 
+        const initOrderPool: OrderPool = {};
         const orderPool: OrderPool = snapshot.data.reduce((acc: OrderPool, pd: PriceData) => ({
             ...acc,
             [ pd.id.toString() ]: priceDataToLvl3(pd),
-        }), {});
+        }), initOrderPool);
 
         const snapshotMsg: SnapshotMessage = {
             time: new Date(),

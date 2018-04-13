@@ -13,6 +13,7 @@
       "max-line-length": [true, 180],
       "member-access": false,
       "no-console": false,
+      "no-inferred-empty-object-type": true,
       "no-trailing-whitespace": [true, "ignore-comments", "ignore-jsdoc"],
       "no-unused-variable": [
         true,
