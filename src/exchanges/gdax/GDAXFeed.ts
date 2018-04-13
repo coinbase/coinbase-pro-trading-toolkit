@@ -333,7 +333,8 @@ export class GDAXFeed extends ExchangeFeed {
             type: 'unknown',
             time: time,
             sequence: sequence,
-            productId: product
+            productId: product,
+            origin: unknown
         };
         return msg;
     }
