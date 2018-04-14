@@ -85,7 +85,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
             trade_id: undefined,
             size: undefined
         };
-        this.strictMode = !!(config.strictMode as any);
+        this.strictMode = config.strictMode;
         this.snapshotReceived = false;
     }
 
