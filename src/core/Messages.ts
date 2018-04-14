@@ -78,7 +78,7 @@ export function isSequencedMessage(msg: any): msg is SequencedMessage {
 /**
  * Root definition for messages that stem from a websocket feed
  */
-export interface OrderbookMessage extends SequencedMessage, StreamMessage {
+export interface OrderbookMessageLike extends SequencedMessage, StreamMessage {
     type: 'newOrder' | 'orderDone' | 'changedOrder' | 'level';
     productId: string;
     side: Side;
@@ -89,7 +89,7 @@ export interface OrderbookMessage extends SequencedMessage, StreamMessage {
 /**
  * Message representing the common state for a resting order (for an order request, see PlaceOrderRequest)
  */
-export interface BaseOrderMessageLike extends OrderbookMessage {
+export interface BaseOrderMessageLike extends OrderbookMessageLike {
     orderId: string;
     price: string;
 }
@@ -128,7 +128,7 @@ export interface ChangedOrderMessage extends BaseOrderMessageLike {
  * Represents a price-level change in an orderbook. The `size` parameter represents the new size of the level and should
  * replace the old one.
  */
-export interface LevelMessage extends OrderbookMessage {
+export interface LevelMessage extends OrderbookMessageLike {
     type: 'level';
     price: string;
     size: string;
@@ -242,6 +242,10 @@ const BASE_ORDER_MESSAGE_TYPES: ReadonlySet<string> =
 export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
     return BASE_ORDER_MESSAGE_TYPES.has(msg.type);
 }
+
+export type OrderbookMessage =
+    BaseOrderMessage |
+    LevelMessage;
 
 const ORDERBOOK_MESSAGE_TYPE: ReadonlySet<string> =
     new Set([...BASE_ORDER_MESSAGE_TYPES,
