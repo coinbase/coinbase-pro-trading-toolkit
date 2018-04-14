@@ -89,7 +89,7 @@ export interface OrderbookMessage extends SequencedMessage, StreamMessage {
 /**
  * Message representing the common state for a resting order (for an order request, see PlaceOrderRequest)
  */
-export interface BaseOrderMessage extends OrderbookMessage {
+export interface BaseOrderMessageLike extends OrderbookMessage {
     type: 'newOrder' | 'orderDone' | 'changedOrder';
     orderId: string;
     price: string;
@@ -98,7 +98,7 @@ export interface BaseOrderMessage extends OrderbookMessage {
 /**
  * In order-level books, represents a new order.
  */
-export interface NewOrderMessage extends BaseOrderMessage {
+export interface NewOrderMessage extends BaseOrderMessageLike {
     type: 'newOrder';
     size: string;
 }
@@ -107,7 +107,7 @@ export interface NewOrderMessage extends BaseOrderMessage {
  * In order-level books, means an order has been filled, or cancelled. RemainingSize indicated how much of the order
  * was left unfilled if it was cancelled
  */
-export interface OrderDoneMessage extends BaseOrderMessage {
+export interface OrderDoneMessage extends BaseOrderMessageLike {
     type: 'orderDone';
     reason: string;
     remainingSize: string;
@@ -117,7 +117,7 @@ export interface OrderDoneMessage extends BaseOrderMessage {
  * In order-level books, means the size of an existing order has changed. Either `newSize` (which replaces the old value)
  * or changedAmount (which adds to the old value) must be specified.
  */
-export interface ChangedOrderMessage extends BaseOrderMessage {
+export interface ChangedOrderMessage extends BaseOrderMessageLike {
     type: 'changedOrder';
     newSize?: string;
     changedAmount?: string;
@@ -229,6 +229,11 @@ export interface MyOrderPlacedMessage extends StreamMessage {
     size: string;
     sequence: number;
 }
+
+export type BaseOrderMessage =
+    ChangedOrderMessage |
+    NewOrderMessage |
+    OrderDoneMessage;
 
 const BASE_ORDER_MESSAGE_TYPES: ReadonlySet<string> =
     new Set(['changedOrder',
