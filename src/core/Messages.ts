@@ -26,13 +26,13 @@ export type OrderType = 'limit' | 'market' | 'stop';
  * The origin field, if present represents the original unmodified message that was mapped (e.g. original trade message from exchange)
  */
 
-export interface StreamMessage {
+export interface StreamMessageLike {
     type: string;
     time: Date;
     origin?: any;
 }
 
-export interface ErrorMessage extends StreamMessage {
+export interface ErrorMessage extends StreamMessageLike {
     type: 'error';
     message: string;
     cause: any;
@@ -54,7 +54,7 @@ export function isErrorMessage(msg: any): msg is ErrorMessage {
  * The type must always be 'unknown'. If the source of the message is actually known, (e.g. trollbox chats), this can be indicated in the `tag` field.
  * Any context-rich information can be extracted into the `extra` field, and the original message should be attached to the `origin` field as usual.
  */
-export interface UnknownMessage extends StreamMessage {
+export interface UnknownMessage extends StreamMessageLike {
     type: 'unknown';
     sequence?: number;
     productId?: string;
@@ -78,7 +78,7 @@ export function isSequencedMessage(msg: any): msg is SequencedMessage {
 /**
  * Root definition for messages that stem from a websocket feed
  */
-export interface OrderbookMessageLike extends SequencedMessage, StreamMessage {
+export interface OrderbookMessageLike extends SequencedMessage, StreamMessageLike {
     productId: string;
     side: Side;
 }
@@ -138,7 +138,7 @@ export interface LevelMessage extends OrderbookMessageLike {
  * Reflects a trade that has taken place. This message does not impact the orderbook, and as such does not carry a
  * sequence field. A corresponding `level`, `done`, or 'change` message will also be sent.
  */
-export interface TradeMessage extends StreamMessage {
+export interface TradeMessage extends StreamMessageLike {
     type: 'trade';
     productId: string;
     side: Side;
@@ -147,7 +147,7 @@ export interface TradeMessage extends StreamMessage {
     size: string;
 }
 
-export interface SnapshotMessage extends StreamMessage, OrderbookState {
+export interface SnapshotMessage extends StreamMessageLike, OrderbookState {
     type: 'snapshot';
     productId: string;
 }
@@ -156,7 +156,7 @@ export function isSnapshotMessage(msg: any): msg is SnapshotMessage {
     return msg.type === 'snapshot';
 }
 
-export interface TickerMessage extends StreamMessage, Ticker {
+export interface TickerMessage extends StreamMessageLike, Ticker {
     type: 'ticker';
     sequence?: number;
     productId: string;
@@ -168,7 +168,7 @@ export interface TickerMessage extends StreamMessage, Ticker {
  * A new order request message. Only the most common fields are specified here. Additional options can be specified
  * in the extra field, which can be handled by the target trade engine.
  */
-export interface PlaceOrderMessage extends StreamMessage {
+export interface PlaceOrderMessage extends StreamMessageLike {
     type: 'placeOrder';
     productId: string;
     clientId?: string;
@@ -181,7 +181,7 @@ export interface PlaceOrderMessage extends StreamMessage {
     extra?: any;
 }
 
-export interface CancelOrderRequestMessage extends StreamMessage {
+export interface CancelOrderRequestMessage extends StreamMessageLike {
     type: 'cancelOrder';
     orderId: string;
 }
@@ -189,7 +189,7 @@ export interface CancelOrderRequestMessage extends StreamMessage {
 /**
  * Emitted from a feed when one of my orders has been matched. (An authenticated feed is required)
  */
-export interface TradeExecutedMessage extends StreamMessage {
+export interface TradeExecutedMessage extends StreamMessageLike {
     type: 'tradeExecuted';
     productId: string;
     orderId: string;
@@ -204,7 +204,7 @@ export interface TradeExecutedMessage extends StreamMessage {
  * Emitted when my order is finalized. (An authenticated feed is
  * required).
  */
-export interface TradeFinalizedMessage extends StreamMessage {
+export interface TradeFinalizedMessage extends StreamMessageLike {
     type: 'tradeFinalized';
     productId: string;
     orderId: string;
@@ -218,7 +218,7 @@ export interface TradeFinalizedMessage extends StreamMessage {
  * Emitted when my order is placed. (An authenticated feed is
  * required).
  */
-export interface MyOrderPlacedMessage extends StreamMessage {
+export interface MyOrderPlacedMessage extends StreamMessageLike {
     type: 'myOrderPlaced';
     productId: string;
     orderId: string;
@@ -253,6 +253,19 @@ const ORDERBOOK_MESSAGE_TYPE: ReadonlySet<string> =
 export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
     return ORDERBOOK_MESSAGE_TYPE.has(msg.type);
 }
+
+export type StreamMessage =
+    ErrorMessage |
+    UnknownMessage |
+    OrderbookMessage |
+    TradeMessage |
+    SnapshotMessage |
+    TickerMessage |
+    PlaceOrderMessage |
+    CancelOrderRequestMessage |
+    TradeExecutedMessage |
+    TradeFinalizedMessage |
+    MyOrderPlacedMessage;
 
 const STREAM_MESSAGE_TYPES: ReadonlySet<string> =
     new Set(['error',

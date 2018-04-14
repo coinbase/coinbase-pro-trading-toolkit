@@ -22,6 +22,7 @@ import { CancelOrderRequestMessage,
          MyOrderPlacedMessage,
          PlaceOrderMessage,
          StreamMessage,
+         StreamMessageLike,
          TradeExecutedMessage,
          TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
@@ -37,7 +38,7 @@ export interface TraderConfig {
     pricePrecision?: number;
 }
 
-export interface CancelMyOrdersRequestMessage extends StreamMessage {
+export interface CancelMyOrdersRequestMessage extends StreamMessageLike {
     type: 'cancelMyOrders';
 }
 
@@ -45,7 +46,7 @@ export function isCancelMyOrdersRequestMessage(msg: any): msg is CancelMyOrdersR
     return msg.type === 'cancelMyOrders';
 }
 
-export interface CancelAllOrdersRequestMessage extends StreamMessage {
+export interface CancelAllOrdersRequestMessage extends StreamMessageLike {
     type: 'cancelAllOrders';
 }
 
