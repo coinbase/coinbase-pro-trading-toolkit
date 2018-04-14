@@ -18,8 +18,7 @@ import { Side } from '../../lib/sides';
  * Glossary of GDAX Websocket messages
  */
 
-export interface GDAXMessage {
-    type: string;
+export interface OptionalUserId {
     user_id?: string; // Authenticated messages only
 }
 
@@ -28,22 +27,41 @@ export interface GDAXChannel {
     product_ids: string[];
 }
 
-export interface GDAXErrorMessage extends GDAXMessage {
+export interface GDAXErrorMessage extends OptionalUserId {
     type: 'error';
     message: string;
     reason: string;
 }
 
-export interface GDAXProductMessage extends GDAXMessage {
+export interface ProductIdAndOptionalUserId extends OptionalUserId {
     product_id: string;
 }
 
-export interface GDAXSubscriptionsMessage extends GDAXMessage {
+export interface GDAXHeartbeatMessage extends ProductIdAndOptionalUserId {
+    type: 'heartbeat';
+    last_trade_id: number;
+    sequence: number;
+    time: string;
+}
+
+export interface GDAXSubscriptionsMessage extends OptionalUserId {
     type: 'subscriptions';
     channels: GDAXChannel[];
 }
 
-export interface GDAXOpenMessage extends GDAXProductMessage {
+export interface GDAXReceivedMessage extends ProductIdAndOptionalUserId {
+    type: 'received';
+    sequence: number;
+    time: string;
+    client_oid: string;
+    order_id: string;
+    order_type: 'limit' | 'market' | 'stop';
+    price: string;
+    size: string;
+    side: Side;
+}
+
+export interface GDAXOpenMessage extends ProductIdAndOptionalUserId {
     type: 'open';
     sequence: number;
     time: string;
@@ -53,7 +71,7 @@ export interface GDAXOpenMessage extends GDAXProductMessage {
     side: Side;
 }
 
-export interface GDAXDoneMessage extends GDAXProductMessage {
+export interface GDAXDoneMessage extends ProductIdAndOptionalUserId {
     type: 'done';
     sequence: number;
     time: string;
@@ -64,19 +82,21 @@ export interface GDAXDoneMessage extends GDAXProductMessage {
     remaining_size: string;
 }
 
-export interface GDAXMatchMessage extends GDAXProductMessage {
+export interface GDAXMatchMessage extends ProductIdAndOptionalUserId {
     type: 'match';
     sequence: number;
     time: string;
     trade_id: string;
     maker_order_id: string;
     taker_order_id: string;
+    maker_user_id?: string;
+    taker_user_id?: string;
     size: string;
     price: string;
     side: Side;
 }
 
-export interface GDAXChangeMessage extends GDAXProductMessage {
+export interface GDAXChangeMessage extends ProductIdAndOptionalUserId {
     type: 'change';
     sequence: number;
     time: string;
@@ -89,12 +109,12 @@ export interface GDAXChangeMessage extends GDAXProductMessage {
     side: Side;
 }
 
-export interface GDAXL2UpdateMessage extends GDAXProductMessage {
+export interface GDAXL2UpdateMessage extends ProductIdAndOptionalUserId {
     type: 'l2update';
     changes: [Side, string, string][]; // [ [ side, price, newSize ] ]
 }
 
-export interface GDAXTickerMessage extends GDAXProductMessage {
+export interface GDAXTickerMessage extends ProductIdAndOptionalUserId {
     type: 'ticker';
     trade_id: number;
     sequence: number;
@@ -107,10 +127,39 @@ export interface GDAXTickerMessage extends GDAXProductMessage {
     volume_24h: string;
 }
 
-export interface GDAXSnapshotMessage extends GDAXProductMessage {
+export interface GDAXSnapshotMessage extends ProductIdAndOptionalUserId {
     type: 'snapshot';
     bids: [string, string][]; // [ [price, size] ]
     asks: [string, string][]; // [ [price, size] ]
+}
+
+export type GDAXMessage =
+    GDAXErrorMessage |
+    GDAXHeartbeatMessage |
+    GDAXSubscriptionsMessage |
+    GDAXReceivedMessage |
+    GDAXOpenMessage |
+    GDAXDoneMessage |
+    GDAXMatchMessage |
+    GDAXChangeMessage |
+    GDAXL2UpdateMessage |
+    GDAXTickerMessage |
+    GDAXSnapshotMessage;
+
+const GDAX_MESSAGE_TYPES: ReadonlySet<string> = new Set(['error',
+                                                         'heartbeat',
+                                                         'subscriptions',
+                                                         'received',
+                                                         'open',
+                                                         'done',
+                                                         'match',
+                                                         'change',
+                                                         'l2update',
+                                                         'ticker',
+                                                         'snapshot']);
+
+export function isGDAXMessage(msg: any): msg is GDAXMessage {
+    return GDAX_MESSAGE_TYPES.has(msg.type);
 }
 
 export interface GDAXSubscriptionRequest {
