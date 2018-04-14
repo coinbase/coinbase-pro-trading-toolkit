@@ -79,7 +79,6 @@ export function isSequencedMessage(msg: any): msg is SequencedMessage {
  * Root definition for messages that stem from a websocket feed
  */
 export interface OrderbookMessageLike extends SequencedMessage, StreamMessage {
-    type: 'newOrder' | 'orderDone' | 'changedOrder' | 'level';
     productId: string;
     side: Side;
 }
