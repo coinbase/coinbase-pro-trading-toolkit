@@ -200,10 +200,10 @@ export class Trader extends Writable {
         }
         switch (msg.type) {
             case 'placeOrder':
-                this.handleOrderRequest(msg as PlaceOrderMessage);
+                this.handleOrderRequest(msg);
                 break;
             case 'cancelOrder':
-                this.handleCancelOrder(msg as CancelOrderRequestMessage);
+                this.handleCancelOrder(msg);
                 break;
             case 'cancelAllOrders':
                 this.cancelAllOrders();
@@ -212,13 +212,13 @@ export class Trader extends Writable {
                 this.cancelMyOrders();
                 break;
             case 'tradeExecuted':
-                this.handleTradeExecutedMessage(msg as TradeExecutedMessage);
+                this.handleTradeExecutedMessage(msg);
                 break;
             case 'tradeFinalized':
-                this.handleTradeFinalized(msg as TradeFinalizedMessage);
+                this.handleTradeFinalized(msg);
                 break;
             case 'myOrderPlaced':
-                this.handleOrderPlacedConfirmation(msg as MyOrderPlacedMessage);
+                this.handleOrderPlacedConfirmation(msg);
                 break;
         }
     }
