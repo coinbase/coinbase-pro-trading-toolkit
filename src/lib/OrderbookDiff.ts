@@ -135,10 +135,9 @@ export class OrderbookDiff {
         return book.state();
     }
 
-    productId: string;
-    commands: StreamMessage[] = [];
-    initial: BookBuilder;
-    final: BookBuilder;
+    readonly productId: string;
+    readonly initial: BookBuilder;
+    readonly final: BookBuilder;
 
     constructor(productId: string, initial: BookBuilder, final: BookBuilder) {
         this.initial = initial;
@@ -174,7 +173,6 @@ export class OrderbookDiff {
                 commands.push(order);
             });
         });
-        this.commands = commands;
         return commands;
     }
 

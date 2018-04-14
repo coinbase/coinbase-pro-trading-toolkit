@@ -47,7 +47,7 @@ export default class YahooFinanceFXProvider extends FXProvider {
                     }
                 });
                 return this.isSupportedPair(pair);
-            }, (err: Error) => Promise.reject(err));
+            });
     }
 
     protected downloadCurrentRate(pair: CurrencyPair): Promise<FXObject> {

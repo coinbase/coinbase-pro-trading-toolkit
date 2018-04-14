@@ -19,8 +19,8 @@ import { StreamMessage } from '../core/Messages';
  * Simple stream that pipes through a supplied set of stream messages when the `send` method is called.
  */
 export class StaticCommandSet extends Readable {
-    messages: StreamMessage[];
-    private autoClose: boolean;
+    readonly messages: StreamMessage[];
+    private readonly autoClose: boolean;
 
     constructor(messages: StreamMessage[], autoClose: boolean = true) {
         super({ objectMode: true });

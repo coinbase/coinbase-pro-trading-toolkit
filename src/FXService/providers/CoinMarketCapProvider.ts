@@ -49,7 +49,7 @@ interface ResultCache {
 }
 
 export default class CoinMarketCapProvider extends FXProvider {
-    private lastUpdate: { [id: string]: ResultCache };
+    private readonly lastUpdate: { [id: string]: ResultCache };
     private initializing: Promise<void>;
 
     constructor(config: FXProviderConfig) {

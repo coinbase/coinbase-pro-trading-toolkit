@@ -24,9 +24,9 @@ export class GTTError extends Error implements StreamError {
     readonly cause: Error;
     readonly time: Date;
 
-    constructor(msg: string, err?: Error) {
+    constructor(msg: string, cause?: Error) {
         super(msg);
-        this.cause = err;
+        this.cause = cause;
         this.time = new Date();
     }
 

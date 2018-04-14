@@ -172,6 +172,7 @@ export function isSnapshotMessage(msg: any): msg is SnapshotMessage {
 
 export interface TickerMessage extends StreamMessage, Ticker {
     type: 'ticker';
+    sequence?: number;
     productId: string;
 }
 

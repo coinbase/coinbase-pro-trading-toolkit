@@ -24,7 +24,7 @@ export interface ProductFilterConfig extends MessageTransformConfig {
  * Filters out any messages that don't have the configured product_id
  */
 export class ProductFilter extends AbstractMessageTransform {
-    public productId: string;
+    public readonly productId: string;
 
     constructor(config: ProductFilterConfig) {
         super(config);

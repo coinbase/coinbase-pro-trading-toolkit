@@ -65,8 +65,8 @@ function createLiveBook(feed: ExchangeFeed, product: string): LiveOrderbook {
 }
 
 export class DataFeed {
-    private socket: WebSocket;
-    private exchanges: { [exchange: string]: ExchangeConnection } = {};
+    private readonly socket: WebSocket;
+    private readonly exchanges: { [exchange: string]: ExchangeConnection } = {};
 
     constructor(socket: WebSocket) {
         this.socket = socket;
