@@ -88,10 +88,6 @@ export interface OrderbookMessage extends SequencedMessage, StreamMessage {
     side: Side;
 }
 
-export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
-    return isStreamMessage(msg) && isSequencedMessage(msg) && !!(msg as OrderbookMessage).productId && !!(msg as OrderbookMessage).side;
-}
-
 // ---------------------------------------- Order-level (Level 3) Messages --------------------------------------------//
 
 /**
@@ -245,6 +241,14 @@ const BASE_ORDER_MESSAGE_TYPES: ReadonlySet<string> =
 
 export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
     return BASE_ORDER_MESSAGE_TYPES.has(msg.type);
+}
+
+const ORDERBOOK_MESSAGE_TYPE: ReadonlySet<string> =
+    new Set([...BASE_ORDER_MESSAGE_TYPES,
+             'level']);
+
+export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
+    return ORDERBOOK_MESSAGE_TYPE.has(msg.type);
 }
 
 /**
