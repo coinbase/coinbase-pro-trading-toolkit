@@ -21,7 +21,6 @@ import { CancelOrderRequestMessage,
          isStreamMessage,
          MyOrderPlacedMessage,
          PlaceOrderMessage,
-         StreamMessage,
          TradeExecutedMessage,
          TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
@@ -168,7 +167,7 @@ export class Trader extends Writable {
         });
     }
 
-    executeMessage(msg: StreamMessage) {
+    executeMessage(msg: any) {
         if (!isStreamMessage(msg)) {
             return;
         }
