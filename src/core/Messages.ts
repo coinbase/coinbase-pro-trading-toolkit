@@ -32,10 +32,6 @@ export interface StreamMessage {
     origin?: any;
 }
 
-export function isStreamMessage(msg: any): msg is StreamMessage {
-    return !!msg.type;
-}
-
 export interface ErrorMessage extends StreamMessage {
     type: 'error';
     message: string;
@@ -249,6 +245,23 @@ const ORDERBOOK_MESSAGE_TYPE: ReadonlySet<string> =
 
 export function isOrderbookMessage(msg: any): msg is OrderbookMessage {
     return ORDERBOOK_MESSAGE_TYPE.has(msg.type);
+}
+
+const STREAM_MESSAGE_TYPES: ReadonlySet<string> =
+    new Set(['error',
+             'unknown',
+             ...ORDERBOOK_MESSAGE_TYPE,
+             'trade',
+             'snapshot',
+             'ticker',
+             'placeOrder',
+             'cancelOrder',
+             'tradeExecuted',
+             'tradeFinalized',
+             'myOrderPlaced']);
+
+export function isStreamMessage(msg: any): msg is StreamMessage {
+    return STREAM_MESSAGE_TYPES.has(msg.type);
 }
 
 /**
