@@ -100,9 +100,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     loadMidMarketPrice(product: string): Promise<BigJS> {
         return this.loadTicker(product).then((ticker) => {
             if (!ticker || !ticker.bid || !ticker.ask) {
-                throw new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, {status: 200, body: ticker});
+                const err = new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, {status: 200, body: ticker});
+                return Promise.reject(err);
             }
-            return ticker.ask.plus(ticker.bid).times(0.5);
+            return Promise.resolve(ticker.ask.plus(ticker.bid).times(0.5));
         });
     }
 
@@ -246,7 +247,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 } as OrderParams; // Override for incomplete definition in GDAX lib
                 break;
             default:
-                return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
+                return Promise.reject(new GTTError(`Invalid order type: ${order.type}`));
         }
 
         return this.authClient.placeOrder(gdaxOrder).then((result: OrderResult) => {

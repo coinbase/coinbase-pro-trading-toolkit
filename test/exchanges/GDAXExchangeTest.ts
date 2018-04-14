@@ -103,6 +103,33 @@ describe('GDAX Authenticated Exchange API', () => {
         gdax = new GDAXExchangeAPI({logger: null, auth: {key: 'key', secret: 'secret', passphrase: 'pass'}});
     });
 
+    it('handles errors from the gdax module', () => {
+        nock('https://api.gdax.com', {encodedQueryParams: true})
+            .get('/products')
+            .reply(400, {reason: 'Fake failure'});
+        return gdax.loadProducts().then((products) => {
+            return Promise.reject(`Unexpected success ${products}`);
+        }, (err) => {
+            assert(err);
+            assert(err.response);
+            assert.equal(err.response.status, undefined);
+            assert.equal(err.response.body,
+                         JSON.stringify({reason: 'Fake failure'}));
+        });
+    });
+
+    it('handles errors when it does API calls', () => {
+        nock('https://api.gdax.com', {encodedQueryParams: true})
+            .delete('/orders/foobar')
+            .reply(400, {reason: 'Fake failure'});
+        return gdax.cancelOrder('foobar').then((id) => {
+            return Promise.reject(`Unexpected success ${id}`);
+        }, (err) => {
+            assert(err);
+            assert(!err.response);
+        });
+    });
+
     it('returns a crypto address', () => {
         nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/coinbase-accounts')

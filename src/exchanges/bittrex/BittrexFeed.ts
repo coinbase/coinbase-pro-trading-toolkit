@@ -82,8 +82,6 @@ export class BittrexFeed extends ExchangeFeed {
         })).then(() => {
             // Every result is guaranteed to be true
             return true;
-        }).catch((err) => {
-            return Promise.reject(err);
         });
     }
 
