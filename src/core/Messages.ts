@@ -90,7 +90,6 @@ export interface OrderbookMessage extends SequencedMessage, StreamMessage {
  * Message representing the common state for a resting order (for an order request, see PlaceOrderRequest)
  */
 export interface BaseOrderMessageLike extends OrderbookMessage {
-    type: 'newOrder' | 'orderDone' | 'changedOrder';
     orderId: string;
     price: string;
 }
