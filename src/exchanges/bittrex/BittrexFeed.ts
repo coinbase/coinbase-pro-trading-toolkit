@@ -24,7 +24,7 @@ const Bittrex = require('node-bittrex-api');
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
     private connection: any;
-    private counters: { [product: string]: MessageCounter };
+    private readonly counters: { [product: string]: MessageCounter };
 
     constructor(config: ExchangeFeedConfig) {
         super(config);

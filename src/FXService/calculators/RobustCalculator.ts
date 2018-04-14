@@ -66,11 +66,11 @@ export interface QueryStatus {
  *  To be reliable, one should supply at least 5 rate sources for this method.
  */
 export class RobustCalculator extends FXRateCalculator {
-    deltaThreshold: number;
-    priceThreshold: number;
-    logger: Logger;
-    sources: FXProvider[];
-    minNumberOfReliableSources: number;
+    readonly deltaThreshold: number;
+    readonly priceThreshold: number;
+    readonly logger: Logger;
+    readonly sources: FXProvider[];
+    readonly minNumberOfReliableSources: number;
     private report: RobustCalculatorReport;
 
     constructor(config: RobustCalculatorConfig) {

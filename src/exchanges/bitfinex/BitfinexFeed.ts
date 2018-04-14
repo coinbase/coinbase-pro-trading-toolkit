@@ -70,8 +70,8 @@ export class BitfinexFeed extends ExchangeFeed {
     private subscriptions: BitfinexChannels;
     private paused: boolean;
     private pinger: NodeJS.Timer;
-    private standardMessages: boolean;
-    private snapshotDepth: number;
+    private readonly standardMessages: boolean;
+    private readonly snapshotDepth: number;
 
     constructor(config: BitfinexFeedConfig) {
         super(config);

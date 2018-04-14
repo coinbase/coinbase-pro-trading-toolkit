@@ -23,8 +23,8 @@ import * as GI from './GeminiInterfaces';
 export class GeminiMarketFeed extends ExchangeFeed {
     readonly owner: string;
     readonly feedUrl: string;
-    private productId: string;
-    private ccxtProductId: string;
+    private readonly productId: string;
+    private readonly ccxtProductId: string;
 
     constructor(config: GI.GeminiMarketFeedConfig) {
         super(config);

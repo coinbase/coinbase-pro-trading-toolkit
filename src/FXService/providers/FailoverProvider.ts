@@ -24,7 +24,7 @@ export interface FailoverProviderConfig extends FXProviderConfig {
  * son on.
  */
 export class FailoverProvider extends FXProvider {
-    private providers: FXProvider[];
+    private readonly providers: FXProvider[];
 
     constructor(config: FailoverProviderConfig) {
         super(config);

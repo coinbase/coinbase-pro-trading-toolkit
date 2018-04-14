@@ -79,10 +79,10 @@ export interface GDAXFeedConfig extends ExchangeFeedConfig {
  * Error messages from the Websocket feed are passed down the stream and also emitted as 'feed-error' events.
  */
 export class GDAXFeed extends ExchangeFeed {
-    private products: Set<string>;
-    private gdaxAPI: GDAXExchangeAPI;
-    private internalSequence: { [index: string]: number } = {};
-    private channels: string[];
+    private readonly products: Set<string>;
+    private readonly gdaxAPI: GDAXExchangeAPI;
+    private readonly internalSequence: { [index: string]: number } = {};
+    private readonly channels: string[];
 
     constructor(config: GDAXFeedConfig) {
         super(config);

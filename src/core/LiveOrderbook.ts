@@ -62,12 +62,12 @@ export class LiveOrderbook extends Duplex implements Orderbook {
     public readonly baseCurrency: string;
     public readonly quoteCurrency: string;
     protected snapshotReceived: boolean;
-    protected strictMode: boolean;
+    protected readonly strictMode: boolean;
     protected lastBookUpdate: Date;
-    protected _book: BookBuilder;
-    protected liveTicker: Ticker;
+    protected readonly _book: BookBuilder;
+    protected readonly liveTicker: Ticker;
     protected _sourceSequence: number;
-    private logger: Logger;
+    private readonly logger: Logger;
 
     constructor(config: LiveBookConfig) {
         super({ objectMode: true, highWaterMark: 1024 });

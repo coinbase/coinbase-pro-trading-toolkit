@@ -172,9 +172,9 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
     }
 
     readonly owner: string;
-    private instance: ccxt.Exchange;
-    private options: any;
-    private logger: Logger;
+    private readonly instance: ccxt.Exchange;
+    private readonly options: any;
+    private readonly logger: Logger;
 
     constructor(owner: string, opts: any, ccxtInstance: ccxt.Exchange, logger: Logger) {
         this.owner = owner;

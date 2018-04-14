@@ -64,7 +64,7 @@ export interface OrderPool { [id: string]: Level3Order; }
 export class AggregatedLevel implements PriceLevel {
     totalSize: BigJS;
     totalValue: BigJS;
-    price: BigJS;
+    readonly price: BigJS;
     private _numOrders: number;
 
     constructor(price: BigJS) {
@@ -98,7 +98,7 @@ export class AggregatedLevel implements PriceLevel {
 }
 
 export class AggregatedLevelWithOrders extends AggregatedLevel implements PriceLevelWithOrders {
-    private _orders: Level3Order[];
+    private readonly _orders: Level3Order[];
 
     constructor(price: BigJS) {
         super(price);
@@ -150,15 +150,15 @@ export class AggregatedLevelWithOrders extends AggregatedLevel implements PriceL
  * Call #state to get a hierarchical object representation of the orderbook
  */
 export class BookBuilder extends EventEmitter implements Orderbook {
-    public sequence: number = -1;
+    public sequence: number;
     protected readonly bids: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
     protected readonly asks: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
-    protected _bidsTotal: BigJS = ZERO;
-    protected _bidsValueTotal: BigJS = ZERO;
-    protected _asksTotal: BigJS = ZERO;
-    protected _asksValueTotal: BigJS = ZERO;
-    private _orderPool: OrderPool = {};
-    private logger: Logger;
+    protected _bidsTotal: BigJS;
+    protected _bidsValueTotal: BigJS;
+    protected _asksTotal: BigJS;
+    protected _asksValueTotal: BigJS;
+    private _orderPool: OrderPool;
+    private readonly logger: Logger;
 
     constructor(logger: Logger) {
         super();

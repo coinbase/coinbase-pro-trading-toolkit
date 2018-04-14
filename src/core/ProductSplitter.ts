@@ -15,7 +15,7 @@ import { StreamCopier } from '../lib/StreamCopier';
 import { ExchangeFeed } from '../exchanges/ExchangeFeed';
 
 export class ProductSplitter extends StreamCopier {
-    private products: string[];
+    private readonly products: string[];
 
     constructor(feed: ExchangeFeed, productIds: string[]) {
         const numProducts = productIds.length;

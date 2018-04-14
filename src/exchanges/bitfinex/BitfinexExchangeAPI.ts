@@ -104,9 +104,9 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         };
     }
 
-    owner: string;
-    private auth: ExchangeAuthConfig;
-    private logger: Logger;
+    readonly owner: string;
+    private readonly auth: ExchangeAuthConfig;
+    private readonly logger: Logger;
 
     constructor(config: BitfinexConfig) {
         this.owner = 'Bitfinex';

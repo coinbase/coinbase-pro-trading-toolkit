@@ -44,15 +44,15 @@ interface OrderPage {
 }
 
 export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
-    owner: string;
-    quoteCurrency: string;
-    baseCurrency: string;
+    readonly owner: string;
+    readonly quoteCurrency: string;
+    readonly baseCurrency: string;
     private coinbaseAccounts: CoinbaseAccount[];
-    private _apiURL: string;
-    private publicClient: PublicClient;
-    private authClient: AuthenticatedClient;
-    private auth: GDAXAuthConfig;
-    private logger: Logger;
+    private readonly _apiURL: string;
+    private readonly publicClient: PublicClient;
+    private readonly authClient: AuthenticatedClient;
+    private readonly auth: GDAXAuthConfig;
+    private readonly logger: Logger;
 
     constructor(options: GDAXConfig) {
         this.owner = 'GDAX';

@@ -55,8 +55,8 @@ export interface FXProviderConfig {
 }
 
 export abstract class FXProvider {
-    private logger: Logger;
-    private _pending: { [pair: string]: Promise<FXObject> } = {};
+    private readonly logger: Logger;
+    private readonly _pending: { [pair: string]: Promise<FXObject> } = {};
 
     constructor(config: FXProviderConfig) {
         this.logger = config.logger;

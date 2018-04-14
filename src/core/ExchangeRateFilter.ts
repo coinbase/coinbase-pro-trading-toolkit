@@ -36,10 +36,10 @@ const ARRAY_FIELDS = ['bids', 'asks'];
  * can watch for FXRateMayBeInvalid events and respond accordingly
  */
 export class ExchangeRateFilter extends AbstractMessageTransform {
-    private pairIndex: string;
-    private pair: CurrencyPair;
-    private fxService: FXService;
-    private precision: number;
+    private readonly pairIndex: string;
+    private readonly pair: CurrencyPair;
+    private readonly fxService: FXService;
+    private readonly precision: number;
 
     constructor(config: ExchangeRateFilterConfig) {
         super(config);

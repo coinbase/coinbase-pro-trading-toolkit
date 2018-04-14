@@ -21,8 +21,8 @@ import { ConsoleLoggerFactory, Logger } from '../../utils/Logger';
  * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
  */
 export default class SimpleRateCalculator extends FXRateCalculator {
-    logger: Logger;
-    provider: FXProvider;
+    readonly logger: Logger;
+    readonly provider: FXProvider;
 
     constructor(provider: FXProvider, logger?: Logger) {
         super();

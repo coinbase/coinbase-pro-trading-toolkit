@@ -28,9 +28,9 @@ export interface OpenExchangeConfig extends FXProviderConfig {
 }
 
 export default class OpenExchangeProvider extends FXProvider {
-    private apiKey: string;
+    private readonly apiKey: string;
     private pending: Promise<Response> = null;
-    private cacheDuration: number;
+    private readonly cacheDuration: number;
     private cacheTimer: Timer = null;
     private base: string = null;
 
