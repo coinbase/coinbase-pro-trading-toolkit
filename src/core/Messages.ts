@@ -103,10 +103,6 @@ export interface BaseOrderMessage extends OrderbookMessage {
     price: string;
 }
 
-export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
-    return msg.orderId && msg.price && isOrderbookMessage(msg);
-}
-
 /**
  * In order-level books, represents a new order.
  */
@@ -240,6 +236,15 @@ export interface MyOrderPlacedMessage extends StreamMessage {
     price: string;
     size: string;
     sequence: number;
+}
+
+const BASE_ORDER_MESSAGE_TYPES: ReadonlySet<string> =
+    new Set(['changedOrder',
+             'newOrder',
+             'orderDone']);
+
+export function isBaseOrderMessage(msg: any): msg is BaseOrderMessage {
+    return BASE_ORDER_MESSAGE_TYPES.has(msg.type);
 }
 
 /**
