@@ -498,7 +498,6 @@ export class GDAXFeed extends ExchangeFeed {
                     orderId: feedMessage.order_id,
                     side: feedMessage.side,
                     price: feedMessage.price,
-                    orderType: feedMessage.type,
                     size: feedMessage.remaining_size,
                     sequence: feedMessage.sequence
                 };
