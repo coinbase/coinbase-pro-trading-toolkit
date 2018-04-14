@@ -170,14 +170,14 @@ export class LiveOrderbook extends Duplex implements Orderbook {
         }
         switch (msg.type) {
             case 'ticker':
-                this.updateTicker(msg as TickerMessage);
+                this.updateTicker(msg);
                 // ticker is emitted in pvs method
                 break;
             case 'snapshot':
-                this.processSnapshot(msg as SnapshotMessage);
+                this.processSnapshot(msg);
                 break;
             case 'level':
-                this.processLevelChange(msg as LevelMessage);
+                this.processLevelChange(msg);
                 this.emit('LiveOrderbook.update', msg);
                 break;
             case 'trade':
@@ -270,13 +270,13 @@ export class LiveOrderbook extends Duplex implements Orderbook {
         this._sourceSequence = message.sourceSequence;
         switch (message.type) {
             case 'newOrder':
-                this.processNewOrderMessage(message as NewOrderMessage);
+                this.processNewOrderMessage(message);
                 break;
             case 'orderDone':
-                this.processDoneMessage(message as OrderDoneMessage);
+                this.processDoneMessage(message);
                 break;
             case 'changedOrder':
-                this.processChangedOrderMessage(message as ChangedOrderMessage);
+                this.processChangedOrderMessage(message);
                 break;
             default:
                 return;
