@@ -45,7 +45,7 @@
     "@types/superagent": "2.0.35",
     "@types/winston": "2.3.9",
     "@types/ws": "0.0.37",
-    "bignumber.js": "4.0.4",
+    "bignumber.js": "5.0.0",
     "bintrees": "1.0.1",
     "ccxt": "1.12.137",
     "commander": "2.9.0",
