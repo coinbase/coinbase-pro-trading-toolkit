@@ -16,7 +16,7 @@ import request = require('superagent');
 import Response = request.Response;
 import Timer = NodeJS.Timer;
 import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig } from '../FXProvider';
-import * as Big from 'bignumber.js';
+import { Big } from '../../lib/types';
 
 const API_URL = 'https://openexchangerates.org/api';
 
@@ -95,7 +95,7 @@ export default class OpenExchangeProvider extends FXProvider {
             return Promise.resolve({
                 from: pair.from,
                 to: pair.to,
-                rate: new Big(rate),
+                rate: Big(rate),
                 time: new Date()
             });
         });
