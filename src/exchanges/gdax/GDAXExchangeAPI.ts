@@ -254,7 +254,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             // Check for error
             // TODO: Remove the first type assertion when https://github.com/coinbase/gdax-node/issues/269 is fixed.
             if ((result as any).status === 'rejected' || (result as any).message) {
-                return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, result));
+                return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, undefined, result));
             }
             return Promise.resolve(GDAXOrderResultToOrder(result));
         }, (err: GDAXHTTPError) => {

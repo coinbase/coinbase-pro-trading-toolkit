@@ -1,3 +1,5 @@
+/* tslint:disable:max-classes-per-file */
+
 /**********************************************************************************************************************
  * @license                                                                                                           *
  * Copyright 2017 Coinbase, Inc.                                                                                      *
@@ -18,36 +20,13 @@ export interface StreamError {
 }
 
 /**
- * Errors raised as a result of an internal exception raised by GTT code.
+ * Base class for all errors.
  */
-export class GTTError extends Error implements StreamError {
-    readonly cause: Error;
+export class BaseError extends Error implements StreamError {
+    readonly cause: undefined | Error;
     readonly time: Date;
 
     constructor(msg: string, cause?: Error) {
-        super(msg);
-        this.cause = cause;
-        this.time = new Date();
-    }
-
-    asMessage(): ErrorMessage {
-        return {
-            type: 'error',
-            time: this.time,
-            message: this.message,
-            cause: this.cause ? this.cause.message : undefined
-        };
-    }
-}
-
-/**
- * Errors raised or captured as a result of errors coming from external network sources, such as WS Feeds or REST APIs
- */
-export class APIError extends Error implements StreamError {
-    readonly cause: any;
-    readonly time: Date;
-
-    constructor(msg: string, cause: any) {
         super(msg);
         this.cause = cause;
         this.time = new Date();
@@ -63,34 +42,53 @@ export class APIError extends Error implements StreamError {
     }
 }
 
+/**
+ * Errors raised as a result of an internal exception raised by GTT code.
+ */
+export class GTTError extends BaseError {
+    constructor(msg: string, cause?: Error) {
+        super(msg, cause);
+    }
+}
+
+/**
+ * Errors raised or captured as a result of errors coming from external network sources, such as WS Feeds or REST APIs
+ */
+export class APIError extends BaseError {
+    readonly meta: any;
+
+    constructor(msg: string, cause?: Error, meta?: any) {
+        super(msg, cause);
+        this.meta = meta;
+    }
+
+    asMessage(): ErrorMessage {
+        return {...super.asMessage(),
+                meta: this.meta};
+    }
+}
+
 export interface ResponseLike {
     status: number;
     body: any;
 }
 
 /**
- * Errors raised due to failures from REST API calls. The response status and body are returned in the `cause` object.
+ * Errors raised due to failures from REST API calls. The response
+ * status and body are returned in the `response` property or in
+ * asMessage()'s `meta` property.
  */
-export class HTTPError extends Error implements StreamError {
+export class HTTPError extends BaseError {
     readonly response: ResponseLike;
-    readonly time: Date;
 
-    constructor(msg: string, res: ResponseLike) {
-        super(msg);
-        this.time = new Date();
+    constructor(msg: string, res: ResponseLike, cause?: Error) {
+        super(msg, cause);
         this.response = res || { status: undefined, body: undefined };
     }
 
     asMessage(): HTTPErrorMessage {
-        return {
-            type: 'error',
-            time: this.time,
-            message: this.message,
-            cause: {
-                status: this.response.status,
-                body: this.response.body
-            }
-        };
+        return {...super.asMessage(),
+                meta: this.response};
     }
 }
 

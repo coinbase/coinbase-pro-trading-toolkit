@@ -319,7 +319,7 @@ export class GDAXFeed extends ExchangeFeed {
             type: 'error',
             time: new Date(),
             message: errorMessage.message,
-            cause: errorMessage.reason
+            meta: errorMessage
         };
         this.emit('feed-error', msg);
         return msg;
