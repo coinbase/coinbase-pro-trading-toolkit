@@ -224,7 +224,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    cancelAllOrders(gdaxProduct?: string): Promise<string[]> {
+    cancelAllOrders(_gdaxProduct?: string): Promise<string[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.cancelAllOrders(auth).then((result: BitfinexResult) => {
                 if (this.logger) {
@@ -246,7 +246,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]> {
+    loadAllOrders(_gdaxProduct?: string): Promise<LiveOrder[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.activeOrders(auth).then((results: BitfinexSuccessfulOrderExecution[]) => {
                 if (this.logger) {
@@ -279,13 +279,13 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+    loadCandles(_options: CandleRequestOptions): Promise<Candle[]> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
     // -------------------------- Transfer methods -------------------------------------------------
 
-    requestCryptoAddress(cur: string): Promise<CryptoAddress> {
+    requestCryptoAddress(_cur: string): Promise<CryptoAddress> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
@@ -318,11 +318,11 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    requestWithdrawal(req: WithdrawalRequest): Promise<TransferResult> {
+    requestWithdrawal(_req: WithdrawalRequest): Promise<TransferResult> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
-    transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
+    transfer(_cur: string, _amount: BigJS, _from: string, _to: string, _options: any): Promise<TransferResult> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 

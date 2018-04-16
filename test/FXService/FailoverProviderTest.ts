@@ -145,7 +145,7 @@ describe('FailoverProvider', () => {
         nock('https://api.gdax.com:443')
             .get('/products/BTC-XYZ/ticker')
             .reply(404, { message: 'NotFound' });
-        return provider.fetchCurrentRate({ from: 'BTC', to: 'XYZ' }).then((result: FXObject) => {
+        return provider.fetchCurrentRate({ from: 'BTC', to: 'XYZ' }).then((_result: FXObject) => {
             throw new Error('should reject this promise');
         }).catch((err: Error) => {
             assert.ok(err instanceof EFXRateUnavailable);

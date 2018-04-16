@@ -125,7 +125,7 @@ export class BittrexFeed extends ExchangeFeed {
         // no-op
     }
 
-    protected onClose(code: number, reason: string): void {
+    protected onClose(_code: number, _reason: string): void {
         this.emit('websocket-closed');
         this.connection = null;
     }

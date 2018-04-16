@@ -364,7 +364,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         };
     }
 
-    handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
+    handleResponse<T>(req: Promise<Response>, _meta: any): Promise<T> {
         return req.then((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
                 return res.body;

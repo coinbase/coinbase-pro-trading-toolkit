@@ -197,7 +197,7 @@ export class Trader extends Writable {
         }
     }
 
-    _write(msg: any, encoding: string, callback: (err?: Error) => any): void {
+    _write(msg: any, _encoding: string, callback: (err?: Error) => any): void {
         this.executeMessage(msg);
         callback();
     }

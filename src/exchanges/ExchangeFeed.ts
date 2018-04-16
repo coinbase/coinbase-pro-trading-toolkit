@@ -94,7 +94,7 @@ export abstract class ExchangeFeed extends Readable {
         this.close();
     }
 
-    _read(size: number) {
+    _read(_size: number) {
         // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
         // in from the websocket, so there's nothing to do here.
     }
@@ -123,7 +123,7 @@ export abstract class ExchangeFeed extends Readable {
 
     protected abstract onOpen(): void;
 
-    protected onClose(code: number, reason: string): void {
+    protected onClose(_code: number, _reason: string): void {
         this.emit('websocket-closed');
         this.socket = null;
     }
