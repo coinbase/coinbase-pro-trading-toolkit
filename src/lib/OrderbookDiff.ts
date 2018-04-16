@@ -85,7 +85,7 @@ export class OrderbookDiff {
                 // If prices are equal, compare sizes
                 if (ilevel.price.eq(flevel.price)) {
                     const sizeDiff: BigJS = flevel.totalSize.minus(ilevel.totalSize);
-                    if (sizeDiff.cmp(ZERO) !== 0) {
+                    if (!sizeDiff.eq(ZERO)) {
                         diff.push({
                             totalSize: absolute ? flevel.totalSize : sizeDiff,
                             price: ilevel.price,
