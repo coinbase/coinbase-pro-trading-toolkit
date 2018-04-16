@@ -22,6 +22,7 @@ import { CancelOrderRequestMessage,
          MyOrderPlacedMessage,
          PlaceOrderMessage,
          StreamMessage,
+         StreamMessageLike,
          TradeExecutedMessage,
          TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
@@ -35,6 +36,31 @@ export interface TraderConfig {
     fitOrders: boolean;
     sizePrecision?: number;
     pricePrecision?: number;
+}
+
+export interface CancelMyOrdersRequestMessage extends StreamMessageLike {
+    type: 'cancelMyOrders';
+}
+
+export function isCancelMyOrdersRequestMessage(msg: any): msg is CancelMyOrdersRequestMessage {
+    return msg.type === 'cancelMyOrders';
+}
+
+export interface CancelAllOrdersRequestMessage extends StreamMessageLike {
+    type: 'cancelAllOrders';
+}
+
+export function isCancelAllOrdersRequestMessage(msg: any): msg is CancelAllOrdersRequestMessage {
+    return msg.type === 'cancelAllOrders';
+}
+
+export type TraderStreamMessage =
+    StreamMessage |
+    CancelMyOrdersRequestMessage |
+    CancelAllOrdersRequestMessage;
+
+export function isTraderStreamMessage(msg: any): msg is TraderStreamMessage {
+    return isStreamMessage(msg) || msg.type === 'cancelMyOrders' || msg.type === 'cancelAllOrders';
 }
 
 /**
@@ -168,16 +194,16 @@ export class Trader extends Writable {
         });
     }
 
-    executeMessage(msg: StreamMessage) {
-        if (!isStreamMessage(msg)) {
+    executeMessage(msg: any) {
+        if (!isTraderStreamMessage(msg)) {
             return;
         }
         switch (msg.type) {
             case 'placeOrder':
-                this.handleOrderRequest(msg as PlaceOrderMessage);
+                this.handleOrderRequest(msg);
                 break;
             case 'cancelOrder':
-                this.handleCancelOrder(msg as CancelOrderRequestMessage);
+                this.handleCancelOrder(msg);
                 break;
             case 'cancelAllOrders':
                 this.cancelAllOrders();
@@ -186,13 +212,13 @@ export class Trader extends Writable {
                 this.cancelMyOrders();
                 break;
             case 'tradeExecuted':
-                this.handleTradeExecutedMessage(msg as TradeExecutedMessage);
+                this.handleTradeExecutedMessage(msg);
                 break;
             case 'tradeFinalized':
-                this.handleTradeFinalized(msg as TradeFinalizedMessage);
+                this.handleTradeFinalized(msg);
                 break;
             case 'myOrderPlaced':
-                this.handleOrderPlacedConfirmation(msg as MyOrderPlacedMessage);
+                this.handleOrderPlacedConfirmation(msg);
                 break;
         }
     }

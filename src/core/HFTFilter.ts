@@ -179,7 +179,7 @@ export class HFTFilter extends Duplex {
      */
     _write(chunk: any, _encoding: string, callback: (err: Error) => void) {
         if (typeof chunk === 'object' && isStreamMessage(chunk)) {
-            this.filterMessage(chunk as StreamMessage);
+            this.filterMessage(chunk);
             return callback(null);
         }
         // Maybe the messages have been serialised as strings
@@ -188,7 +188,7 @@ export class HFTFilter extends Duplex {
         try {
             const message = JSON.parse(data);
             if (isStreamMessage(message)) {
-                this.filterMessage(message as StreamMessage);
+                this.filterMessage(message);
                 return callback(null);
             }
         } catch (e) {

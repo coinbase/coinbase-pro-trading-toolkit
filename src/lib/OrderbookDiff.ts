@@ -13,8 +13,8 @@
  ***************************************************************************************************************************/
 
 import { CancelOrderRequestMessage,
-         PlaceOrderMessage,
-         StreamMessage } from '../core/Messages';
+         PlaceOrderMessage } from '../core/Messages';
+import { TraderStreamMessage } from '../core/Trader';
 import { Level3Order,
          OrderbookState,
          PriceLevelWithOrders } from './Orderbook';
@@ -150,8 +150,8 @@ export class OrderbookDiff {
      * generate this set. If set, defaultOrderFields will be used to provide default values for any missing fields
      * on the order
      */
-    generateSimpleCommandSet(defaultOrderFields?: any): StreamMessage[] {
-        const commands: StreamMessage[] = [];
+    generateSimpleCommandSet(defaultOrderFields?: any): TraderStreamMessage[] {
+        const commands: TraderStreamMessage[] = [];
         const now = new Date();
         commands.push({ type: 'cancelAllOrders', time: now });
         SIDES.forEach((side) => {
@@ -181,8 +181,8 @@ export class OrderbookDiff {
      * If set, defaultOrderFields will be used to provide default values for any missing fields
      * on the order.
      */
-    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any): StreamMessage[] {
-        const commands: StreamMessage[] = [];
+    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any): TraderStreamMessage[] {
+        const commands: TraderStreamMessage[] = [];
         const now = new Date();
         if (!diff) {
             diff = OrderbookDiff.compareByLevel(this.initial, this.final, true, true);

@@ -70,7 +70,7 @@ export function createPriceTrigger(feed: ExchangeFeed, product: string, priceThr
         if (msg.type !== 'ticker') {
             return;
         }
-        const ticker = msg as TickerMessage;
+        const ticker = msg;
         if (ticker.productId !== product) {
             return;
         }
@@ -91,11 +91,11 @@ export function createPriceTrigger(feed: ExchangeFeed, product: string, priceThr
 export function createTickerTrigger(feed: ExchangeFeed, product: string, onlyOnce: boolean = true): Trigger<TickerMessage> {
     const trigger = new Trigger<TickerMessage>(feed);
     const tickerFilter: TriggerFilter = (msg: StreamMessage) => {
-        if (msg.type === 'ticker' && (msg as TickerMessage).productId === product) {
+        if (msg.type === 'ticker' && msg.productId === product) {
             if (onlyOnce) {
                 trigger.cancel();
             }
-            trigger.execute(msg as TickerMessage);
+            trigger.execute(msg);
         }
     };
     return trigger.setFilter(tickerFilter);
