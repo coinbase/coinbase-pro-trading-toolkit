@@ -150,6 +150,9 @@ export class BitmexMarketFeed extends ExchangeFeed {
         };
 
         this.push(snapshotMsg);
+        process.nextTick(() => {
+            this.emit('snapshot', snapshotMsg.productId);
+        });
     }
 
     private handleOrderbookUpdate(updates: OrderbookUpdateMessage) {

@@ -365,7 +365,9 @@ export class GDAXFeed extends ExchangeFeed {
 
     private processSnapshot(snapshot: SnapshotMessage) {
         this.push(snapshot);
-        this.emit('snapshot');
+        process.nextTick(() => {
+            this.emit('snapshot', snapshot.productId);
+        });
     }
 
     /**
