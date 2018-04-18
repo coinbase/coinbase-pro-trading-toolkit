@@ -35,7 +35,6 @@
   "author": "Cayle Sharrock <cayle@coinbase.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/bignumber.js": "4.0.2",
     "@types/bintrees": "1.0.2",
     "@types/commander": "2.3.31",
     "@types/crypto-js": "3.1.32",
@@ -46,7 +45,7 @@
     "@types/superagent": "2.0.35",
     "@types/winston": "2.3.9",
     "@types/ws": "0.0.37",
-    "bignumber.js": "4.0.2",
+    "bignumber.js": "5.0.0",
     "bintrees": "1.0.1",
     "ccxt": "1.12.137",
     "commander": "2.9.0",

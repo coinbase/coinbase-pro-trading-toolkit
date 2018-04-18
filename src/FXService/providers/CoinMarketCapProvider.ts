@@ -15,8 +15,7 @@
 import request = require('superagent');
 import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig, pairAsString } from '../FXProvider';
 import Response = request.Response;
-import * as Big from 'bignumber.js';
-import { BigJS } from '../../lib/types';
+import { Big, BigJS } from '../../lib/types';
 
 const URL = 'https://api.coinmarketcap.com/v1/ticker/';
 let CODE_MAP: { [index: string]: string } = null;
@@ -119,10 +118,10 @@ export default class CoinMarketCapProvider extends FXProvider {
             const result: CMCCurrencyData = res.body[0] as CMCCurrencyData;
             rate.time = new Date((+result.last_updated) * 1000);
             if (pair.to === 'BTC') {
-                rate.rate = new Big(result.price_btc);
+                rate.rate = Big(result.price_btc);
             } else {
                 const key = `price_${pair.to.toLowerCase()}`;
-                rate.rate = new Big(result[key]);
+                rate.rate = Big(result[key]);
             }
             if (!rate.rate.isFinite()) {
                 const error = new EFXRateUnavailable('We got a response, but the FX rates weren\'t present', this.name);

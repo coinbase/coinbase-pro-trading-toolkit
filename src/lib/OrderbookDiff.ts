@@ -61,7 +61,7 @@ export class OrderbookDiff {
                 // level as a diff (size is negated though)
                 if (!flevel || ilevel.price.lt(flevel.price)) {
                     const levelDiff: PriceLevelWithOrders = {
-                        totalSize: ilevel.totalSize.neg(),
+                        totalSize: ilevel.totalSize.negated(),
                         price: ilevel.price,
                         orders: copyWithNegativeSizes(ilevel.orders)
                     };
@@ -85,7 +85,7 @@ export class OrderbookDiff {
                 // If prices are equal, compare sizes
                 if (ilevel.price.eq(flevel.price)) {
                     const sizeDiff: BigJS = flevel.totalSize.minus(ilevel.totalSize);
-                    if (sizeDiff.cmp(ZERO) !== 0) {
+                    if (!sizeDiff.eq(ZERO)) {
                         diff.push({
                             totalSize: absolute ? flevel.totalSize : sizeDiff,
                             price: ilevel.price,
@@ -129,7 +129,7 @@ export class OrderbookDiff {
         }
         for (const orderId in iorders) {
             const order = iorders[orderId];
-            order.size = order.size.neg();
+            order.size = order.size.negated();
             book.add(order);
         }
         return book.state();
@@ -227,7 +227,7 @@ export class OrderbookDiff {
 function copyWithNegativeSizes(orders: Level3Order[]): Level3Order[] {
     return orders.map((order) => {
         const newOrder = Object.assign({}, order);
-        newOrder.size = order.size.neg();
+        newOrder.size = order.size.negated();
         return newOrder;
     });
 }
