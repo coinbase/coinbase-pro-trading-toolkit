@@ -258,26 +258,21 @@ export class BookBuilder extends EventEmitter implements Orderbook {
 
     /**
      * Changes the size of an existing order to newSize. If the order doesn't exist, returns false.
-     * If the newSize is zero, the order is removed.
      * If newSize is negative, an error is thrown.
+     * Even if newSize is zero, the order is kept.
      * It is possible for an order to switch sides, in which case the newSide parameter determines the new side.
      */
     modify(id: string, newSize: BigJS, newSide?: Side): boolean {
         if (newSize.lt(ZERO)) {
             throw new Error('Cannot set an order size to a negative number');
         }
-        const order = this.getOrder(id);
+        const order = this.remove(id);
         if (!order) {
             return false;
         }
-        if (!this.remove(id)) {
-            return false;
-        }
-        if (newSize.gt(ZERO)) {
-            order.size = newSize;
-            order.side = newSide || order.side;
-            this.add(order);
-        }
+        order.size = newSize;
+        order.side = newSide || order.side;
+        this.add(order);
         return true;
     }
 

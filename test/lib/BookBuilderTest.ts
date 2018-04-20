@@ -112,6 +112,30 @@ describe('BookBuilder:', () => {
                 assert.ok(book.asksValueTotal.eq(randomBook.totalAsksValue.minus(deconstedOrder.size.times(deconstedOrder.price))));
             }
         });
+
+        it('adds an order when the order size is zero', () => {
+            const order: Level3Order = {id: 'abcdefg',
+                                        price: Big(123.4567),
+                                        size: ZERO,
+                                        side: 'buy'};
+            assert.ok(!book.hasOrder(order.id), 'Book does not have order');
+            assert.ok(book.add(order), 'Book adds the order with zero size');
+            assert.ok(book.hasOrder(order.id), 'Book has order');
+        });
+
+        it('keeps an order when the order size is modified to zero', () => {
+            assert.ok(book.hasOrder('00006'),
+                      'Order was not removed');
+            const order = book.getOrder('00006');
+            assert.ok(order,
+                      'Order still was not removed');
+            assert.ok(book.modify('00006', ZERO),
+                      'Order can be modified to zero size');
+            assert.ok(book.hasOrder('00006'),
+                      'Book has order after modified to zero size');
+            assert.ok(book.getOrder('00006').size.eq(ZERO),
+                      'The order has zero size');
+        });
     });
 });
 
