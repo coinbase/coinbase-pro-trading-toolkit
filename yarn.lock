@@ -6,6 +6,10 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/bintrees/-/bintrees-1.0.2.tgz#0dfdce4eeebdf90427bd35b0e79dc248b3d157a6"
 
+"@types/caseless@*":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
+
 "@types/commander@2.3.31":
   version "2.3.31"
   resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.3.31.tgz#c60e5517091f9e2200a5e2063a830eddac4a7036"
@@ -15,6 +19,12 @@
 "@types/crypto-js@3.1.32":
   version "3.1.32"
   resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.32.tgz#e2f3003d19a1a500d1b7eba5d4ea0d1d77b9bbd5"
+
+"@types/form-data@*":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.1.tgz#ee2b3b8eaa11c0938289953606b745b738c54b1e"
+  dependencies:
+    "@types/node" "*"
 
 "@types/fs-extra@^4.0.0":
   version "4.0.0"
@@ -60,6 +70,15 @@
   version "3.0.30"
   resolved "https://registry.yarnpkg.com/@types/query-string/-/query-string-3.0.30.tgz#8b1a2b382ccf2e4793ec41a9a004cc5b2a43a072"
 
+"@types/request@2.47.0":
+  version "2.47.0"
+  resolved "https://registry.yarnpkg.com/@types/request/-/request-2.47.0.tgz#76a666cee4cb85dcffea6cd4645227926d9e114e"
+  dependencies:
+    "@types/caseless" "*"
+    "@types/form-data" "*"
+    "@types/node" "*"
+    "@types/tough-cookie" "*"
+
 "@types/shelljs@^0.7.0":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@types/shelljs/-/shelljs-0.7.3.tgz#dcf22ae660405fd50437f09b5af7fd838493aec7"
@@ -75,6 +94,10 @@
   resolved "https://registry.yarnpkg.com/@types/superagent/-/superagent-2.0.35.tgz#4b7d93f56cd4bf2d368df921017e80f439ea496f"
   dependencies:
     "@types/node" "*"
+
+"@types/tough-cookie@*":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
 "@types/winston@2.3.9":
   version "2.3.9"
@@ -977,10 +1000,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-gdax@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/gdax/-/gdax-0.6.0.tgz#185184852035f5b8607abbd9468e0678fcf0881f"
+gdax@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/gdax/-/gdax-0.7.0.tgz#b9f3395730fc0b33f4ddd99cdd659ae1cf4a12ac"
   dependencies:
+    "@types/request" "2.47.0"
     bignumber.js "^5.0.0"
     bintrees "^1.0.1"
     request "^2.81.0"
