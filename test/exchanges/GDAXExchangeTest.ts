@@ -57,7 +57,7 @@ describe('GDAX Exchange API', () => {
         });
     });
 
-    it('loads the orderbook', (done) => {
+    it('loads the orderbook', () => {
         nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/products/BTC-USD/book')
             .query({level: '3'})
@@ -66,16 +66,15 @@ describe('GDAX Exchange API', () => {
                 bids: [['240', '5', 1], ['245', '3', 1], ['248', '1', 1]],
                 asks: [['250', '3', 1], ['251', '1.15', 1]]
             });
-        gdax.loadOrderbook('BTC-USD').then((book) => {
+        return gdax.loadOrderbook('BTC-USD').then((book) => {
             assert.equal(book.numBids, 3);
             assert.equal(book.numAsks, 2);
             assert(book.asksTotal.eq(4.15));
             assert(book.bidsTotal.eq(9));
-            done();
         });
     });
 
-    it('returns candles', (done) => {
+    it('returns candles', () => {
         nock('https://api.gdax.com', {encodedQueryParams: true})
             .get('/products/BTC-USD/candles')
             .query({granularity: '3600', limit: 3})
@@ -84,7 +83,7 @@ describe('GDAX Exchange API', () => {
                 [1519037580, 10911.81, 10924.99, 10924.99, 10911.82, 2.32705733],
                 [1519037520, 10910.33, 10925, 10910.33, 10924.99, 0.47783237999999995]
             ]);
-        gdax.loadCandles({gdaxProduct: 'BTC-USD', interval: '1h', limit: 3, from: null, extra: null}).then((candles: Candle[]) => {
+        return gdax.loadCandles({gdaxProduct: 'BTC-USD', interval: '1h', limit: 3, from: null, extra: null}).then((candles: Candle[]) => {
             assert.equal(candles.length, 3);
             assert.equal(candles[0].timestamp.valueOf(), 1519037640000);
             assert.equal(candles[0].open.toFixed(2), 10911.82);
@@ -92,7 +91,6 @@ describe('GDAX Exchange API', () => {
             assert.equal(candles[2].low.toFixed(2), 10910.33);
             assert.equal(candles[0].close.toFixed(2), 10911.82);
             assert.equal(candles[1].volume.toFixed(2), 2.33);
-            done();
         });
     });
 });
