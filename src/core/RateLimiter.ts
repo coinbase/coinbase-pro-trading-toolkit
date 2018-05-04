@@ -21,7 +21,7 @@ import { StreamMessage } from './Messages';
  * the message was actually sent
  */
 export default class RateLimiter extends Transform {
-    private limiter: any;
+    private readonly limiter: Limiter;
 
     /**
      * Limit outgoing message to `limit` per `interval`
@@ -33,7 +33,7 @@ export default class RateLimiter extends Transform {
         this.limiter = new Limiter(limit, interval, false);
     }
 
-    _transform(msg: StreamMessage, encoding: string, callback: (err?: Error, data?: any) => void): void {
+    _transform(msg: StreamMessage, _encoding: string, callback: (err?: Error, data?: any) => void): void {
         this.limiter.removeTokens(1, () => {
             msg.time = new Date();
             this.push(msg);

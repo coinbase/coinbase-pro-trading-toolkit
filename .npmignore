@@ -6,7 +6,7 @@ node_modules/
 !types/
 docs/apiref
 
-src/
+/src/
 npm-shrinkwrap.json
 yarn.lock
 tsconfig.json

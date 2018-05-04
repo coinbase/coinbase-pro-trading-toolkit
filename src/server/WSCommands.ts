@@ -26,6 +26,7 @@ export interface ExchangeCommand extends Command {
 }
 
 export interface AttachCommand extends ExchangeCommand {
+    type: 'attach';
     products: string[];
 }
 
@@ -38,17 +39,20 @@ export interface AttachCommand extends ExchangeCommand {
  *
  */
 export interface OrderbookCommand extends ExchangeCommand {
+    type: 'subscribe' | 'unsubscribe' | 'snapshot' | 'ticker';
     product: string;
 }
 
 // --------------------------------- Messages are sent from server to client ------------------------------------------//
 
 export interface ErrorMessage extends Command {
+    type: 'error';
     message: string;
     command: any;
 }
 
 export interface ResponseMessage extends Command {
+    type: 'subscribe' | 'unsubscribe';
     tag: string;
     result: string;
     command: Command;

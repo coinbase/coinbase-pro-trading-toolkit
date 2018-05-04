@@ -132,7 +132,7 @@ export default class BigArray {
         if (len === 0) {
             return new BigArray([]);
         }
-        if (typeof big.prototype[op] !== 'function') {
+        if (typeof (big.prototype as any)[op] !== 'function') {
             throw new Error('Unsupported BigJS.js operation: ' + op);
         }
         const result = new Array(len);

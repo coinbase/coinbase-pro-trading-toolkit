@@ -101,7 +101,7 @@ describe('OpenExchangeProvider', () => {
 
     it('rejects for unsupported currencies', () => {
         // Still cached
-        return provider.fetchCurrentRate({ from: 'USD', to: 'XYZ' }).then((result: FXObject) => {
+        return provider.fetchCurrentRate({ from: 'USD', to: 'XYZ' }).then((_result: FXObject) => {
             throw new Error('should reject this promise');
         }).catch((err: Error) => {
             assert.ok(err instanceof EFXRateUnavailable);

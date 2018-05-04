@@ -12,7 +12,8 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AbstractMessageTransform, MessageTransformConfig } from '../lib/AbstractMessageTransform';
+import { AbstractMessageTransform,
+         MessageTransformConfig } from '../lib/AbstractMessageTransform';
 import { StreamMessage } from './Messages';
 import { CurrencyPair, FXObject, pairAsString } from '../FXService/FXProvider';
 import { FXRates, FXService } from '../FXService/FXService';
@@ -35,10 +36,10 @@ const ARRAY_FIELDS = ['bids', 'asks'];
  * can watch for FXRateMayBeInvalid events and respond accordingly
  */
 export class ExchangeRateFilter extends AbstractMessageTransform {
-    private pairIndex: string;
-    private pair: CurrencyPair;
-    private fxService: FXService;
-    private precision: number;
+    private readonly pairIndex: string;
+    private readonly pair: CurrencyPair;
+    private readonly fxService: FXService;
+    private readonly precision: number;
 
     constructor(config: ExchangeRateFilterConfig) {
         super(config);

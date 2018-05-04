@@ -77,10 +77,10 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
     };
     const book = new LiveOrderbook(liveBookConfig);
     // register for LiveOrderbook events
-    book.on('LiveOrderbook.snapshot', (snapshot: SnapshotMessage) => {
+    book.on('LiveOrderbook.snapshot', (_snapshot: SnapshotMessage) => {
         // maybe do something
     });
-    book.on('LiveOrderbook.ticker', (ticker: Ticker) => {
+    book.on('LiveOrderbook.ticker', (_ticker: Ticker) => {
        // maybe do something
     });
     book.on('LiveOrderbook.trade', (trade: TradeMessage) => {
@@ -138,7 +138,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             }
         }
     });
-    book.on('LiveOrderbook.update', (level: LevelMessage) => {
+    book.on('LiveOrderbook.update', (_level: LevelMessage) => {
         // maybe do something
     });
     book.on('LiveOrderbook.skippedMessage', (details: SkippedMessageEvent) => {

@@ -21,12 +21,12 @@ export function delay(time: number): Promise<void> {
 /**
  * Apply each argument in arr to iteratorFn, waiting for the promise to resolve before continuing
  */
-export function eachSeries<T>(arr: T[], iteratorFn: (arg: T) => Promise<any>) {
+export function eachSeries<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U>): Promise<null | U> {
     return arr.reduce((prev, item) => {
         return prev.then(() => {
             return iteratorFn(item);
         });
-    }, Promise.resolve());
+    }, Promise.resolve(null));
 }
 
 /**
@@ -57,7 +57,7 @@ export function eachParallelAndFinish<T, U>(arr: T[], iteratorFn: (arg: T) => Pr
  * Applies iteratorFn to each element in arr until a 'true' result is returned. Rejected promises are swallowed. A false result is returned only
  * if every iteratorFn(i) returns false or an Error
  */
-export async function tryUntil<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U | boolean>, index: number = 0): Promise<U | boolean> {
+export async function tryUntil<T, U>(arr: T[], iteratorFn: (arg: T) => Promise<U | boolean>): Promise<U | boolean> {
     if (arr.length < 1) {
         return Promise.resolve(false);
     }

@@ -12,12 +12,21 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
+import { staticAssertNever } from '../lib/asserts';
+import { Side } from '../lib/sides';
 import { Big, BigJS, Biglike, ZERO } from '../lib/types';
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState } from '../lib/Orderbook';
-import { AggregatedLevelFactory, AggregatedLevelWithOrders, BookBuilder, StartPoint } from '../lib/BookBuilder';
+import { CumulativePriceLevel,
+         Level3Order,
+         Orderbook,
+         OrderbookState } from '../lib/Orderbook';
+import { AggregatedLevelFactory,
+         AggregatedLevelWithOrders,
+         BookBuilder,
+         StartPoint } from '../lib/BookBuilder';
 import { Logger } from '../utils/Logger';
 import { Ticker } from '../exchanges/PublicExchangeAPI';
 import {
+    BaseOrderMessage,
     ChangedOrderMessage,
     isStreamMessage,
     LevelMessage,
@@ -55,12 +64,12 @@ export class LiveOrderbook extends Duplex implements Orderbook {
     public readonly baseCurrency: string;
     public readonly quoteCurrency: string;
     protected snapshotReceived: boolean;
-    protected strictMode: boolean;
+    protected readonly strictMode: boolean;
     protected lastBookUpdate: Date;
-    protected _book: BookBuilder;
-    protected liveTicker: Ticker;
+    protected readonly _book: BookBuilder;
+    protected readonly liveTicker: Ticker;
     protected _sourceSequence: number;
-    private logger: Logger;
+    private readonly logger: Logger;
 
     constructor(config: LiveBookConfig) {
         super({ objectMode: true, highWaterMark: 1024 });
@@ -78,7 +87,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
             trade_id: undefined,
             size: undefined
         };
-        this.strictMode = !!(config.strictMode as any);
+        this.strictMode = config.strictMode;
         this.snapshotReceived = false;
     }
 
@@ -145,41 +154,54 @@ export class LiveOrderbook extends Duplex implements Orderbook {
      * Return an array of (aggregated) orders whose sum is equal to or greater than `value`. The side parameter is from
      * the perspective of the purchaser, so 'buy' returns asks and 'sell' bids.
      */
-    ordersForValue(side: string, value: Biglike, useQuote: boolean, startPrice?: StartPoint): CumulativePriceLevel[] {
+    ordersForValue(side: Side, value: Biglike, useQuote: boolean, startPrice?: StartPoint): CumulativePriceLevel[] {
         return this._book.ordersForValue(side, Big(value), useQuote, startPrice);
     }
 
     _read() { /* no-op */ }
 
-    _write(msg: any, encoding: string, callback: () => void): void {
+    _write(msg: any, _encoding: string, callback: () => void): void {
         // Pass the msg on to downstream users
         this.push(msg);
         // Process the message for the orderbook state
-        if (!isStreamMessage(msg) || !msg.productId) {
+        if (msg.productId !== this.product) {
             return callback();
         }
-        if (msg.productId !== this.product) {
+        if (!isStreamMessage(msg)) {
             return callback();
         }
         switch (msg.type) {
             case 'ticker':
-                this.updateTicker(msg as TickerMessage);
+                this.updateTicker(msg);
                 // ticker is emitted in pvs method
                 break;
             case 'snapshot':
-                this.processSnapshot(msg as SnapshotMessage);
+                this.processSnapshot(msg);
                 break;
             case 'level':
-                this.processLevelChange(msg as LevelMessage);
+                this.processLevelChange(msg);
                 this.emit('LiveOrderbook.update', msg);
                 break;
             case 'trade':
                 // Trade messages don't affect the orderbook
                 this.emit('LiveOrderbook.trade', msg);
                 break;
-            default:
+            case 'newOrder':
+            case 'orderDone':
+            case 'changedOrder':
                 this.processLevel3Messages(msg);
                 this.emit('LiveOrderbook.update', msg);
+                break;
+            case 'cancelOrder':
+            case 'error':
+            case 'myOrderPlaced':
+            case 'placeOrder':
+            case 'tradeExecuted':
+            case 'tradeFinalized':
+            case 'unknown':
+                break;
+            default:
+                staticAssertNever(msg);
                 break;
         }
         callback();
@@ -251,7 +273,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
     /**
      * Processes order messages from order-level books.
      */
-    private processLevel3Messages(message: OrderbookMessage): void {
+    private processLevel3Messages(message: BaseOrderMessage): void {
         // Can't do anything until we get a snapshot
         if (!this.snapshotReceived || !message.sequence) {
             return;
@@ -263,16 +285,17 @@ export class LiveOrderbook extends Duplex implements Orderbook {
         this._sourceSequence = message.sourceSequence;
         switch (message.type) {
             case 'newOrder':
-                this.processNewOrderMessage(message as NewOrderMessage);
+                this.processNewOrderMessage(message);
                 break;
             case 'orderDone':
-                this.processDoneMessage(message as OrderDoneMessage);
+                this.processDoneMessage(message);
                 break;
             case 'changedOrder':
-                this.processChangedOrderMessage(message as ChangedOrderMessage);
+                this.processChangedOrderMessage(message);
                 break;
             default:
-                return;
+                staticAssertNever(message);
+                break;
         }
     }
 
@@ -292,8 +315,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
         // If we're using an order pool, then we only remove orders that we're aware of. GDAX, for example might
         // send a done message for a stop order that is cancelled (and was not previously known to us).
         // Also filled orders will already have been removed by the time a GDAX done order reaches here
-        const book: BookBuilder = this._book;
-        if (!book.hasOrder(msg.orderId)) {
+        if (!this._book.hasOrder(msg.orderId)) {
             return;
         }
         if (!(this._book.remove(msg.orderId))) {
@@ -306,7 +328,7 @@ export class LiveOrderbook extends Duplex implements Orderbook {
             return;
         }
         let newSize: BigJS;
-        const newSide: string = msg.side;
+        const newSide: Side = msg.side;
         if (msg.changedAmount) {
             const order: Level3Order = this.book.getOrder(msg.orderId);
             newSize = order.size.plus(msg.changedAmount);

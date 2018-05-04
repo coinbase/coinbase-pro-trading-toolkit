@@ -23,7 +23,7 @@ import { sanitizeMessage } from '../core/Messages';
 export class ExchangeFeedConfig {
     wsUrl: string;
     logger: Logger;
-    auth: ExchangeAuthConfig;
+    auth?: ExchangeAuthConfig;
 }
 
 // hooks for replacing libraries if desired
@@ -32,15 +32,15 @@ export const hooks = {
 };
 
 export abstract class ExchangeFeed extends Readable {
-    protected auth: ExchangeAuthConfig;
+    protected readonly auth: ExchangeAuthConfig;
     protected url: string;
     protected _isConnecting: boolean;
     // keys in this list will be sanitised in log messages
-    protected sensitiveKeys: string[];
+    protected readonly sensitiveKeys: string[];
     private lastHeartBeat: number = -1;
     private connectionChecker: Timer = null;
     private socket: WebSocket;
-    private _logger: Logger;
+    private readonly _logger: Logger;
 
     constructor(config: ExchangeFeedConfig) {
         super({ objectMode: true, highWaterMark: 1024 });
@@ -94,7 +94,7 @@ export abstract class ExchangeFeed extends Readable {
         this.close();
     }
 
-    _read(size: number) {
+    _read(_size: number) {
         // This is not an on-demand service. For that, I refer you to Netflix. Data gets pushed to the queue as it comes
         // in from the websocket, so there's nothing to do here.
     }
@@ -123,7 +123,7 @@ export abstract class ExchangeFeed extends Readable {
 
     protected abstract onOpen(): void;
 
-    protected onClose(code: number, reason: string): void {
+    protected onClose(_code: number, _reason: string): void {
         this.emit('websocket-closed');
         this.socket = null;
     }

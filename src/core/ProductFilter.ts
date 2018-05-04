@@ -12,7 +12,9 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { AbstractMessageTransform, MessageTransformConfig } from '../lib/AbstractMessageTransform';
+import { AbstractMessageTransform,
+         MessageTransformConfig } from '../lib/AbstractMessageTransform';
+import { StreamMessage } from '../core/Messages';
 
 export interface ProductFilterConfig extends MessageTransformConfig {
     productId: string;
@@ -22,15 +24,15 @@ export interface ProductFilterConfig extends MessageTransformConfig {
  * Filters out any messages that don't have the configured product_id
  */
 export class ProductFilter extends AbstractMessageTransform {
-    public productId: string;
+    public readonly productId: string;
 
     constructor(config: ProductFilterConfig) {
         super(config);
         this.productId = config.productId;
     }
 
-    transformMessage(msg: any): any {
-        if (!msg || !msg.productId || msg.productId !== this.productId) {
+    transformMessage(msg: StreamMessage): StreamMessage {
+        if (!msg || !(msg as any).productId || (msg as any).productId !== this.productId) {
             return null;
         }
         return msg;

@@ -16,7 +16,7 @@ import request = require('superagent');
 import Response = request.Response;
 import Timer = NodeJS.Timer;
 import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig } from '../FXProvider';
-import * as Big from 'bignumber.js';
+import { Big } from '../../lib/types';
 
 const API_URL = 'https://openexchangerates.org/api';
 
@@ -28,9 +28,9 @@ export interface OpenExchangeConfig extends FXProviderConfig {
 }
 
 export default class OpenExchangeProvider extends FXProvider {
-    private apiKey: string;
+    private readonly apiKey: string;
     private pending: Promise<Response> = null;
-    private cacheDuration: number;
+    private readonly cacheDuration: number;
     private cacheTimer: Timer = null;
     private base: string = null;
 
@@ -63,7 +63,7 @@ export default class OpenExchangeProvider extends FXProvider {
             .then((res: Response) => {
                 const curs: { [cur: string]: string } = res.body;
                 supportedCurrencies = Object.keys(curs);
-                return Promise.resolve(isSupported(pair));
+                return isSupported(pair);
             });
     }
 
@@ -95,7 +95,7 @@ export default class OpenExchangeProvider extends FXProvider {
             return Promise.resolve({
                 from: pair.from,
                 to: pair.to,
-                rate: new Big(rate),
+                rate: Big(rate),
                 time: new Date()
             });
         });

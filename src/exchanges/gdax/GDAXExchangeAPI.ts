@@ -21,8 +21,15 @@ import { PlaceOrderMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { AuthCallOptions, AuthHeaders, GDAXAuthConfig, GDAXConfig, GDAXHTTPError, OrderbookEndpointParams } from './GDAXInterfaces';
-import { Account, AuthenticatedClient, BaseOrderInfo, CoinbaseAccount, OrderInfo, OrderParams, OrderResult, ProductInfo, ProductTicker, PublicClient } from 'gdax';
-import * as assert from 'assert';
+import { Account,
+         AuthenticatedClient,
+         CoinbaseAccount,
+         OrderInfo,
+         OrderParams,
+         OrderResult,
+         ProductInfo,
+         ProductTicker,
+         PublicClient } from 'gdax';
 import { APIError, extractResponse, GTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
 import querystring = require('querystring');
@@ -33,19 +40,19 @@ export const GDAX_API_URL = 'https://api.gdax.com';
 
 interface OrderPage {
     after: string;
-    orders: BaseOrderInfo[];
+    orders: OrderInfo[];
 }
 
 export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
-    owner: string;
-    quoteCurrency: string;
-    baseCurrency: string;
+    readonly owner: string;
+    readonly quoteCurrency: string;
+    readonly baseCurrency: string;
     private coinbaseAccounts: CoinbaseAccount[];
-    private _apiURL: string;
-    private publicClient: PublicClient;
-    private authClient: AuthenticatedClient;
-    private auth: GDAXAuthConfig;
-    private logger: Logger;
+    private readonly _apiURL: string;
+    private readonly publicClient: PublicClient;
+    private readonly authClient: AuthenticatedClient;
+    private readonly auth: GDAXAuthConfig;
+    private readonly logger: Logger;
 
     constructor(options: GDAXConfig) {
         this.owner = 'GDAX';
@@ -73,7 +80,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return this.publicClient.getProducts()
             .then((products: ProductInfo[]) => {
                 return products.map((prod: ProductInfo) => {
-                    return {
+                    const p: Product = {
                         id: prod.id,
                         sourceId: prod.id,
                         baseCurrency: prod.base_currency,
@@ -82,7 +89,8 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                         baseMaxSize: Big(prod.base_max_size),
                         quoteIncrement: Big(prod.quote_increment),
                         sourceData: prod
-                    } as Product;
+                    };
+                    return p;
                 });
             }).catch((err: GDAXHTTPError) => {
                 return Promise.reject(new HTTPError('Error loading products from GDAX', extractResponse(err.response)));
@@ -92,9 +100,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     loadMidMarketPrice(product: string): Promise<BigJS> {
         return this.loadTicker(product).then((ticker) => {
             if (!ticker || !ticker.bid || !ticker.ask) {
-                throw new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, {status: 200, body: ticker});
+                const err = new HTTPError(`Loading midmarket price for ${product} failed because ticker data was incomplete or unavailable`, {status: 200, body: ticker});
+                return Promise.reject(err);
             }
-            return ticker.ask.plus(ticker.bid).times(0.5);
+            return Promise.resolve(ticker.ask.plus(ticker.bid).times(0.5));
         });
     }
 
@@ -199,15 +208,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             return Promise.reject(new GTTError('No authentication details were given for this API'));
         }
         let gdaxOrder: OrderParams;
-        assert(order.side === 'buy' || order.side === 'sell');
-        const side: 'buy' | 'sell' = order.side === 'buy' ? 'buy' : 'sell';
         switch (order.orderType) {
             case 'limit':
                 gdaxOrder = {
                     product_id: order.productId,
                     size: order.size,
                     price: order.price,
-                    side: side,
+                    side: order.side,
                     type: 'limit',
                     client_oid: order.clientId,
                     post_only: order.postOnly,
@@ -220,7 +227,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 gdaxOrder = {
                     type: 'market',
                     product_id: order.productId,
-                    side: side,
+                    side: order.side,
                     size: order.size,
                     client_oid: order.clientId,
                     funds: order.funds,
@@ -231,7 +238,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 gdaxOrder = {
                     type: 'stop',
                     product_id: order.productId,
-                    side: side,
+                    side: order.side,
                     size: order.size,
                     price: order.price,
                     funds: order.funds,
@@ -240,17 +247,13 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 } as OrderParams; // Override for incomplete definition in GDAX lib
                 break;
             default:
-                return Promise.reject(new GTTError('Invalid Order type: ' + order.type));
+                return Promise.reject(new GTTError(`Invalid order type: ${order.type}`));
         }
 
-        // TODO: use this.authClient.placeOrder() when gdax's
-        // index.d.ts adds it.
-        const promise = side === 'buy' ? this.authClient.buy(gdaxOrder) : this.authClient.sell(gdaxOrder);
-        return promise.then((result: OrderResult) => {
+        return this.authClient.placeOrder(gdaxOrder).then((result: OrderResult) => {
             // Check for error
-            // TODO: Remove the first type assertion when https://github.com/coinbase/gdax-node/issues/269 is fixed.
-            if ((result as any).status === 'rejected' || (result as any).message) {
-                return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, result));
+            if (result.status === 'rejected' || (result as any).message) {
+                return Promise.reject(new APIError(`Placing order on ${order.productId} failed`, undefined, result));
             }
             return Promise.resolve(GDAXOrderResultToOrder(result));
         }, (err: GDAXHTTPError) => {
@@ -262,17 +265,14 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
     cancelOrder(id: string): Promise<string> {
         const apiCall = this.authCall('DELETE', `/orders/${id}`, {});
         return this.handleResponse<string[]>(apiCall, {order_id: id}).then((ids: string[]) => {
-            return Promise.resolve(ids[0]);
+            return ids[0];
         });
-
     }
 
-    cancelAllOrders(product: string): Promise<string[]> {
+    cancelAllOrders(product?: string): Promise<string[]> {
         const apiCall = this.authCall('DELETE', `/orders`, {});
         const options = product ? {product_id: product} : null;
-        return this.handleResponse<string[]>(apiCall, options).then((ids: string[]) => {
-            return Promise.resolve(ids);
-        });
+        return this.handleResponse<string[]>(apiCall, options);
     }
 
     loadOrder(id: string): Promise<LiveOrder> {
@@ -286,10 +286,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    loadAllOrders(product: string): Promise<LiveOrder[]> {
+    loadAllOrders(product?: string): Promise<LiveOrder[]> {
         const self = this;
         let allOrders: LiveOrder[] = [];
-        const loop: (after: string) => Promise<LiveOrder[]> = (after: string) => {
+        const loop: (after?: string) => Promise<LiveOrder[]> = (after?: string) => {
             return self.loadNextOrders(product, after).then((result) => {
                 const liveOrders: LiveOrder[] = result.orders.map(GDAXOrderInfoToOrder);
                 allOrders = allOrders.concat(liveOrders);
@@ -300,7 +300,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
                 }
             });
         };
-        return loop(null);
+        return loop();
     }
 
     loadBalances(): Promise<Balances> {
@@ -344,7 +344,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
             if (opts.headers) {
                 req = req.set(opts.headers);
             }
-            return Promise.resolve(req);
+            return req;
         });
     }
 
@@ -363,10 +363,10 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         };
     }
 
-    handleResponse<T>(req: Promise<Response>, meta: any): Promise<T> {
+    handleResponse<T>(req: Promise<Response>, _meta: any): Promise<T> {
         return req.then((res: Response) => {
             if (res.status >= 200 && res.status < 300) {
-                return Promise.resolve(res.body);
+                return res.body;
             }
             const err: HTTPError = new HTTPError(`Error handling GDAX request for ${(req as any).url}`, res);
             return Promise.reject(err);
@@ -376,9 +376,9 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         });
     }
 
-    checkAuth(): Promise<GDAXAuthConfig> {
+    checkAuth(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this.auth === null) {
+            if (!this.auth) {
                 return reject(new GTTError('You cannot make authenticated requests if a GDAXAuthConfig object was not provided to the GDAXExchangeAPI constructor'));
             }
             if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {
@@ -447,7 +447,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         }
         return this.authClient.getCoinbaseAccounts().then((accounts: CoinbaseAccount[]) => {
             this.coinbaseAccounts = accounts;
-            return Promise.resolve(accounts);
+            return accounts;
         }).catch((err: GDAXHTTPError) => {
             return Promise.reject(new HTTPError('Error loading Coinbase accounts', extractResponse(err.response)));
         });
@@ -503,7 +503,7 @@ export class GDAXExchangeAPI implements PublicExchangeAPI, AuthenticatedExchange
         return book;
     }
 
-    private loadNextOrders(product: string, after: string): Promise<OrderPage> {
+    private loadNextOrders(product?: string, after?: string): Promise<OrderPage> {
         const qs: any = {
             status: ['open', 'pending', 'active']
         };

@@ -33,7 +33,7 @@ const spread = Big('0.15');
 
 const options: GDAXFeedConfig = {
     logger: logger,
-    auth: { key: null, secret: null, passphrase: null }, // use public feed
+    auth: undefined, // use public feed
     channels: ['ticker'],
     wsUrl: GDAX_WS_FEED,
     apiUrl: GDAX_API_URL

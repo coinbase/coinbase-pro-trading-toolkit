@@ -23,6 +23,7 @@ import {
 import { WEBSOCKET_API_VERSION, ORDERBOOK_PRECISION, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
@@ -69,8 +70,8 @@ export class BitfinexFeed extends ExchangeFeed {
     private subscriptions: BitfinexChannels;
     private paused: boolean;
     private pinger: NodeJS.Timer;
-    private standardMessages: boolean;
-    private snapshotDepth: number;
+    private readonly standardMessages: boolean;
+    private readonly snapshotDepth: number;
 
     constructor(config: BitfinexFeedConfig) {
         super(config);
@@ -272,7 +273,11 @@ export class BitfinexFeed extends ExchangeFeed {
                     })
                 };
                 if (self.standardMessages) {
-                    self.push(self.mapSnapshot(snapshot));
+                    const s = self.mapSnapshot(snapshot);
+                    process.nextTick(() => {
+                        self.emit('snapshot', s.productId);
+                    });
+                    self.push(s);
                 } else {
                     self.push(snapshot);
                 }
@@ -411,7 +416,7 @@ export class BitfinexFeed extends ExchangeFeed {
     private mapOrderMessage(order: BitfinexOrderMessage): LevelMessage {
         const pair = this.subscriptions[order.channel_id].pair;
         const productId = this.mapProduct(pair);
-        let side: string = null;
+        let side: Side;
         const size = +order.size;
         if (size < 0) {
             side = 'sell';

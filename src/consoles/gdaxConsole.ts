@@ -22,7 +22,9 @@ import { Ticker } from '../exchanges/PublicExchangeAPI';
 import { Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { PlaceOrderMessage } from '../core/Messages';
 import { LiveOrder } from '../lib/Orderbook';
-import { AuthCallOptions, GDAXAuthConfig, GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
+import { AuthCallOptions,
+         GDAXAuthConfig,
+         GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
 import { TransferRequest, TransferResult } from '../exchanges/ExchangeTransferAPI';
 import { Big } from '../lib/types';
 

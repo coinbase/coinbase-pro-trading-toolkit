@@ -30,6 +30,7 @@ import { Logger } from '../../utils/Logger';
 import { PRODUCT_MAP, REVERSE_CURRENCY_MAP, REVERSE_PRODUCT_MAP } from './BitfinexCommon';
 import { CryptoAddress, ExchangeTransferAPI, TransferRequest, TransferResult, WithdrawalRequest } from '../ExchangeTransferAPI';
 import { ExchangeAuthConfig } from '../AuthConfig';
+import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
 import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder } from '../../lib/Orderbook';
@@ -103,9 +104,9 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         };
     }
 
-    owner: string;
-    private auth: ExchangeAuthConfig;
-    private logger: Logger;
+    readonly owner: string;
+    private readonly auth: ExchangeAuthConfig;
+    private readonly logger: Logger;
 
     constructor(config: BitfinexConfig) {
         this.owner = 'Bitfinex';
@@ -223,7 +224,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    cancelAllOrders(): Promise<string[]> {
+    cancelAllOrders(_gdaxProduct?: string): Promise<string[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.cancelAllOrders(auth).then((result: BitfinexResult) => {
                 if (this.logger) {
@@ -245,7 +246,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    loadAllOrders(): Promise<LiveOrder[]> {
+    loadAllOrders(_gdaxProduct?: string): Promise<LiveOrder[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.activeOrders(auth).then((results: BitfinexSuccessfulOrderExecution[]) => {
                 if (this.logger) {
@@ -278,13 +279,13 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
-        return Promise.reject(new GTTError('Error loading products from Bitfinex'));
+    loadCandles(_options: CandleRequestOptions): Promise<Candle[]> {
+        return Promise.reject(new GTTError('Not implemented'));
     }
 
     // -------------------------- Transfer methods -------------------------------------------------
 
-    requestCryptoAddress(cur: string): Promise<CryptoAddress> {
+    requestCryptoAddress(_cur: string): Promise<CryptoAddress> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
@@ -317,11 +318,11 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    requestWithdrawal(req: WithdrawalRequest): Promise<TransferResult> {
+    requestWithdrawal(_req: WithdrawalRequest): Promise<TransferResult> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
-    transfer(cur: string, amount: BigJS, from: string, to: string, options: any): Promise<TransferResult> {
+    transfer(_cur: string, _amount: BigJS, _from: string, _to: string, _options: any): Promise<TransferResult> {
         return Promise.reject(new GTTError('Not implemented'));
     }
 
@@ -339,7 +340,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         book.sequence = 0;
         return book;
 
-        function addToLevel(side: string, order: BitfinexRESTOrder) {
+        function addToLevel(side: Side, order: BitfinexRESTOrder) {
             try {
                 book.addLevel(side, convertOrder(side, order));
             } catch (err) {
@@ -349,7 +350,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
             }
         }
 
-        function convertOrder(side: string, order: BitfinexRESTOrder): AggregatedLevelWithOrders {
+        function convertOrder(side: Side, order: BitfinexRESTOrder): AggregatedLevelWithOrders {
             const price: BigJS = Big(order.price);
             const size: BigJS = Big(order.amount).abs();
             const level = new AggregatedLevelWithOrders(price);

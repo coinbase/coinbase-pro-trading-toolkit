@@ -12,10 +12,17 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { CancelOrderRequestMessage, PlaceOrderMessage, StreamMessage } from '../core/Messages';
-import { Level3Order, OrderbookState, PriceLevel, PriceLevelWithOrders } from './Orderbook';
-import { AggregatedLevel, AggregatedLevelWithOrders, BookBuilder } from './BookBuilder';
+import { CancelOrderRequestMessage,
+         PlaceOrderMessage } from '../core/Messages';
+import { TraderStreamMessage } from '../core/Trader';
+import { Level3Order,
+         OrderbookState,
+         PriceLevelWithOrders } from './Orderbook';
+import { AggregatedLevel,
+         AggregatedLevelWithOrders,
+         BookBuilder } from './BookBuilder';
 import { RBTree } from 'bintrees';
+import { SIDES } from './sides';
 import { BigJS, ZERO } from './types';
 
 /**
@@ -40,7 +47,7 @@ export class OrderbookDiff {
             bids: [],
             asks: []
         };
-        ['buy', 'sell'].forEach((side: string) => {
+        SIDES.forEach((side) => {
             const diff: PriceLevelWithOrders[] = side === 'buy' ? diffs.bids : diffs.asks;
             const initialOrders: RBTree<AggregatedLevelWithOrders> = initial.getTree(side);
             const finalOrders: RBTree<AggregatedLevelWithOrders> = final.getTree(side);
@@ -54,7 +61,7 @@ export class OrderbookDiff {
                 // level as a diff (size is negated though)
                 if (!flevel || ilevel.price.lt(flevel.price)) {
                     const levelDiff: PriceLevelWithOrders = {
-                        totalSize: ilevel.totalSize.neg(),
+                        totalSize: ilevel.totalSize.negated(),
                         price: ilevel.price,
                         orders: copyWithNegativeSizes(ilevel.orders)
                     };
@@ -78,7 +85,7 @@ export class OrderbookDiff {
                 // If prices are equal, compare sizes
                 if (ilevel.price.eq(flevel.price)) {
                     const sizeDiff: BigJS = flevel.totalSize.minus(ilevel.totalSize);
-                    if (sizeDiff.cmp(ZERO) !== 0) {
+                    if (!sizeDiff.eq(ZERO)) {
                         diff.push({
                             totalSize: absolute ? flevel.totalSize : sizeDiff,
                             price: ilevel.price,
@@ -122,16 +129,15 @@ export class OrderbookDiff {
         }
         for (const orderId in iorders) {
             const order = iorders[orderId];
-            order.size = order.size.neg();
+            order.size = order.size.negated();
             book.add(order);
         }
         return book.state();
     }
 
-    productId: string;
-    commands: StreamMessage[] = [];
-    initial: BookBuilder;
-    final: BookBuilder;
+    readonly productId: string;
+    readonly initial: BookBuilder;
+    readonly final: BookBuilder;
 
     constructor(productId: string, initial: BookBuilder, final: BookBuilder) {
         this.initial = initial;
@@ -144,11 +150,11 @@ export class OrderbookDiff {
      * generate this set. If set, defaultOrderFields will be used to provide default values for any missing fields
      * on the order
      */
-    generateSimpleCommandSet(defaultOrderFields?: any): StreamMessage[] {
-        const commands: StreamMessage[] = [];
+    generateSimpleCommandSet(defaultOrderFields?: any): TraderStreamMessage[] {
+        const commands: TraderStreamMessage[] = [];
         const now = new Date();
         commands.push({ type: 'cancelAllOrders', time: now });
-        ['buy', 'sell'].forEach((side: string) => {
+        SIDES.forEach((side) => {
             const levels: RBTree<AggregatedLevel> = this.final.getTree(side);
             const iterFn: string = side === 'buy' ? 'reach' : 'each';
             (levels as any)[iterFn]((level: AggregatedLevel) => {
@@ -167,7 +173,6 @@ export class OrderbookDiff {
                 commands.push(order);
             });
         });
-        this.commands = commands;
         return commands;
     }
 
@@ -176,14 +181,14 @@ export class OrderbookDiff {
      * If set, defaultOrderFields will be used to provide default values for any missing fields
      * on the order.
      */
-    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any): StreamMessage[] {
-        const commands: StreamMessage[] = [];
+    generateDiffCommands(diff?: OrderbookState, defaultOrderFields?: any): TraderStreamMessage[] {
+        const commands: TraderStreamMessage[] = [];
         const now = new Date();
         if (!diff) {
             diff = OrderbookDiff.compareByLevel(this.initial, this.final, true, true);
         }
         ['bids', 'asks'].forEach((side: string) => {
-            const diffLevels: PriceLevel[] = (diff as any)[side];
+            const diffLevels = side === 'bids' ? diff.bids : diff.asks;
             diffLevels.forEach((diffLevel: PriceLevelWithOrders) => {
                 // Cancel all existing orders on this price level
                 diffLevel.orders.forEach((order: Level3Order) => {
@@ -222,7 +227,7 @@ export class OrderbookDiff {
 function copyWithNegativeSizes(orders: Level3Order[]): Level3Order[] {
     return orders.map((order) => {
         const newOrder = Object.assign({}, order);
-        newOrder.size = order.size.neg();
+        newOrder.size = order.size.negated();
         return newOrder;
     });
 }
