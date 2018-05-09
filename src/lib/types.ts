@@ -13,14 +13,13 @@
  ***************************************************************************************************************************/
 
 import * as BigNumber from 'bignumber.js';
-import { NumberLike } from 'bignumber.js';
-export const big = BigNumber.another({
+export const big: typeof BigNumber.BigNumber = BigNumber.BigNumber.another({
     ROUNDING_MODE: 4,
     ERRORS: false,
     CRYPTO: false
 });
-export const Big = (x: NumberLike): BigNumber.BigNumber => new big(x);
+export type Biglike = number | string | BigNumber.BigNumber;
+export const Big = (x: Biglike): BigNumber.BigNumber => new big(x);
 export const ZERO = Big(0);
 export const ONE = Big(1);
-export type Biglike = NumberLike;
 export type BigJS = BigNumber.BigNumber;

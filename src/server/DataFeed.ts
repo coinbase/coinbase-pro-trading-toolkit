@@ -39,7 +39,7 @@ export function dataFeedFactory(): Server {
     if (server === undefined) {
         server = new Server(serverOptions);
         logger.log('info', `Websocket server listening on port ${server.options.port}`);
-        server.on('connection', (socket: WebSocket) => {
+        server.on('connection', (_socket: WebSocket) => {
             logger.log('debug', 'Websocket connection made to ' + server.options.host);
         });
     }
@@ -65,8 +65,8 @@ function createLiveBook(feed: ExchangeFeed, product: string): LiveOrderbook {
 }
 
 export class DataFeed {
-    private socket: WebSocket;
-    private exchanges: { [exchange: string]: ExchangeConnection } = {};
+    private readonly socket: WebSocket;
+    private readonly exchanges: { [exchange: string]: ExchangeConnection } = {};
 
     constructor(socket: WebSocket) {
         this.socket = socket;
@@ -257,7 +257,7 @@ export class DataFeed {
             type: 'snapshot',
             time: new Date(),
             productId: cmd.product,
-            ... book.state()
+            ...book.state()
         };
         this.send(wrapMessage(msg, cmd));
     }

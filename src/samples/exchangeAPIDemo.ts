@@ -16,13 +16,15 @@
  * This script demonstrates how to access Bitfinex's and GDAX trading APIs using the same set of standardized calls,
  * returning data in a consistent format
  */
-import { BitfinexConfig, BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
+import { BitfinexConfig,
+         BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
 import { PublicExchangeAPI, Ticker } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { printOrderbook, printTicker } from '../utils/printers';
-import { AuthenticatedExchangeAPI, Balances } from '../exchanges/AuthenticatedExchangeAPI';
+import { AuthenticatedExchangeAPI,
+         Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { LiveOrder } from '../lib/Orderbook';
 import { DefaultAPI } from '../factories/bittrexFactories';
 import { GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';

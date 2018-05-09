@@ -23,8 +23,8 @@ import * as GI from './GeminiInterfaces';
 export class GeminiMarketFeed extends ExchangeFeed {
     readonly owner: string;
     readonly feedUrl: string;
-    private productId: string;
-    private ccxtProductId: string;
+    private readonly productId: string;
+    private readonly ccxtProductId: string;
 
     constructor(config: GI.GeminiMarketFeedConfig) {
         super(config);
@@ -60,7 +60,11 @@ export class GeminiMarketFeed extends ExchangeFeed {
     private processUpdate(update: GI.GeminiUpdateMessage) {
         if (update.socket_sequence === 0) {
             // Process the first message with the orderbook state
-            this.push(this.createSnapshotMessage(update));
+            const snapshot = this.createSnapshotMessage(update);
+            this.push(snapshot);
+            process.nextTick(() => {
+                this.emit('snapshot', snapshot.productId);
+            });
         } else {
             update.events.forEach((event) => {
                 let message: StreamMessage;
@@ -146,7 +150,7 @@ export class GeminiMarketFeed extends ExchangeFeed {
         return message;
     }
 
-    private processAuction(event: GI.GeminiAuctionEvent, update: GI.GeminiUpdateMessage): StreamMessage {
+    private processAuction(_event: GI.GeminiAuctionEvent, _update: GI.GeminiUpdateMessage): StreamMessage {
         // TODO: Are auctions unique to Gemini?
         return undefined;
     }

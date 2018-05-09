@@ -55,8 +55,8 @@ export interface FXProviderConfig {
 }
 
 export abstract class FXProvider {
-    private logger: Logger;
-    private _pending: { [pair: string]: Promise<FXObject> } = {};
+    private readonly logger: Logger;
+    private readonly _pending: { [pair: string]: Promise<FXObject> } = {};
 
     constructor(config: FXProviderConfig) {
         this.logger = config.logger;
@@ -87,13 +87,13 @@ export abstract class FXProvider {
                 return this.supportsPair(inversePair).then<FXObject>((inverseOk: boolean) => {
                     if (inverseOk) {
                         return this.getPromiseForRate(inversePair).then((inverse: FXObject) => {
-                            const rate = {
+                            const rate: FXObject = {
                                 from: pair.from,
                                 to: pair.to,
                                 rate: ONE.div(inverse.rate),
                                 time: inverse.time
                             };
-                            return Promise.resolve<FXObject>(rate);
+                            return rate;
                         });
                     } else {
                         return Promise.reject(new EFXRateUnavailable(`Currency pair ${pair.from}-${pair.to} or its inverse is not supported`, this.name));

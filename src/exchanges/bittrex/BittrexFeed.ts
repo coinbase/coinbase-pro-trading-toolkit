@@ -15,6 +15,7 @@
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage } from '../../core/Messages';
 import { BittrexAPI } from './BittrexAPI';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
@@ -23,7 +24,7 @@ const Bittrex = require('node-bittrex-api');
 export class BittrexFeed extends ExchangeFeed {
     private client: any;
     private connection: any;
-    private counters: { [product: string]: MessageCounter };
+    private readonly counters: { [product: string]: MessageCounter };
 
     constructor(config: ExchangeFeedConfig) {
         super(config);
@@ -74,15 +75,16 @@ export class BittrexFeed extends ExchangeFeed {
                         }
                         const snapshot: SnapshotMessage = this.processSnapshot(product, data);
                         this.push(snapshot);
+                        process.nextTick(() => {
+                            this.emit('snapshot', snapshot.productId);
+                        });
                         return resolve(true);
                     });
                 });
             });
         })).then(() => {
             // Every result is guaranteed to be true
-            return Promise.resolve(true);
-        }).catch((err) => {
-            return Promise.reject(err);
+            return true;
         });
     }
 
@@ -126,7 +128,7 @@ export class BittrexFeed extends ExchangeFeed {
         // no-op
     }
 
-    protected onClose(code: number, reason: string): void {
+    protected onClose(_code: number, _reason: string): void {
         this.emit('websocket-closed');
         this.connection = null;
     }
@@ -176,7 +178,7 @@ export class BittrexFeed extends ExchangeFeed {
 
     private updateExchangeState(states: BittrexExchangeState[]) {
 
-        const createUpdateMessage = (product: string, side: string, nonce: number, delta: BittrexOrder): LevelMessage => {
+        const createUpdateMessage = (product: string, side: Side, nonce: number, delta: BittrexOrder): LevelMessage => {
             const seq = this.nextSequence(product);
             const message: LevelMessage = {
                 type: 'level',
@@ -217,7 +219,7 @@ export class BittrexFeed extends ExchangeFeed {
                     tradeId: '0',
                     price: fill.Rate,
                     size: fill.Quantity,
-                    side: fill.OrderType.toLowerCase()
+                    side: Side(fill.OrderType)
                 };
                 this.push(message);
             });
@@ -259,7 +261,7 @@ export class BittrexFeed extends ExchangeFeed {
         this.setSnapshotSequence(product, state.Nounce);
         return snapshotMessage;
 
-        function addOrder(order: BittrexOrder, side: string, levelArray: PriceLevelWithOrders[]) {
+        function addOrder(order: BittrexOrder, side: Side, levelArray: PriceLevelWithOrders[]) {
             const size = Big(order.Quantity);
             const newOrder: Level3Order = {
                 id: String(order.Rate),

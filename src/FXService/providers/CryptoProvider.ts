@@ -20,7 +20,7 @@ export interface CryptoProviderConfig extends FXProviderConfig {
 }
 
 export class CryptoProvider extends FXProvider {
-    private exchange: PublicExchangeAPI;
+    private readonly exchange: PublicExchangeAPI;
     private products: string[];
 
     constructor(config: CryptoProviderConfig) {

@@ -16,6 +16,7 @@
 import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { SnapshotMessage, LevelMessage, TradeMessage, ErrorMessage, UnknownMessage } from '../../core/Messages';
 import { BITMEX_WS_FEED } from './BitmexCommon';
+import { Side } from '../../lib/sides';
 import { Big } from '../../lib/types';
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelFactory, PriceLevelWithOrders } from '../../lib/Orderbook';
@@ -66,8 +67,8 @@ export class BitmexMarketFeed extends ExchangeFeed {
             const errMsg: ErrorMessage = {
                 type: 'error',
                 time: new Date(),
-                message: `Error while subscribing to symbols`,
-                cause: msg.error
+                message: `Error while subscribing to symbols: ${msg.error}`,
+                meta: msg
             };
 
             this.push(errMsg);
@@ -113,11 +114,11 @@ export class BitmexMarketFeed extends ExchangeFeed {
 
     private handleSnapshot(snapshot: OrderbookSnapshotMessage) {
         // (re)initialize our order id map
-        const newIdMap = snapshot.data.reduce((acc, { id, price }) => ({...acc, [id]: price }), {});
-        this.orderIdMap = newIdMap;
+        const initOrderIdMap: { [orderId: number]: number } = {};
+        this.orderIdMap = snapshot.data.reduce((acc, { id, price }) => ({...acc, [id]: price }), initOrderIdMap);
 
         const mapLevelUpdates: (date: PriceData) => PriceLevelWithOrders =
-            ({ id, price, size, side }) => PriceLevelFactory(price, size, side.toLowerCase());
+            ({ price, size, side }) => PriceLevelFactory(price, size, Side(side));
 
         const asks: PriceLevelWithOrders[] = snapshot.data
             .filter( ({ side }) => side === 'Sell' )
@@ -129,14 +130,15 @@ export class BitmexMarketFeed extends ExchangeFeed {
         const priceDataToLvl3: (pd: PriceData) => Level3Order = ({ price, size, side, id }) => ({
             price: Big(price),
             size: Big(size),
-            side: side.toLowerCase(),
+            side: Side(side),
             id: id.toString(),
         });
 
+        const initOrderPool: OrderPool = {};
         const orderPool: OrderPool = snapshot.data.reduce((acc: OrderPool, pd: PriceData) => ({
             ...acc,
             [ pd.id.toString() ]: priceDataToLvl3(pd),
-        }), {});
+        }), initOrderPool);
 
         const snapshotMsg: SnapshotMessage = {
             time: new Date(),
@@ -149,6 +151,9 @@ export class BitmexMarketFeed extends ExchangeFeed {
         };
 
         this.push(snapshotMsg);
+        process.nextTick(() => {
+            this.emit('snapshot', snapshotMsg.productId);
+        });
     }
 
     private handleOrderbookUpdate(updates: OrderbookUpdateMessage) {
@@ -169,7 +174,7 @@ export class BitmexMarketFeed extends ExchangeFeed {
                 productId: update.symbol,
                 price: (price ? price : update.price).toString(),
                 size: update.size ? update.size.toString() : '0',
-                side: update.side.toLowerCase(),
+                side: Side(update.side),
                 count: 1,
             };
 
@@ -186,14 +191,14 @@ export class BitmexMarketFeed extends ExchangeFeed {
                 tradeId: trade.trdMatchID,
                 price: trade.price.toString(),
                 size: trade.size.toString(),
-                side: trade.side.toLowerCase(),
+                side: Side(trade.side),
             };
 
             this.push(message);
         });
     }
 
-    private handleSubscriptionSuccess(successMsg: SubscriptionResponseMessage) {
+    private handleSubscriptionSuccess(_successMsg: SubscriptionResponseMessage) {
         // TODO
     }
 }

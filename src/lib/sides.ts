@@ -12,32 +12,35 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import request = require('superagent');
-import crypto = require('crypto');
-import Response = request.Response;
-import { ExchangeAuthConfig } from './AuthConfig';
-import { extractResponse, HTTPError } from '../lib/errors';
+export type Side = 'buy' | 'sell';
 
-/**
- * A generic API response handler.
- * @param req A superagent request object
- * @param meta
- * @returns {Promise<Response>}
- */
-export function handleResponse<T>(req: Promise<Response>, _meta: any): Promise<T> {
-    return req.then<T>((res: Response) => {
-        if (res.status >= 200 && res.status < 300) {
-            return res.body as T;
-        }
-        return Promise.reject(new HTTPError('Error in Bitfinex request', extractResponse(res)));
-    }).catch((err) => {
-        return Promise.reject(new HTTPError('Error in Bitfinex request', extractResponse(err.response)));
-    });
+// Use this when one wants to iterate through the sides with proper types:
+//   SIDES.forEach((side) => { ... });           // side is a Side
+// instead of
+//   ['buy', 'sell'].forEach((side) => { ... }); // side is a string
+export const SIDES: ReadonlyArray<Side> = ['buy', 'sell'];
+
+export function isSide(s: any): s is Side {
+    return s === 'buy' || s === 'sell';
 }
 
-export function getSignature(auth: ExchangeAuthConfig, payload: string, algorithm: string = 'sha256'): string {
-    return crypto
-        .createHmac(algorithm, auth.secret)
-        .update(payload)
-        .digest('hex');
+/**
+ * Given a string return the corresponding Side or throw.
+ *
+ * @param side the side as a string
+ * @return the side as a Side
+ * @throws if the input side cannot be converted to a Side
+ */
+export function Side(side: string): Side {
+    // Check for a undefined or null side even though it shouldn't be
+    // one, since the market feeds may just pass in any value.
+    const s = side ? side.toLowerCase() : '';
+    switch (s) {
+        case 'buy':
+            return s;
+        case 'sell':
+            return s;
+        default:
+            throw new Error(`Cannot convert "${side}" to a Side`);
+    }
 }

@@ -26,7 +26,7 @@ export interface MessageTransformConfig {
  * will implement.
  */
 export abstract class AbstractMessageTransform extends stream.Transform {
-    protected logger: Logger;
+    protected readonly logger: Logger;
 
     constructor(config: MessageTransformConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });
@@ -44,10 +44,9 @@ export abstract class AbstractMessageTransform extends stream.Transform {
         return super.read(size) as StreamMessage;
     }
 
-    _transform(chunk: any, encoding: string, callback: (err: Error, chunk?: any) => void) {
+    _transform(chunk: any, _encoding: string, callback: (err: Error, chunk?: any) => void) {
         if (typeof chunk === 'object' && isStreamMessage(chunk)) {
-            const msg: StreamMessage = chunk as StreamMessage;
-            const transformed = this.transformMessage(msg);
+            const transformed = this.transformMessage(chunk);
             if (transformed) {
                 this.push(transformed);
             }
@@ -56,5 +55,5 @@ export abstract class AbstractMessageTransform extends stream.Transform {
         return callback(null, chunk);
     }
 
-    abstract transformMessage(msg: StreamMessage): StreamMessage;
+    abstract transformMessage(msg: StreamMessage): null | StreamMessage;
 }

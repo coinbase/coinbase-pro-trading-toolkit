@@ -12,14 +12,22 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { CumulativePriceLevel, Level3Order, Orderbook, OrderbookState, PriceComparable, PriceLevel, PriceLevelWithOrders, PriceTreeFactory } from './Orderbook';
+import { CumulativePriceLevel,
+         Level3Order,
+         Orderbook,
+         OrderbookState,
+         PriceComparable,
+         PriceLevel,
+         PriceLevelWithOrders,
+         PriceTreeFactory } from './Orderbook';
 import { Big, BigJS, Biglike, ZERO } from './types';
+import { Side } from './sides';
 import { RBTree } from 'bintrees';
 import { EventEmitter } from 'events';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import assert = require('assert');
 
-export function AggregatedLevelFactory(totalSize: Biglike, price: Biglike, side: string): AggregatedLevelWithOrders {
+export function AggregatedLevelFactory(totalSize: Biglike, price: Biglike, side: Side): AggregatedLevelWithOrders {
     const level = new AggregatedLevelWithOrders(Big(price));
     const size = Big(totalSize);
     if (!size.eq(ZERO)) {
@@ -56,7 +64,7 @@ export interface OrderPool { [id: string]: Level3Order; }
 export class AggregatedLevel implements PriceLevel {
     totalSize: BigJS;
     totalValue: BigJS;
-    price: BigJS;
+    readonly price: BigJS;
     private _numOrders: number;
 
     constructor(price: BigJS) {
@@ -90,7 +98,7 @@ export class AggregatedLevel implements PriceLevel {
 }
 
 export class AggregatedLevelWithOrders extends AggregatedLevel implements PriceLevelWithOrders {
-    private _orders: Level3Order[];
+    private readonly _orders: Level3Order[];
 
     constructor(price: BigJS) {
         super(price);
@@ -142,15 +150,15 @@ export class AggregatedLevelWithOrders extends AggregatedLevel implements PriceL
  * Call #state to get a hierarchical object representation of the orderbook
  */
 export class BookBuilder extends EventEmitter implements Orderbook {
-    public sequence: number = -1;
-    protected bids: RBTree<AggregatedLevelWithOrders>;
-    protected asks: RBTree<AggregatedLevelWithOrders>;
-    protected _bidsTotal: BigJS = ZERO;
-    protected _bidsValueTotal: BigJS = ZERO;
-    protected _asksTotal: BigJS = ZERO;
-    protected _asksValueTotal: BigJS = ZERO;
-    private _orderPool: OrderPool = {};
-    private logger: Logger;
+    public sequence: number;
+    protected readonly bids: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
+    protected readonly asks: RBTree<AggregatedLevelWithOrders> = PriceTreeFactory<AggregatedLevelWithOrders>();
+    protected _bidsTotal: BigJS;
+    protected _bidsValueTotal: BigJS;
+    protected _asksTotal: BigJS;
+    protected _asksValueTotal: BigJS;
+    private _orderPool: OrderPool;
+    private readonly logger: Logger;
 
     constructor(logger: Logger) {
         super();
@@ -159,8 +167,8 @@ export class BookBuilder extends EventEmitter implements Orderbook {
     }
 
     clear() {
-        this.bids = PriceTreeFactory<AggregatedLevelWithOrders>();
-        this.asks = PriceTreeFactory<AggregatedLevelWithOrders>();
+        this.bids.clear();
+        this.asks.clear();
         this._bidsTotal = ZERO;
         this._asksTotal = ZERO;
         this._bidsValueTotal = ZERO;
@@ -225,7 +233,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         return this._orderPool.hasOwnProperty(orderId);
     }
 
-    getLevel(side: string, price: BigJS): AggregatedLevelWithOrders {
+    getLevel(side: Side, price: BigJS): AggregatedLevelWithOrders {
         const tree = this.getTree(side);
         return tree.find({ price: price } as any);
     }
@@ -258,31 +266,26 @@ export class BookBuilder extends EventEmitter implements Orderbook {
 
     /**
      * Changes the size of an existing order to newSize. If the order doesn't exist, returns false.
-     * If the newSize is zero, the order is removed.
      * If newSize is negative, an error is thrown.
+     * Even if newSize is zero, the order is kept.
      * It is possible for an order to switch sides, in which case the newSide parameter determines the new side.
      */
-    modify(id: string, newSize: BigJS, newSide?: string): boolean {
+    modify(id: string, newSize: BigJS, newSide?: Side): boolean {
         if (newSize.lt(ZERO)) {
             throw new Error('Cannot set an order size to a negative number');
         }
-        const order = this.getOrder(id);
+        const order = this.remove(id);
         if (!order) {
             return false;
         }
-        if (!this.remove(id)) {
-            return false;
-        }
-        if (newSize.gt(ZERO)) {
-            order.size = newSize;
-            order.side = newSide || order.side;
-            this.add(order);
-        }
+        order.size = newSize;
+        order.side = newSide || order.side;
+        this.add(order);
         return true;
     }
 
     // Add a complete price level with orders to the order book. If the price level already exists, throw an exception
-    addLevel(side: string, level: AggregatedLevelWithOrders) {
+    addLevel(side: Side, level: AggregatedLevelWithOrders) {
         const tree = this.getTree(side);
         if (tree.find(level)) {
             throw new Error(`cannot add a new level to orderbook since the level already exists at price ${level.price.toString()}`);
@@ -299,7 +302,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
      * Remove a complete level and links to orders in the order pool. If the price level doesn't exist, it returns
      * false
      */
-    removeLevel(side: string, priceLevel: PriceComparable): boolean {
+    removeLevel(side: Side, priceLevel: PriceComparable): boolean {
         const tree = this.getTree(side);
         const level: AggregatedLevelWithOrders = tree.find(priceLevel as any);
         if (!level) {
@@ -316,7 +319,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
     /**
      * Shortcut method for replacing a level. First removeLevel is called, and then addLevel
      */
-    setLevel(side: string, level: AggregatedLevelWithOrders): boolean {
+    setLevel(side: Side, level: AggregatedLevelWithOrders): boolean {
         this.removeLevel(side, level);
         if (level.numOrders > 0) {
             this.addLevel(side, level);
@@ -358,7 +361,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         return order;
     }
 
-    getTree(side: string): RBTree<AggregatedLevelWithOrders> {
+    getTree(side: Side): RBTree<AggregatedLevelWithOrders> {
         return side === 'buy' ? this.bids : this.asks;
     }
 
@@ -411,7 +414,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
      * If useQuote is true, value is assumed to represent price * size, otherwise just size is used
      * startPrice sets the first price to start counting from (inclusive). The default is undefined, which starts at the best bid/by
      */
-    ordersForValue(side: string, value: BigJS, useQuote: boolean, start?: StartPoint): CumulativePriceLevel[] {
+    ordersForValue(side: Side, value: BigJS, useQuote: boolean, start?: StartPoint): CumulativePriceLevel[] {
         const source = side === 'buy' ? this.asks : this.bids;
         const iter = source.iterator();
         let totalSize = ZERO;
@@ -470,7 +473,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         return exists;
     }
 
-    private subtractFromTotal(amount: BigJS, side: string, price: BigJS) {
+    private subtractFromTotal(amount: BigJS, side: Side, price: BigJS) {
         if (side === 'buy') {
             this._bidsTotal = this._bidsTotal.minus(amount);
             this._bidsValueTotal = this._bidsValueTotal.minus(amount.times(price));
@@ -480,7 +483,7 @@ export class BookBuilder extends EventEmitter implements Orderbook {
         }
     }
 
-    private addToTotal(amount: BigJS, side: string, price: BigJS) {
+    private addToTotal(amount: BigJS, side: Side, price: BigJS) {
         if (side === 'buy') {
             this._bidsTotal = this._bidsTotal.plus(amount);
             this._bidsValueTotal = this._bidsValueTotal.plus(amount.times(price));

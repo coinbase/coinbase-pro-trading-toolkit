@@ -19,12 +19,13 @@ import { ErrorMessage } from '../../src/core/Messages';
 describe('Errors', () => {
     describe('GTTError', () => {
         it('accepts an error as metadata', () => {
-            const err = new GTTError('GTT Error Test 1', new Error('a bug'));
+            const cause = new Error('a bug');
+            const err = new GTTError('GTT Error Test 1', cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'GTT Error Test 1');
-            assert.equal(msg.cause, 'a bug');
+            assert.deepEqual(msg.cause, cause);
         });
 
         it('behaves like a standard error', () => {
@@ -38,23 +39,36 @@ describe('Errors', () => {
     });
 
     describe('APIError', () => {
-        it('accepts a cause', () => {
-            const cause: any = { reason: 'That thing' };
-            const err = new APIError('API Error Test 1', cause);
+        it('accepts a meta', () => {
+            const meta = { reason: 'That thing' };
+            const err = new APIError('API Error Test 1', null, meta);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'API Error Test 1');
-            assert.deepEqual(msg.cause, cause);
+            assert.deepEqual(msg.cause, null);
+            assert.deepEqual(msg.meta, meta);
         });
 
-        it('acts like a standard Error', () => {
-            const err = new APIError('API Error Test 2', null);
+        it('accepts a cause', () => {
+            const cause = new Error('That thing');
+            const err = new APIError('API Error Test 2', cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'API Error Test 2');
+            assert.deepEqual(msg.cause, cause);
+            assert.deepEqual(msg.meta, null);
+        });
+
+        it('acts like a standard Error', () => {
+            const err = new APIError('API Error Test 3', null);
+            const msg: ErrorMessage = err.asMessage();
+            assert.equal(msg.type, 'error');
+            assert.ok(msg.time);
+            assert.equal(msg.message, 'API Error Test 3');
             assert.deepEqual(msg.cause, null);
+            assert.deepEqual(msg.meta, null);
         });
     });
 
@@ -70,18 +84,37 @@ describe('Errors', () => {
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'HTTP Error Test 1');
-            assert.deepEqual(msg.cause.status, 403);
-            assert.deepEqual(msg.cause.body.message, 'Invalid API key');
+            assert.deepEqual(msg.meta.status, 403);
+            assert.deepEqual(msg.meta.body.message, 'Invalid API key');
         });
 
-        it('accepts a null response', () => {
-            const err = new HTTPError('HTTP Error Test 2', null);
+        it('accepts a response and a cause', () => {
+            const cause = new Error('Unit test');
+            const response: ResponseLike = {
+                status: 403, body: {
+                    message: 'Invalid API key'
+                }
+            };
+            const err = new HTTPError('HTTP Error Test 2', response, cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
             assert.equal(msg.message, 'HTTP Error Test 2');
-            assert.deepEqual(msg.cause.status, undefined);
-            assert.deepEqual(msg.cause.body, undefined);
+            assert.deepEqual(msg.meta.status, 403);
+            assert.deepEqual(msg.meta.body.message, 'Invalid API key');
+            assert.strictEqual(err.cause, cause);
+        });
+
+        it('accepts a null response and a non-null cause', () => {
+            const cause = new Error('Unit test');
+            const err = new HTTPError('HTTP Error Test 3', null, cause);
+            const msg: ErrorMessage = err.asMessage();
+            assert.equal(msg.type, 'error');
+            assert.ok(msg.time);
+            assert.equal(msg.message, 'HTTP Error Test 3');
+            assert.deepEqual(msg.meta.status, undefined);
+            assert.deepEqual(msg.meta.body, undefined);
+            assert.strictEqual(err.cause, cause);
         });
     });
 });

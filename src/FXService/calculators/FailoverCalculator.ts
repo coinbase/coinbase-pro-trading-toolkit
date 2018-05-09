@@ -31,8 +31,8 @@ export interface LastRequestInfo {
  * If the pair is unavailable, or some other error occurs, the calculator returns null for that pair
  */
 export default class FailoverCalculator extends FXRateCalculator {
-    logger: Logger;
-    calculators: FXRateCalculator[];
+    readonly logger: Logger;
+    readonly calculators: FXRateCalculator[];
     private lastCalculatorUsed: FXRateCalculator = null;
 
     constructor(config: FailoverCalculatorConfig) {

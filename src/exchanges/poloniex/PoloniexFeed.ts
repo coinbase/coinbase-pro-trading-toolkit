@@ -16,6 +16,7 @@ import { ExchangeFeed, ExchangeFeedConfig } from '../ExchangeFeed';
 import { ChannelSubscription, PoloniexSnapshotLevel, PoloniexSnapshotMessage, PoloniexTrollboxMessage } from './PoloniexMessages';
 import { getProductInfo } from './PoloniexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage, UnknownMessage } from '../../core/Messages';
+import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
 import Timer = NodeJS.Timer;
 import { OrderPool } from '../../lib/BookBuilder';
@@ -173,7 +174,7 @@ export class PoloniexFeed extends ExchangeFeed {
         }
         // I don't know what these messages are yet, so just log them for now
         const message: UnknownMessage = {
-            type: 'poloniex-user',
+            type: 'unknown',
             time: new Date(),
             productId: null,
             sequence: null,
@@ -305,6 +306,9 @@ export class PoloniexFeed extends ExchangeFeed {
                     channelInfo.sequence = sequence;
                     const snapshot: SnapshotMessage = self.createSnapshotMessage(product, sequence, update[1]);
                     self.push(snapshot);
+                    process.nextTick(() => {
+                        self.emit('snapshot', snapshot.productId);
+                    });
                     return;
                 }
                 if (type === 'o') {
@@ -354,7 +358,7 @@ export class PoloniexFeed extends ExchangeFeed {
             const levelArray: PoloniexSnapshotLevel = snapshot.orderBook[i];
             const sideArray: PriceLevelWithOrders[] = i === 0 ? snapshotMessage.asks : snapshotMessage.bids;
             for (const price in snapshot.orderBook[i]) {
-                const side: string = i === 0 ? 'sell' : 'buy';
+                const side: Side = i === 0 ? 'sell' : 'buy';
                 const size: BigJS = Big(levelArray[price]);
                 const newOrder: Level3Order = {
                     id: String(price),

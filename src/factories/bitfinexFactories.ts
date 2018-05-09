@@ -14,9 +14,11 @@
 
 import { BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { Logger } from '../utils/Logger';
-import { BitfinexFeed, BitfinexFeedConfig } from '../exchanges/bitfinex/BitfinexFeed';
+import { BitfinexFeed,
+         BitfinexFeedConfig } from '../exchanges/bitfinex/BitfinexFeed';
 import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
-import { BITFINEX_WS_FEED, PRODUCT_MAP } from '../exchanges/bitfinex/BitfinexCommon';
+import { BITFINEX_WS_FEED,
+         PRODUCT_MAP } from '../exchanges/bitfinex/BitfinexCommon';
 import { Product } from '../exchanges/PublicExchangeAPI';
 import { getFeed } from '../exchanges/ExchangeFeed';
 
@@ -88,7 +90,7 @@ export function FeedFactory(logger: Logger, productIDs?: string[]): Promise<Bitf
             .loadProducts()
             .then((products: Product[]) => {
                 const ids = products.map((p) => p.id);
-                return Promise.resolve(ids);
+                return ids;
             });
     }
     return productPromise.then((productIds: string[]) => {

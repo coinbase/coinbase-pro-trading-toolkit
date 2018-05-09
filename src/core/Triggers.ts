@@ -32,18 +32,18 @@ export class Trigger<T extends StreamMessage> {
         this.feed = feed;
     }
 
-    setAction(action: Action<T>): Trigger<T> {
+    setAction(action: Action<T>): this {
         this.action = action;
         return this;
     }
 
-    setFilter(filter: TriggerFilter): Trigger<T> {
+    setFilter(filter: TriggerFilter): this {
         this.filter = filter;
         this.feed.on('data', filter);
         return this;
     }
 
-    execute(event: T): Trigger<T> {
+    execute(event: T): this {
         this.action(event);
         return this;
     }
@@ -70,7 +70,7 @@ export function createPriceTrigger(feed: ExchangeFeed, product: string, priceThr
         if (msg.type !== 'ticker') {
             return;
         }
-        const ticker = msg as TickerMessage;
+        const ticker = msg;
         if (ticker.productId !== product) {
             return;
         }
@@ -91,11 +91,11 @@ export function createPriceTrigger(feed: ExchangeFeed, product: string, priceThr
 export function createTickerTrigger(feed: ExchangeFeed, product: string, onlyOnce: boolean = true): Trigger<TickerMessage> {
     const trigger = new Trigger<TickerMessage>(feed);
     const tickerFilter: TriggerFilter = (msg: StreamMessage) => {
-        if (msg.type === 'ticker' && (msg as TickerMessage).productId === product) {
+        if (msg.type === 'ticker' && msg.productId === product) {
             if (onlyOnce) {
                 trigger.cancel();
             }
-            trigger.execute(msg as TickerMessage);
+            trigger.execute(msg);
         }
     };
     return trigger.setFilter(tickerFilter);

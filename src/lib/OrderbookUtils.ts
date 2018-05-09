@@ -83,7 +83,7 @@ export default class OrderbookUtils {
         return result;
     }
 
-    private book: OrderbookState;
+    private readonly book: OrderbookState;
 
     private precalc: OrderbookCache;
 

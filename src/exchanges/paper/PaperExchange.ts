@@ -4,7 +4,7 @@ import { BigJS } from '../../lib/types';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { Product, PublicExchangeAPI, Ticker, CandleRequestOptions, Candle } from '../PublicExchangeAPI';
 import { HTTPError, GTTError } from '../../lib/errors';
-import * as BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import * as GUID from 'guid';
 import * as Collections from 'typescript-collections';
 import { Duplex } from 'stream';
@@ -184,19 +184,19 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         throw new Error('Not implemented yet.');
     }
 
-    public loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
+    public loadMidMarketPrice(_gdaxProduct: string): Promise<BigJS> {
         throw new Error('Not implemented yet.');
     }
 
-    public loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
+    public loadOrderbook(_gdaxProduct: string): Promise<BookBuilder> {
         throw new Error('Not implemented yet.');
     }
 
-    public loadTicker(gdaxProduct: string): Promise<Ticker> {
+    public loadTicker(_gdaxProduct: string): Promise<Ticker> {
         throw new Error('Not implemented yet.');
     }
 
-    loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
+    loadCandles(_options: CandleRequestOptions): Promise<Candle[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -204,11 +204,11 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
 
     _read() { /* no-op */ }
 
-    _write(msg: any, encoding: string, callback: () => void): void {
+    _write(msg: any, _encoding: string, callback: () => void): void {
         // Pass the msg on to downstream users
         this.push(msg);
         // Process the message to determine if paper trade should be filled
-        if (!isStreamMessage(msg) || !msg.productId) {
+        if (!isStreamMessage(msg) || !msg.hasOwnProperty('productId')) {
             return callback();
         }
 
@@ -279,7 +279,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
             }
         }
     }
-    private fillLimitOrder(orderBook: BookBuilder, l3Order: Level3Order, tradeMsg: TradeMessage) {
+    private fillLimitOrder(_orderBook: BookBuilder, l3Order: Level3Order, tradeMsg: TradeMessage) {
         const executedMsg: TradeExecutedMessage = {
             type: 'tradeExecuted',
             productId: tradeMsg.productId,
@@ -294,7 +294,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         this.announceTradeExecuted(executedMsg);
         // current implementation completely fills orders, so emit TradeFinalizedMessage as well
         const finalizedMsg: TradeFinalizedMessage = {
-            type: 'tradeExecuted',
+            type: 'tradeFinalized',
             productId: tradeMsg.productId,
             orderId: l3Order.id,
             side: l3Order.side,
@@ -353,7 +353,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         this.announceTradeExecuted(executedMsg);
 
         const finalizedMsg: TradeFinalizedMessage = {
-            type: 'tradeExecuted',
+            type: 'tradeFinalized',
             productId: order.productId,
             orderId: liveOrder.id,
             side: order.side,

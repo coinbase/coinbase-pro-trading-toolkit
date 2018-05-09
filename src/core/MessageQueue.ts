@@ -13,7 +13,11 @@
  ***************************************************************************************************************************/
 
 import { Logger, ConsoleLoggerFactory } from '../utils/Logger';
-import { OrderbookMessage, BaseOrderMessage } from './Messages';
+import { isSequencedMessage,
+         isSnapshotMessage,
+         BaseOrderMessage,
+         OrderbookMessage,
+         SequencedMessage } from './Messages';
 import { RBTree } from 'bintrees';
 import assert = require('assert');
 import { Duplex } from 'stream';
@@ -23,7 +27,7 @@ import { Duplex } from 'stream';
  *
  * @param logger {Logger} An optional logging interface
  *
- * @param product {string} A product to filter for. A single feed might be producing messages form multiple products (each with their own
+ * @param product {string} A product to filter for. A single feed might be producing messages from multiple products (each with their own
  * sequence numbers). This selects for the product so that all messages can be emitted in strictly increasing sequence number.
  *
  * @param targetQueueLength {number} Tries to maintain the queue length at this value. Default is zero, but you can increase to
@@ -69,12 +73,12 @@ export interface MessageQueueConfig {
  * Emitted if a message is about to be sent out, out of sequence and waiting would violate the `targetQueueLength` constraint
  */
 export class MessageQueue extends Duplex {
-    private logger: Logger;
-    private messages: RBTree<OrderbookMessage>;
-    private targetQueueLength: number;
+    private readonly logger: Logger;
+    private readonly messages: RBTree<SequencedMessage>;
+    private readonly targetQueueLength: number;
     private lastSequence: number;
-    private productId: string;
-    private waitForSnapshot: boolean;
+    private readonly productId: string;
+    private readonly waitForSnapshot: boolean;
 
     constructor(options: MessageQueueConfig) {
         super({ readableObjectMode: true, writableObjectMode: true });
@@ -83,7 +87,9 @@ export class MessageQueue extends Duplex {
         this.targetQueueLength = options.targetQueueLength || 10;
         this.lastSequence = -1000;
         this.waitForSnapshot = options.waitForSnapshot;
-        this.clearQueue();
+        this.messages = new RBTree<BaseOrderMessage>((a: BaseOrderMessage, b: BaseOrderMessage) => {
+            return a.sequence - b.sequence;
+        });
     }
 
     get product(): string {
@@ -107,7 +113,7 @@ export class MessageQueue extends Duplex {
      */
     end() {
         // Clear the queue first
-        let message: OrderbookMessage;
+        let message: SequencedMessage;
         // tslint:disable-next-line:no-conditional-assignment
         while (message = this.pop()) {
             this.push(message);
@@ -119,8 +125,8 @@ export class MessageQueue extends Duplex {
      * Add the message to the queue
      * @param message
      */
-    addMessage(message: OrderbookMessage): void {
-        if (message.type === 'snapshot' && this.waitForSnapshot) {
+    addMessage(message: SequencedMessage): void {
+        if (isSnapshotMessage(message) && this.waitForSnapshot) {
             this.lastSequence = message.sequence - 1;
         } else {
             this.messages.insert(message);
@@ -128,12 +134,10 @@ export class MessageQueue extends Duplex {
     }
 
     clearQueue() {
-        this.messages = new RBTree<BaseOrderMessage>((a: BaseOrderMessage, b: BaseOrderMessage) => {
-            return a.sequence - b.sequence;
-        });
+        this.messages.clear();
     }
 
-    _write(inputMessage: any, encoding: string, callback: (err: Error) => void): void {
+    _write(inputMessage: any, _encoding: string, callback: (err: Error) => void): void {
         if (this.defaultMessageHandler(inputMessage)) {
             setImmediate(() => {
                 this._read();
@@ -178,7 +182,7 @@ export class MessageQueue extends Duplex {
         const node = this.messages.min();
         if (node) {
             // If we haven't emitted any messages yet, and we're waiting for a snapshot, it must be the first message
-            if (node.sequence && expectedSequence < 0 && this.waitForSnapshot && node.type !== 'snapshot') {
+            if (node.sequence && expectedSequence < 0 && this.waitForSnapshot && !isSnapshotMessage(node)) {
                 return null;
             }
             // If we've received a snapshot, old messages can be discarded
@@ -211,8 +215,8 @@ export class MessageQueue extends Duplex {
         if (msg.productId !== this.productId) {
             return false;
         }
-        if (msg.sequence) {
-            this.addMessage(msg as OrderbookMessage);
+        if (isSequencedMessage(msg)) {
+            this.addMessage(msg);
         }
         return true;
     }

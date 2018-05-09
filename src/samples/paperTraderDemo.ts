@@ -77,10 +77,10 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
     };
     const book = new LiveOrderbook(liveBookConfig);
     // register for LiveOrderbook events
-    book.on('LiveOrderbook.snapshot', (snapshot: SnapshotMessage) => {
+    book.on('LiveOrderbook.snapshot', (_snapshot: SnapshotMessage) => {
         // maybe do something
     });
-    book.on('LiveOrderbook.ticker', (ticker: Ticker) => {
+    book.on('LiveOrderbook.ticker', (_ticker: Ticker) => {
        // maybe do something
     });
     book.on('LiveOrderbook.trade', (trade: TradeMessage) => {
@@ -89,7 +89,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             const positionDelta = positionDeltaByProduct.getValue(trade.productId);
 
             // if there is no existing delta and trader has not received initial straddle orders
-            if (positionDelta === undefined && trader.state().orderPool && trader.state().asks.length > 0) {
+            if (positionDelta === undefined && JSON.stringify(trader.state().orderPool) === '{}' && !trader.state().asks.length) {
                 // no delta position defined for this product, straddle price with buy/sell orders
                 trader.submitPlaceOrder({
                     type: 'placeOrder',
@@ -99,7 +99,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
                     size: '1',
                     side: 'sell',
                     orderType: 'limit',
-                }) ;
+                });
                 trader.submitPlaceOrder({
                     type: 'placeOrder',
                     time: new Date(),
@@ -109,7 +109,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
                     side: 'buy',
                     orderType: 'limit',
                 });
-            } else if (positionDelta.greaterThan(0)) {
+            } else if (positionDelta && positionDelta.greaterThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place sell order to get back to delta nuetral
                 trader.submitPlaceOrder({
@@ -121,7 +121,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
                     side: 'sell',
                     orderType: 'limit',
                 } as PlaceOrderMessage);
-            } else if (positionDelta.lessThan(0)) {
+            } else if (positionDelta && positionDelta.lessThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place buy order to get back to delta nuetral
                 trader.submitPlaceOrder({
@@ -138,7 +138,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             }
         }
     });
-    book.on('LiveOrderbook.update', (level: LevelMessage) => {
+    book.on('LiveOrderbook.update', (_level: LevelMessage) => {
         // maybe do something
     });
     book.on('LiveOrderbook.skippedMessage', (details: SkippedMessageEvent) => {
