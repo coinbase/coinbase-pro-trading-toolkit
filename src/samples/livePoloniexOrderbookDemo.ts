@@ -44,5 +44,6 @@ FeedFactory(logger, [product]).then((feed: PoloniexFeed) => {
     book.on('end', () => {
         console.log('Orderbook closed');
     });
+    book.on('data',() => {}); //consume book stream
     feed.pipe(book);
 });

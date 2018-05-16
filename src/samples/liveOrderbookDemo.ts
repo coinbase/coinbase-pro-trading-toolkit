@@ -73,6 +73,7 @@ getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
         console.log('Livebook errored: ', err);
         feed.pipe(book);
     });
+    book.on('data',() => {}); //consume book stream
     feed.pipe(book);
 });
 
