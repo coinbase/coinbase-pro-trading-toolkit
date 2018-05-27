@@ -87,10 +87,13 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
         // place appropriate buy/sell order to remain delta neutral
         if (trade.side === 'buy' || trade.side === 'sell') {
             const positionDelta = positionDeltaByProduct.getValue(trade.productId);
+            const pendingBuyOrders = trader.state().asks.length;
+            const pendingSellOrders = trader.state().bids.length;
 
-            // if there is no existing delta and trader has not received initial straddle orders
-            if (positionDelta === undefined && JSON.stringify(trader.state().orderPool) === '{}' && !trader.state().asks.length) {
-                // no delta position defined for this product, straddle price with buy/sell orders
+            // if there is no existing delta and there are no pending buy/sell orders
+            if (positionDelta === undefined &&  pendingBuyOrders === 0 && pendingSellOrders === 0 ) {
+                // then no delta position defined for this product, therefore create "straddle" orders
+                // to buy and sell 1 dollar above and below the last trade price
                 trader.submitPlaceOrder({
                     type: 'placeOrder',
                     time: new Date(),
