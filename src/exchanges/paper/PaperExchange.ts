@@ -1,10 +1,10 @@
 import { PlaceOrderMessage, isStreamMessage, TradeMessage, TradeExecutedMessage, TradeFinalizedMessage } from '../../core';
 import { BookBuilder, LiveOrder, AggregatedLevelWithOrders, Level3Order } from '../../lib';
-import { BigJS } from '../../lib/types';
+import { Big, BigJS } from '../../lib/types';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { Product, PublicExchangeAPI, Ticker, CandleRequestOptions, Candle } from '../PublicExchangeAPI';
 import { HTTPError, GTTError } from '../../lib/errors';
-import { BigNumber } from 'bignumber.js';
+// import { BigNumber } from 'bignumber.js';
 import * as GUID from 'guid';
 import * as Collections from 'typescript-collections';
 import { Duplex } from 'stream';
@@ -23,7 +23,8 @@ export declare interface PaperExchange {
      * This event is emitted whenever the paper exchange injects a TradeExecuted message in the feed stream.
      * Typically, this happens in response to a TradeMessage received from upstream and that TradeMessage is at a price point that would trigger a previously placed order.
      */
-    on(event: 'PaperExchange.TradeExecuted', listner: (msg: TradeExecutedMessage) => void): this;
+    on(event: 'PaperExchange.TradeExecuted', listener: (msg: TradeExecutedMessage) => void): this;
+
     // tslint:disable-next-line:ban-types
     on(event: string, listener: Function): this;
 }
@@ -67,20 +68,20 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         if (order.side !== 'buy' && order.side !== 'sell') {
             return Promise.reject(new GTTError('Order side must be either \'buy\' or \'sell\'.  Ordder side was: ' + order.side));
         }
-        let orderSize;
-        try {
-            orderSize = new BigNumber(order.size);
-            if (orderSize.lessThan(0)) { throw new Error('must be positive'); }
-        } catch (e) {
+
+        // util function, n must be a number (not undefined or NaN) and must be positive
+        const testOrderNum = (n: any): boolean => !n || isNaN(+n) || +n < 0;
+
+        // make sure order price and size are positive numbers before assignment
+        if (testOrderNum(order.price)) {
+            return Promise.reject(new GTTError('Order price must be a positive number'));
+        } else if (testOrderNum(order.size)) {
             return Promise.reject(new GTTError('Order size must be a positive number'));
         }
-        let orderPrice;
-        try {
-            orderPrice = new BigNumber(order.price);
-            if (orderPrice.lessThan(0)) { throw new Error('must be positive'); }
-        } catch (e) {
-            return Promise.reject(new GTTError('Order price must be a positive number'));
-        }
+
+        const orderSize: BigJS = Big(order.size);
+        const orderPrice: BigJS = Big(order.price);
+
         // generate random order id
         const orderID: string = GUID.raw();
         const liveOrder: LiveOrder = {
@@ -94,7 +95,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
             extra: order
         };
         // put copy of the live order in hash to allow quick lookup by orderId
-        this.liveOrdersById.setValue(liveOrder.id,liveOrder);
+        this.liveOrdersById.setValue(liveOrder.id, liveOrder);
         // put limit order in the book to for future lookup by order type and price
         const book = this.getBookForProduct(liveOrder.productId);
         if (order.orderType === 'limit') {
@@ -135,7 +136,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
                 cancelledOrderIds.union(this.collectOrderIds(this.pendingOrdersByProduct.getValue(productId).bidTree));
                 // collect all orders on the sell side
                 cancelledOrderIds.union(this.collectOrderIds(this.pendingOrdersByProduct.getValue(productId).askTree));
-                // remove all order id's from lookup 
+                // remove all order id's from lookup
                 cancelledOrderIds.forEach((orderId) => {
                     this.clearOrder(orderId, productId);
                 });
@@ -202,7 +203,8 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
 
     // -------------------------------------------------------------------------------------------------------------------//
 
-    _read() { /* no-op */ }
+    _read() { /* no-op */
+    }
 
     _write(msg: any, _encoding: string, callback: () => void): void {
         // Pass the msg on to downstream users
@@ -232,12 +234,14 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         }
         return orderIds;
     }
+
     private getBookForProduct(productId: string): BookBuilder {
         if (!this.pendingOrdersByProduct.containsKey(productId)) {
             this.pendingOrdersByProduct.setValue(productId, new BookBuilder(this.logger));
         }
         return this.pendingOrdersByProduct.getValue(productId);
     }
+
     private processTrade(msg: TradeMessage) {
         if (msg.side === 'sell') {
             this.lastSellTradeByProduct.setValue(msg.productId, msg);
@@ -247,7 +251,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         const orderBook = this.pendingOrdersByProduct.getValue(msg.productId);
         // do we have any pending orders for this product?
         if (orderBook !== undefined) {
-            const tradePrice = new BigNumber(msg.price);
+            const tradePrice = Big(msg.price) as BigJS;
 
             // any buy orders at price above this trade?
             if (orderBook.highestBid !== null && orderBook.highestBid.price.greaterThanOrEqualTo(tradePrice)) {
@@ -279,6 +283,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
             }
         }
     }
+
     private fillLimitOrder(_orderBook: BookBuilder, l3Order: Level3Order, tradeMsg: TradeMessage) {
         const executedMsg: TradeExecutedMessage = {
             type: 'tradeExecuted',

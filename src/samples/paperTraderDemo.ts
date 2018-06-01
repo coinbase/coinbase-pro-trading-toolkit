@@ -46,7 +46,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
         if (msg.side === 'buy') {
             deltaChange = Big(msg.tradeSize);
         } else if (msg.side === 'sell') {
-            deltaChange = Big(msg.tradeSize).mul(-1);
+            deltaChange = Big(msg.tradeSize).neg();
         }
         // if delta has not been previously defined
         if (newDelta === undefined) {
