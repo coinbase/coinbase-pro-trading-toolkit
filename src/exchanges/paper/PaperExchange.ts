@@ -4,7 +4,6 @@ import { Big, BigJS } from '../../lib/types';
 import { AuthenticatedExchangeAPI, Balances } from '../AuthenticatedExchangeAPI';
 import { Product, PublicExchangeAPI, Ticker, CandleRequestOptions, Candle } from '../PublicExchangeAPI';
 import { HTTPError, GTTError } from '../../lib/errors';
-// import { BigNumber } from 'bignumber.js';
 import * as GUID from 'guid';
 import * as Collections from 'typescript-collections';
 import { Duplex } from 'stream';
@@ -66,16 +65,16 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
 
         // make sure order message meets expected formats
         if (order.side !== 'buy' && order.side !== 'sell') {
-            return Promise.reject(new GTTError('Order side must be either \'buy\' or \'sell\'.  Ordder side was: ' + order.side));
+            return Promise.reject(new GTTError('Order side must be either \'buy\' or \'sell\'.  Order side was: ' + order.side));
         }
 
         // util function, n must be a number (not undefined or NaN) and must be positive
-        const testOrderNum = (n: any): boolean => !n || isNaN(+n) || +n < 0;
+        const assertPositiveNumber = (n: any): boolean => !n || isNaN(+n) || +n < 0;
 
         // make sure order price and size are positive numbers before assignment
-        if (testOrderNum(order.price)) {
+        if (assertPositiveNumber(order.price)) {
             return Promise.reject(new GTTError('Order price must be a positive number'));
-        } else if (testOrderNum(order.size)) {
+        } else if (assertPositiveNumber(order.size)) {
             return Promise.reject(new GTTError('Order size must be a positive number'));
         }
 
@@ -251,7 +250,7 @@ export class PaperExchange extends Duplex implements PublicExchangeAPI, Authenti
         const orderBook = this.pendingOrdersByProduct.getValue(msg.productId);
         // do we have any pending orders for this product?
         if (orderBook !== undefined) {
-            const tradePrice = Big(msg.price) as BigJS;
+            const tradePrice: BigJS = Big(msg.price);
 
             // any buy orders at price above this trade?
             if (orderBook.highestBid !== null && orderBook.highestBid.price.greaterThanOrEqualTo(tradePrice)) {
