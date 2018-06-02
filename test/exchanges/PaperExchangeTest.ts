@@ -100,6 +100,10 @@ describe('Paper Exchange', () => {
                 });
             });
         });
+/***
+ *
+ *  Although these tests are semantically correct, and work when tested manually, they remain pending when mocha runs them.
+ *  TODO: Figure out why these remain pending in mocha test run.
 
         describe('#loadAllOrders()', () => {
             it('should load all orders for specific product', () => {
@@ -125,7 +129,7 @@ describe('Paper Exchange', () => {
                 return expect(paper.loadAllOrders(null)).to.eventually.have.length(6);
             });
         });
-
+*/
         describe('#loadBalances()', () => {
             it('should load all orders for specific product');
             it('should load all orders for all products');
@@ -153,7 +157,7 @@ describe('Paper Exchange', () => {
             // maybe add something
         });
         it('trade price is above buy limit order', () => {
-            // create buy limit order 
+            // create buy limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'buy'})).then((liveOrder) => {
                 // send trade message through feed that above price for buy limit order just placed
                 mockExchangeFeed.push(generateTradeMessage(liveOrder, {price: liveOrder.price.add(1).toString()}));
@@ -162,7 +166,7 @@ describe('Paper Exchange', () => {
             });
         });
         it('trade pertains to a different product', () => {
-            // create buy limit order 
+            // create buy limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'buy'})).then((liveOrder) => {
                 mockExchangeFeed.push(generateTradeMessage(liveOrder, {productId: 'BTC-XYZ'}));
                 expect(tradeExecutedSpy.notCalled);
@@ -170,7 +174,7 @@ describe('Paper Exchange', () => {
             });
         });
         it('trade price is below sell limit order', () => {
-            // create sell limit order 
+            // create sell limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'sell'})).then((liveOrder) => {
                 // mock trade at price below sell limit
                 mockExchangeFeed.push(generateTradeMessage(liveOrder, {price: liveOrder.price.minus(1).toString()}));
@@ -203,7 +207,7 @@ describe('Paper Exchange', () => {
             // maybe add something
         });
         it('trade price is below buy limit order', () => {
-            // create buy limit order 
+            // create buy limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'buy'})).then((liveOrder) => {
                 // send trade message at price that should trigger the buy limit order just placed
                 const trade = generateTradeMessage(liveOrder, {price: liveOrder.price.minus(1).toString()});
@@ -213,7 +217,7 @@ describe('Paper Exchange', () => {
             });
         });
         it('trade price is at buy limit order', () => {
-            // create buy limit order 
+            // create buy limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'buy'})).then((liveOrder) => {
                 // send trade message at price that should trigger the buy limit order just placed
                 const trade = generateTradeMessage(liveOrder, {price: liveOrder.price.toString()});
@@ -223,7 +227,7 @@ describe('Paper Exchange', () => {
             });
         });
         it('trade price is above sell limit order', () => {
-            // create sell limit order 
+            // create sell limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'sell'})).then((liveOrder) => {
                 // send trade message at price that should trigger the sell limit order
                 const trade = generateTradeMessage(liveOrder, {price: liveOrder.price.add(1).toString()});
@@ -233,7 +237,7 @@ describe('Paper Exchange', () => {
             });
         });
         it('trade price is at sell limit order', () => {
-            // create sell limit order 
+            // create sell limit order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'limit', side: 'sell'})).then((liveOrder) => {
                 // send trade message at price that should trigger the sell limit order
                 const trade = generateTradeMessage(liveOrder, {price: liveOrder.price.toString()});
@@ -255,7 +259,7 @@ describe('Paper Exchange', () => {
                 origin: 'exchange',
             };
             mockExchangeFeed.push(lastTrade);
-            // place buy market order 
+            // place buy market order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'market', side: 'buy'})).then((liveOrder) => {
                 // this should trigger TradeExecutedMessage at price level corresponding to the lastTrade
                 examineTradeExecution(tradeExecutedSpy, liveOrder, lastTrade);
@@ -275,7 +279,7 @@ describe('Paper Exchange', () => {
                 origin: 'exchange',
             };
             mockExchangeFeed.push(lastTrade);
-            // place buy market order 
+            // place buy market order
             return paper.placeOrder(generatePlaceOrder({price: '10.00', orderType: 'market', side: 'sell'})).then((liveOrder) => {
                 // this should trigger TradeExecutedMessage at price level corresponding to the lastTrade
                 examineTradeExecution(tradeExecutedSpy, liveOrder, lastTrade);
@@ -286,7 +290,7 @@ describe('Paper Exchange', () => {
 });
 /**
  * Returns well formed PlaceOrder instance
- * 
+ *
  * @param options override values for the default PlaceOrder
  */
 function generatePlaceOrder(options?: any): PlaceOrderMessage {
