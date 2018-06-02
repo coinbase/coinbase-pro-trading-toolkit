@@ -34,11 +34,11 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
 
     // register for Trade events
     trader.on('Trader.order-placed', (msg: LiveOrder) => {
-        logger.log('info', 'Order placed', JSON.stringify(msg));
+        logger.log('info', 'Order placed', JSON.stringify(msg, null, 2));
     });
 
     trader.on('Trader.trade-executed', (msg: TradeExecutedMessage) => {
-        logger.log('info', 'Trade executed', JSON.stringify(msg));
+        logger.log('info', 'Trade executed', JSON.stringify(msg, null, 2));
 
         let newDelta = positionDeltaByProduct.getValue(msg.productId);
         // after trade is executed, need to recalculate overall position delta
@@ -94,7 +94,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             if (positionDelta === undefined &&  pendingBuyOrders === 0 && pendingSellOrders === 0 ) {
                 // then no delta position defined for this product, therefore create "straddle" orders
                 // to buy and sell 1 dollar above and below the last trade price
-                trader.submitPlaceOrder({
+                trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
@@ -103,7 +103,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
                     side: 'sell',
                     orderType: 'limit',
                 });
-                trader.submitPlaceOrder({
+                trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
@@ -115,7 +115,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             } else if (positionDelta && positionDelta.greaterThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place sell order to get back to delta nuetral
-                trader.submitPlaceOrder({
+                trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
@@ -127,7 +127,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
             } else if (positionDelta && positionDelta.lessThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place buy order to get back to delta nuetral
-                trader.submitPlaceOrder({
+                trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
