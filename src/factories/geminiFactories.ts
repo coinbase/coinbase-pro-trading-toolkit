@@ -56,7 +56,7 @@ export function FeedFactory(logger: Logger, symbol: string, auth?: ExchangeAuthC
         return getSubscribedFeeds({ auth: auth, logger: logger }, productId);
     }).catch((err) => {
         if (logger) {
-            logger.log('error', 'Error subscribing to feed', err);
+            logger.error(err);
         } else {
             console.error(err);
         }

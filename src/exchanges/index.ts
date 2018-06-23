@@ -11,3 +11,6 @@ export * from './bitfinex/BitfinexExchangeAPI';
 export * from './bittrex/BittrexAPI';
 export * from './ccxt';
 export * from './gdax/GDAXExchangeAPI';
+
+// Paper Trading
+export * from './paper/PaperExchange';

@@ -8,104 +8,20 @@
 Provide all the tools traders need, both professional and hobbyist alike, to create automated trading bots on the
 GDAX and supported digital asset exchanges. Note: Node 7.6 or above is required.
 
-## Getting Started
-### Install Prereqs
-Dependending on the OS of your machine, the specific method to install these application will vary.  With a little Google help you can figure out how to install these:
 Recommended:
 * Node 9.4 or above
 * Typescript 2.7
-* Yarn 1.3+
 
-### Install the Module
-If you want to use the published version of the module in an existing TypeScript project:
-```
-yarn add gdax-trading-toolkit
-```
-Then go read the documentation referenced below.
 
-### Work with a local copy of the code
-If you want to more familiar with the source, or even make a contribution
+## Install
+    yarn add gdax-trading-toolkit
 
-#### Download the code
-clone the repository to directory on your machine ($WORKSPACE_ROOT)
+## Test
+ Run the included test suite with the command
 
-#### Install depedency libraries
-From $WORKSPACE_ROOT
-```
-yarn install
-``` 
-#### Test
-Run the test suite just to make sure...
-```
-yarn test
-```
+    yarn test
 
-#### VS Code Setup
-If you use Visual Studio Code the following will be helpful.
-
-1. Create a ".vscode" subdirectory in $WORKSPACE_ROOT
-2. In the .vscode directory, create a "tasks.json" file that will tell VS Code how to build the software (this assumes the TypeScript compiler is in your $PATH)
-```
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "type": "typescript",
-            "label": "tsc",
-            "tsconfig": "tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ]
-}
-``` 
-3. Create "launch.json" file that will allow you to lauch applications for debugging or run the Mocha tests in debug mode
-```
-{
-    "version": "0.2.0",
-    "configurations": [
-        
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Mocha Tests",
-            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "args": [
-                "-u",
-                "tdd",
-                "--timeout",
-                "999999",
-                "--colors",
-                "${workspaceFolder}/test"
-            ],
-            "internalConsoleOptions": "openOnSessionStart",
-            "preLaunchTask": "tsc"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${file}",
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "cwd": "${workspaceRoot}",
-            "outFiles": [
-                "${workspaceFolder}/build/**/*.js"
-            ],
-            "runtimeExecutable": null,
-            "outputCapture" : "std",
-            "preLaunchTask": "tsc"
-        }
-    ]
-}
-```
-
-#### Run
+## Run
 
 The `src/samples` folder contains many working demo scripts showcasing different aspects of the toolkit, while the `tutorials` folder
 contains running demo programs to accompany the [GTT documentation](https://coinbase.github.io/gdax-tt/).

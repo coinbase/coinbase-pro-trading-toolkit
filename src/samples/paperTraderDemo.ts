@@ -16,11 +16,17 @@ import { PlaceOrderMessage } from '../core/index';
 
 const logger = ConsoleLoggerFactory();
 
-const product = 'BTC-USD';
+const product = 'ETH-USD';
 
 // create feed WITHOUT authentication to ensure no account activity can really occur
-GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
-    const paperExchange = new PaperExchange({logger: logger});
+GDAX.FeedFactory(logger, [product]).then((feed: ExchangeFeed) => {
+    const paperExchange = new PaperExchange({
+        logger: logger,
+
+        // To further simulate real trading conditions we can add occasional errors and network latency
+        errorRate: .05, // Expressed as a percentage (.05 === 5%)
+        latencyRange: {low: 25, high: 150} // The paper exchange uses this range of milliseconds to generate random latencies.
+    });
     const positionDeltaByProduct = new Dictionary<string, BigJS>();
 
     // Configure the trader using the Paper Exchange API and not the exchange feed
@@ -34,11 +40,11 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
 
     // register for Trade events
     trader.on('Trader.order-placed', (msg: LiveOrder) => {
-        logger.log('info', 'Order placed', JSON.stringify(msg));
+        logger.log('info', 'Order placed', JSON.stringify(msg, null, 2));
     });
 
     trader.on('Trader.trade-executed', (msg: TradeExecutedMessage) => {
-        logger.log('info', 'Trade executed', JSON.stringify(msg));
+        logger.log('info', 'Trade executed', JSON.stringify(msg, null, 2));
 
         let newDelta = positionDeltaByProduct.getValue(msg.productId);
         // after trade is executed, need to recalculate overall position delta
@@ -46,7 +52,7 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
         if (msg.side === 'buy') {
             deltaChange = Big(msg.tradeSize);
         } else if (msg.side === 'sell') {
-            deltaChange = Big(msg.tradeSize).mul(-1);
+            deltaChange = Big(msg.tradeSize).neg();
         }
         // if delta has not been previously defined
         if (newDelta === undefined) {
@@ -87,54 +93,63 @@ GDAX.FeedFactory(logger, ['BTC-USD']).then((feed: ExchangeFeed) => {
         // place appropriate buy/sell order to remain delta neutral
         if (trade.side === 'buy' || trade.side === 'sell') {
             const positionDelta = positionDeltaByProduct.getValue(trade.productId);
+            const pendingBuyOrders = trader.state().asks.length;
+            const pendingSellOrders = trader.state().bids.length;
 
-            // if there is no existing delta and trader has not received initial straddle orders
-            if (positionDelta === undefined && trader.state().orderPool && trader.state().asks.length > 0) {
-                // no delta position defined for this product, straddle price with buy/sell orders
-                trader.submitPlaceOrder({
+            // if there is no existing delta and there are no pending buy/sell orders
+            if (positionDelta === undefined &&  pendingBuyOrders === 0 && pendingSellOrders === 0 ) {
+                // then no delta position defined for this product, therefore create "straddle" orders
+                // to buy and sell 1 dollar above and below the last trade price
+
+                // We can use the trader placeOrder with PaperExchange to chain orders async...
+                return trader.placeOrder({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
-                    price: Big(trade.price).add(1).toString(),
+                    price: Big(trade.price).add(.01).toString(),
                     size: '1',
                     side: 'sell',
                     orderType: 'limit',
-                }) ;
-                trader.submitPlaceOrder({
-                    type: 'placeOrder',
-                    time: new Date(),
-                    productId: trade.productId,
-                    price: Big(trade.price).minus(1).toString(),
-                    size: '1',
-                    side: 'buy',
-                    orderType: 'limit',
+                }).then(() => {
+                    return trader.placeOrder({
+                        type: 'placeOrder',
+                        time: new Date(),
+                        productId: trade.productId,
+                        price: Big(trade.price).minus(.01).toString(),
+                        size: '1',
+                        side: 'buy',
+                        orderType: 'limit',
+                    });
                 });
-            } else if (positionDelta.greaterThan(0)) {
+            } else if (positionDelta && positionDelta.greaterThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place sell order to get back to delta nuetral
-                trader.submitPlaceOrder({
+
+                // ...or we can simply execute order placement with synchronous call to executeMessage
+                return trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
-                    price: Big(trade.price).add(1).toString(),
+                    price: Big(trade.price).add(.01).toString(),
                     size: deltaChangeNeeded.toString(),
                     side: 'sell',
                     orderType: 'limit',
                 } as PlaceOrderMessage);
-            } else if (positionDelta.lessThan(0)) {
+            } else if (positionDelta && positionDelta.lessThan(0)) {
                 const deltaChangeNeeded = positionDelta.abs();
                 // need to place buy order to get back to delta nuetral
-                trader.submitPlaceOrder({
+                return trader.executeMessage({
                     type: 'placeOrder',
                     time: new Date(),
                     productId: trade.productId,
-                    price: Big(trade.price).minus(1).toString(),
+                    price: Big(trade.price).minus(.01).toString(),
                     size: deltaChangeNeeded.toString(),
                     side: 'buy',
                     orderType: 'limit',
                 } as PlaceOrderMessage);
             } else {
                 // already at delta neutral, so no action needed
+                return null;
             }
         }
     });

@@ -118,24 +118,34 @@ export class Trader extends Writable {
         this._fitOrders = value;
     }
 
-    /**
-     * Call this method with details of the order you would like the trader to place with the exchange.
-     * The events Trader.place-order-failed or Trader.order-placed will be asynchrounously emitted whenever you call this method
-     * 
-     * @param order details of the Order you want to place with this trader
-     */
-    submitPlaceOrder(order: PlaceOrderMessage) {
-        this.executeMessage(order);
+    placeOrder(req: PlaceOrderMessage): Promise<LiveOrder> {
+        if (this.fitOrders) {
+            req.size = req.size ? Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
+            req.funds = req.funds ? Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
+            req.price = Big(req.price).round(this.pricePrecision, 2).toString();
+        }
+        return this.api.placeOrder(req).then((order: LiveOrder) => {
+            if (req.orderType !== 'market') {
+                this.myBook.add(order);
+            } else {
+                this.unfilledMarketOrders.add(order.id);
+            }
+            return order;
+        }).catch((err: StreamError) => {
+            // Errors can fail if they're too precise, too small, or the API is down
+            // We pass the message along, but let the user decide what to do
+            // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
+            this.emitMessageAsync('Trader.place-order-failed', err.asMessage());
+            return null;
+        });
     }
 
-    submitCancelOrderRequest(order: CancelOrderRequestMessage) {
-        this.executeMessage(order);
+    cancelOrder(orderId: string): Promise<string> {
+        // To avoid race conditions, we only actually remove the order
+        // when the tradeFinalized message arrives.
+        return this.api.cancelOrder(orderId);
     }
 
-    /**
-     * Clears out in-memory orderbook of orders, doesn't actually communicate with the exchange
-     * and send cancel order.
-     */
     cancelMyOrders(): Promise<string[]> {
         if (!this.myBook.orderPool) {
             return Promise.resolve([]);
@@ -184,11 +194,7 @@ export class Trader extends Writable {
         });
     }
 
-    /**
-     * This will be called whenever a message is received from the stream.
-     * @param msg 
-     */
-    executeMessage(msg: CancelAllOrdersRequestMessage | CancelMyOrdersRequestMessage | StreamMessage) {
+    executeMessage(msg: any) {
         if (!isTraderStreamMessage(msg)) {
             return;
         }
@@ -220,41 +226,6 @@ export class Trader extends Writable {
     _write(msg: any, _encoding: string, callback: (err?: Error) => any): void {
         this.executeMessage(msg);
         callback();
-    }
-
-    protected placeOrder(req: PlaceOrderMessage): Promise<LiveOrder> {
-        if (this.fitOrders) {
-            req.size = req.size ? Big(req.size).round(this.sizePrecision, 1).toString() : undefined;
-            req.funds = req.funds ? Big(req.funds).round(this.pricePrecision, 1).toString() : undefined;
-            req.price = Big(req.price).round(this.pricePrecision, 2).toString();
-        }
-        return this.api.placeOrder(req).then((order: LiveOrder) => {
-            if (req.orderType !== 'market') {
-                this.myBook.add(order);
-            } else {
-                this.unfilledMarketOrders.add(order.id);
-            }
-            return order;
-        }).catch((err: StreamError) => {
-            // Errors can fail if they're too precise, too small, or the API is down
-            // We pass the message along, but let the user decide what to do
-            // We also have to wrap this call in a setImmediate; else any errors in the event handler will get thrown from here and lead to an unhandledRejection
-            this.emitMessageAsync('Trader.place-order-failed', err.asMessage());
-            return Promise.resolve(null);
-        });
-    }
-
-    /**
-     * Cancels the specified order id
-     * 
-     * @param orderId id of the order to cancel
-     * @returns Procmise with id of the order that was cancelled.  
-     */
-    protected cancelOrder(orderId: string): Promise<string> {
-        return this.api.cancelOrder(orderId).then((id: string) => {
-            // To avoid race conditions, we only actually remove the order when the tradeFinalized message arrives
-            return id;
-        });
     }
 
     private handleOrderRequest(request: PlaceOrderMessage) {

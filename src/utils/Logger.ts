@@ -17,7 +17,7 @@ import { sanitizeMessage } from '../core/Messages';
 export interface Logger {
     log(level: string, message: string, meta?: any): void;
 
-      error(err: Error): void;
+    error(err: Error): void;
 }
 
 export function ConsoleLoggerFactory(options?: winston.ConsoleTransportOptions): Logger {
@@ -32,8 +32,7 @@ export function ConsoleLoggerFactory(options?: winston.ConsoleTransportOptions):
             new winston.transports.Console(consoleOptions)
         ],
         colorize: true,
-        ...(options || {})
-    };
+        ...(options || {})};
     const logger = new winston.Logger(logOptions);
     return {
         log: (level: string, message: string, meta?: any) => {

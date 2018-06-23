@@ -14,5 +14,3 @@ src/**/*.js
 coverage
 .DS_Store
 tutorials/*.js
-
-.vscode

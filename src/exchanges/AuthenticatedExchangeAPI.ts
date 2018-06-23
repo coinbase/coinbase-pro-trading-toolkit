@@ -42,8 +42,6 @@ export interface AuthenticatedExchangeAPI {
 
     /**
      * Load details for a user-placed order on the exchange
-     * 
-     * @param id {string} The order ID to load
      */
     loadOrder(id: string): Promise<LiveOrder>;
 
