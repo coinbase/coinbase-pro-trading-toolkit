@@ -18,13 +18,13 @@ import { AuthenticatedExchangeAPI } from '../exchanges/AuthenticatedExchangeAPI'
 import { BookBuilder } from '../lib/BookBuilder';
 import { Level3Order, LiveOrder, OrderbookState } from '../lib/Orderbook';
 import { CancelOrderRequestMessage,
-         isStreamMessage,
-         MyOrderPlacedMessage,
-         PlaceOrderMessage,
-         StreamMessage,
-         StreamMessageLike,
-         TradeExecutedMessage,
-         TradeFinalizedMessage } from './Messages';
+    isStreamMessage,
+    MyOrderPlacedMessage,
+    PlaceOrderMessage,
+    StreamMessage,
+    StreamMessageLike,
+    TradeExecutedMessage,
+    TradeFinalizedMessage } from './Messages';
 import { OrderbookDiff } from '../lib/OrderbookDiff';
 import { Big, BigJS } from '../lib/types';
 import { StreamError } from '../lib/errors';
@@ -84,7 +84,7 @@ export function isTraderStreamMessage(msg: any): msg is TraderStreamMessage {
 export class Trader extends Writable {
     private readonly _productId: string;
     private readonly logger: Logger;
-     // Used to keep track of all non-market orders this trader has placed.
+    // Used to keep track of all non-market orders this trader has placed.
     private readonly myBook: BookBuilder;
     private readonly api: AuthenticatedExchangeAPI;
     private _fitOrders: boolean = true;
@@ -259,7 +259,7 @@ export class Trader extends Writable {
         if (!order) {
             this.logger.log('warn', 'Traded order not in my book', msg);
             this.emit('Trader.outOfSyncWarning',
-                      `Traded order ${msg.orderId} not in my book`);
+                `Traded order ${msg.orderId} not in my book`);
             return;
         }
         let newSize: BigJS;

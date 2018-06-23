@@ -10,3 +10,4 @@ docs/apiref
 npm-shrinkwrap.json
 yarn.lock
 tsconfig.json
+.vscode/
