@@ -233,11 +233,7 @@ export class Trader extends Writable {
         if (request.productId !== this._productId) {
             return;
         }
-        this.placeOrder(request).then((result: LiveOrder) => {
-            if (result) {
-                this.emitMessageAsync('Trader.order-placed', result);
-            }
-        });
+        this.placeOrder(request);
     }
 
     private handleCancelOrder(request: CancelOrderRequestMessage) {
