@@ -20,7 +20,7 @@ export interface Logger {
     error(err: Error): void;
 }
 
-export function ConsoleLoggerFactory(options?: winston.ConsoleTransportOptions): Logger {
+export function ConsoleLoggerFactory(options?: winston.LoggerOptions): Logger {
     const consoleOptions: winston.ConsoleTransportOptions = {
         colorize: 'all',
         json: false,
