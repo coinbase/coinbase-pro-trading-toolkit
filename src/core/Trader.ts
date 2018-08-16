@@ -164,8 +164,8 @@ export class Trader extends Writable {
      * Cancel all, and we mean ALL orders (even those not placed by this Trader). To cancel only the messages
      * listed in the in-memory orderbook, use `cancelMyOrders`
      */
-    cancelAllOrders(): Promise<string[]> {
-        return this.api.cancelAllOrders().then((ids: string[]) => {
+    cancelAllOrders(productId?: string): Promise<string[]> {
+        return (productId ? this.api.cancelAllOrders(productId) : this.api.cancelAllOrders()).then((ids: string[]) => {
             this.myBook.clear();
             this.emitMessageAsync('Trader.all-orders-cancelled', ids);
             return ids;
