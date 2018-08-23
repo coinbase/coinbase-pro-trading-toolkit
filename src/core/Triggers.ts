@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { StreamMessage, TickerMessage } from './Messages';
+import { StreamMessage, TickerMessage, TradeExecutedMessage } from './Messages';
 import { ExchangeFeed } from '../exchanges/ExchangeFeed';
 import { Big, BigJS, Biglike } from '../lib/types';
 
@@ -117,5 +117,5 @@ export function createTradeExecutedTrigger(feed: ExchangeFeed, orderId: string, 
         }
 	
     };
-    return trigger.setFilter(triggerFilter);
+    return trigger.setFilter(triggerCondition);
 }
