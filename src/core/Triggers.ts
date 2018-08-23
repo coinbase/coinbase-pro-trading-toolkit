@@ -100,3 +100,22 @@ export function createTickerTrigger(feed: ExchangeFeed, product: string, onlyOnc
     };
     return trigger.setFilter(tickerFilter);
 }
+
+/**
+ * Creates a new trade executed trigger. The feed and orderId specify which TradeExecuted messages to watch for. 
+ */
+export function createTradeExecutedTrigger(feed: ExchangeFeed, orderId: string, onlyOnce: boolean = true): Trigger<TradeExecutedMessage> {
+    const trigger = new Trigger<TradeExecutedMessage>(feed);
+    const triggerCondition: TriggerFilter = (msg: StreamMessage) => {
+        if (    msg.type === 'tradeExecuted' 
+                && (msg as TradeExecutedMessage).orderId === orderId) {
+            if(onlyOnce) {
+                trigger.cancel();
+            }
+
+            trigger.execute(msg as TradeExecutedMessage);
+        }
+	
+    };
+    return trigger.setFilter(triggerFilter);
+}
