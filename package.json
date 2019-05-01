@@ -1,6 +1,6 @@
 {
   "name": "coinbase-pro-trading-toolkit",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A trading toolkit for building advanced trading bots on the Coinbase Pro platform",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
