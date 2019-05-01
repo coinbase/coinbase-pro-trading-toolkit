@@ -92,7 +92,7 @@ requires an explicit import of the `CoinbaseProFeed` type. Most TypeScript-frien
 If you have Git installed and would like to look at, or better yet, [contribute](/contributing.html), first
 clone the source by running
 
-    git clone git@github.com:coinbase/coinbase-pro-tt.git
+    git clone git@github.com:coinbase/coinbase-pro-trading-toolkit.git
 
 ## Running tests
 

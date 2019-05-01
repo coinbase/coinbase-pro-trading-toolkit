@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/coinbase-pro-tt.git"
+    "url": "git@github.com:coinbase/coinbase-pro-trading-toolkit.git"
   },
   "keywords": [
     "coinbase-pro",

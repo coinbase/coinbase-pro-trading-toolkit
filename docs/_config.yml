@@ -1,4 +1,4 @@
-repository: coinbase/coinbase-pro-tt
+repository: coinbase/coinbase-pro-trading-toolkit
 
 output: web
 # this property is useful for conditional filtering of content that is separate from the PDF.

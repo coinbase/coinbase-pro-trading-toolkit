@@ -17,9 +17,9 @@ contribute to the project, but please note the following:
 
 This is an open-source project. This means that there are as many different ideas and thoughts on how to code, test and architect as there are contributors. This also means that getting code into production will often take longer than your average closed-source or corporate project and _way_ longer than any project that you run yourself.
 
-All contributions must adhere to the [General Coinbase Contribution Guidelines](https://github.com/coinbase/coinbase-pro-tt/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/coinbase/code-of-conduct)
+All contributions must adhere to the [General Coinbase Contribution Guidelines](https://github.com/coinbase/coinbase-pro-trading-toolkit/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/coinbase/code-of-conduct)
 
-To contribute to the CBPTT, [fork the project on GitHub](https://github.com/coinbase/coinbase-pro-tt/), make your changes and [submit them as a PR](https://github.com/coinbase/coinbase-pro-tt/pulls).
+To contribute to the CBPTT, [fork the project on GitHub](https://github.com/coinbase/coinbase-pro-trading-toolkit/), make your changes and [submit them as a PR](https://github.com/coinbase/coinbase-pro-trading-toolkit/pulls).
 
 In addition to the general Coinbase contribution guidelines, there are some additional guidelines for the CBPTT specifically.
 
@@ -102,4 +102,4 @@ $ echo ".idea" >> .git/info/exclude
 
 
 
-[1]: https://github.com/coinbase/coinbase-pro-tt/issues
+[1]: https://github.com/coinbase/coinbase-pro-trading-toolkit/issues

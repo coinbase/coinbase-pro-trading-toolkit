@@ -27,4 +27,4 @@ topnav_dropdowns:
         - title: Coinbase Pro API Documentation
           external_url: https://docs.pro.coinbase.com/
         - title: CBPTT Github repository
-          external_url: https://github.com/coinbase/coinbase-pro-tt
+          external_url: https://github.com/coinbase/coinbase-pro-trading-toolkit
