@@ -312,9 +312,9 @@ export class LiveOrderbook extends Duplex implements Orderbook {
     }
 
     private processDoneMessage(msg: OrderDoneMessage) {
-        // If we're using an order pool, then we only remove orders that we're aware of. GDAX, for example might
+        // If we're using an order pool, then we only remove orders that we're aware of. Coinbase Pro, for example might
         // send a done message for a stop order that is cancelled (and was not previously known to us).
-        // Also filled orders will already have been removed by the time a GDAX done order reaches here
+        // Also filled orders will already have been removed by the time a Coinbase Pro done order reaches here
         if (!this._book.hasOrder(msg.orderId)) {
             return;
         }

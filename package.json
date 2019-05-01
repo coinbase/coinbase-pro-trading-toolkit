@@ -1,7 +1,7 @@
 {
-  "name": "gdax-trading-toolkit",
+  "name": "coinbase-pro-trading-toolkit",
   "version": "0.3.1",
-  "description": "A trading toolkit for building advanced trading bots on the GDAX platform",
+  "description": "A trading toolkit for building advanced trading bots on the Coinbase Pro platform",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
@@ -13,19 +13,20 @@
     "test:mocha": "./node_modules/.bin/mocha",
     "test": "yarn run lint && yarn run test:mocha",
     "clean": "rm -fr build coverage .nyc_output",
-    "doc": "yarn run readme && ./node_modules/.bin/typedoc --options typedoc.json .",
+    "doc": "yarn run readme && ./node_modules/.bin/typedoc --options typedoc.json src/",
     "readme": "node generate-md.js",
     "prepublishOnly": "yarn run build"
   },
   "bin": {
-    "gdaxConsole": "./build/src/consoles/gdaxConsole.js"
+    "coinbaseProConsole": "./build/src/consoles/coinbaseProConsole.js"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/gdax-tt.git"
+    "url": "git@github.com:coinbase/coinbase-pro-trading-toolkit.git"
   },
   "keywords": [
-    "gdax",
+    "coinbase-pro",
+    "coinbase pro",
     "trading",
     "toolkit",
     "bot",
@@ -48,8 +49,8 @@
     "bignumber.js": "5.0.0",
     "bintrees": "1.0.1",
     "ccxt": "1.12.137",
+    "coinbase-pro": "0.9.0",
     "commander": "2.9.0",
-    "gdax": "0.7.0",
     "limiter": "1.1.2",
     "node-bittrex-api": "0.7.7",
     "pushbullet": "2.0.0",
@@ -64,7 +65,6 @@
     "@types/mocha": "2.2.33",
     "expect.js": "0.3.1",
     "markdown-magic": "0.1.20",
-    "markdown-magic-github-contributors": "0.0.3",
     "markdown-magic-version-badge": "1.1.1",
     "mocha": "3.2.0",
     "nock": "9.0.2",
@@ -72,10 +72,7 @@
     "source-map-support": "0.4.16",
     "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
-    "typedoc": "0.8.0",
+    "typedoc": "0.11.1",
     "typescript": "^2.7.2"
-  },
-  "resolutions": {
-    "deasync": "^0.1.12"
   }
 }

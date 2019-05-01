@@ -15,9 +15,9 @@
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { isOrderbookMessage, OrderbookMessage } from '../core/Messages';
 import { HFTFilter } from '../core/HFTFilter';
-import { getSubscribedFeeds } from '../factories/gdaxFactories';
+import { getSubscribedFeeds } from '../factories/coinbaseProFactories';
 import { MessageQueue, MessageQueueConfig } from '../core/MessageQueue';
-import { GDAXFeedConfig } from '../exchanges/gdax/GDAXFeed';
+import { CoinbaseProFeedConfig } from '../exchanges/coinbasePro/CoinbaseProFeed';
 
 const products = ['BTC-USD', 'BTC-EUR', 'ETH-USD'];
 const icons = ['.', 'x', '+'];
@@ -26,9 +26,9 @@ const icons = ['.', 'x', '+'];
 const logger = ConsoleLoggerFactory();
 const tally: { [index: string]: number } = { filtered: 0 };
 // Let's subscribe to more than one product to illustrate the product filter
-const options: GDAXFeedConfig = {
-    wsUrl: 'https://ws-feed.gdax.com',
-    apiUrl: 'https://api.gdax.com',
+const options: CoinbaseProFeedConfig = {
+    wsUrl: 'https://ws-feed.pro.coinbase.com',
+    apiUrl: 'https://api.pro.coinbase.com',
     logger: logger,
     channels: null,
     auth: null,

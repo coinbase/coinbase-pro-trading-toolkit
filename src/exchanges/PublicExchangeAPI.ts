@@ -36,17 +36,17 @@ export interface PublicExchangeAPI {
     /**
      * Load the mid-market price from the exchange's ticker. Resolves with the latest midmarket price, or else rejects with an HTTPError
      */
-    loadMidMarketPrice(gdaxProduct: string): Promise<BigJS>;
+    loadMidMarketPrice(coinbaseProProduct: string): Promise<BigJS>;
 
     /**
      * Load the order book from the REST API and resolves as an aggregated book as a #{../core/BookBuilder} object, otherwise the promise is rejected with an HTTPError
      */
-    loadOrderbook(gdaxProduct: string): Promise<BookBuilder>;
+    loadOrderbook(coinbaseProProduct: string): Promise<BookBuilder>;
 
     /**
      * Load the ticker for the configured product from the REST API, Resolves with the latest ticker object, or else rejects with an HTTPError
      */
-    loadTicker(gdaxProduct: string): Promise<Ticker>;
+    loadTicker(coinbaseProProduct: string): Promise<Ticker>;
 
     loadCandles(options: CandleRequestOptions): Promise<Candle[]>;
 }
@@ -61,7 +61,7 @@ export interface Candle {
 }
 
 export interface CandleRequestOptions {
-    gdaxProduct: string;
+    coinbaseProProduct: string;
     interval: CandleInterval;
     from: Date;
     limit: number;
@@ -82,7 +82,7 @@ IntervalInMS['3d'] = 3 * IntervalInMS['1d'];
 IntervalInMS['7d'] = 7 * IntervalInMS['1d'];
 
 /**
- * The interface for the book ticker. The standard GDAX api is employed. See (https://docs.gdax.com/#get-product-ticker)
+ * The interface for the book ticker. The standard Coinbase Pro api is employed. See (https://docs.pro.coinbase.com/#get-product-ticker)
  */
 export interface Ticker {
     productId: string;

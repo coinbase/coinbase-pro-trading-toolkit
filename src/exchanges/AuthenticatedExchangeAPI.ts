@@ -38,7 +38,7 @@ export interface AuthenticatedExchangeAPI {
     /**
      * Cancel all orders. If product is truthy, only cancel orders from that book
      */
-    cancelAllOrders(gdaxProduct?: string): Promise<string[]>;
+    cancelAllOrders(coinbaseProProduct?: string): Promise<string[]>;
 
     /**
      * Load details for a user-placed order on the exchange
@@ -49,7 +49,7 @@ export interface AuthenticatedExchangeAPI {
      * Loads all currently active orders placed by the user (i.e. not the full orderbook). If product is undefined, load
      * all orders from all books
      */
-    loadAllOrders(gdaxProduct?: string): Promise<LiveOrder[]>;
+    loadAllOrders(coinbaseProProduct?: string): Promise<LiveOrder[]>;
 
     /**
      * Return the balances for all the accounts the user has associated with the current authentication credentials

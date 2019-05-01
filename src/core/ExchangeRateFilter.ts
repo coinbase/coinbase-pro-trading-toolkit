@@ -29,7 +29,7 @@ const PRICE_FIELDS = ['price', 'bid', 'ask', 'lastPrice'];
 const ARRAY_FIELDS = ['bids', 'asks'];
 
 /**
- * Implements a stream filter that applies an exchange rate to a stream of GDAX messages.
+ * Implements a stream filter that applies an exchange rate to a stream of Coinbase Pro messages.
  *
  *
  * If the FXService has any problems and enters an ErrorState, the  filter will continue to convert prices, but you

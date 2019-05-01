@@ -13,7 +13,6 @@
  ***************************************************************************************************************************/
 
 import { FXRateCalculator } from './FXRateCalculator';
-import Timer = NodeJS.Timer;
 import { CurrencyPair, FXObject, pairAsString } from './FXProvider';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { EventEmitter } from 'events';
@@ -48,7 +47,7 @@ export class FXService extends EventEmitter {
     private _calculator: FXRateCalculator;
     private _refreshInterval: number;
     private _currencyPairs: CurrencyPair[] = [];
-    private timer: Timer;
+    private timer: NodeJS.Timer;
     private _rates: FXRates;
     private _logger: Logger;
     private errorState: boolean;

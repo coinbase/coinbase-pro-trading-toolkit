@@ -12,17 +12,17 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import * as GTT from 'gdax-trading-toolkit';
+import * as CBPTT from 'coinbase-pro-trading-toolkit';
 import {
     BitfinexConfig,
     BitfinexExchangeAPI
-} from "gdax-trading-toolkit/build/src/exchanges/bitfinex/BitfinexExchangeAPI";
-import { GDAXConfig } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXInterfaces";
-import { GDAXExchangeAPI } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXExchangeAPI";
-import { PublicExchangeAPI, Ticker } from "gdax-trading-toolkit/build/src/exchanges/PublicExchangeAPI";
+} from "coinbase-pro-trading-toolkit/build/src/exchanges/bitfinex/BitfinexExchangeAPI";
+import { CoinbaseProConfig } from "coinbase-pro-trading-toolkit/build/src/exchanges/coinbasePro/CoinbaseProInterfaces";
+import { CoinbaseProExchangeAPI } from "coinbase-pro-trading-toolkit/build/src/exchanges/coinbasePro/CoinbaseProExchangeAPI";
+import { PublicExchangeAPI, Ticker } from "coinbase-pro-trading-toolkit/build/src/exchanges/PublicExchangeAPI";
 
-const padfloat = GTT.utils.padfloat;
-const logger = GTT.utils.ConsoleLoggerFactory({ level: 'info' });
+const padfloat = CBPTT.utils.padfloat;
+const logger = CBPTT.utils.ConsoleLoggerFactory({ level: 'info' });
 
 const bitfinexConfig: BitfinexConfig = {
     logger: logger,
@@ -32,20 +32,20 @@ const bitfinexConfig: BitfinexConfig = {
     }
 };
 
-const gdaxConfig: GDAXConfig = {
+const coinbaseProConfig: CoinbaseProConfig = {
     logger: logger,
-    apiUrl: process.env.GDAX_API_URL || 'https://api.gdax.com',
+    apiUrl: process.env.COINBASE_PRO_API_URL || 'https://api.pro.coinbase.com',
     auth: {
-        key: process.env.GDAX_KEY,
-        secret: process.env.GDAX_SECRET,
-        passphrase: process.env.GDAX_PASSPHRASE
+        key: process.env.COINBASE_PRO_KEY,
+        secret: process.env.COINBASE_PRO_SECRET,
+        passphrase: process.env.COINBASE_PRO_PASSPHRASE
     }
 };
 
 const bitfinex = new BitfinexExchangeAPI(bitfinexConfig);
-const gdax = new GDAXExchangeAPI(gdaxConfig);
+const coinbasePro = new CoinbaseProExchangeAPI(coinbaseProConfig);
 
-const publicExchanges: PublicExchangeAPI[] = [gdax, bitfinex];
+const publicExchanges: PublicExchangeAPI[] = [coinbasePro, bitfinex];
 
 setInterval(() => {
     getAndPrintTickers(publicExchanges, 'BTC-USD').then(() => {

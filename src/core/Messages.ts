@@ -19,7 +19,7 @@ import { Ticker } from '../exchanges/PublicExchangeAPI';
 export type OrderType = 'limit' | 'market' | 'stop';
 
 /**
- * Interfaces for the GTT Stream message types. These messages are generated and passed on my the GTT streaming
+ * Interfaces for the CBPTT Stream message types. These messages are generated and passed on my the CBPTT streaming
  * infrastructure. The `type` field is conventionally named after the interface, first letter lowercased,  with the word Message
  * stripped out, so e.g. HeartbeatMessage => heartbeat and NewOrderMessage => newOrder
  *

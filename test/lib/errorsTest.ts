@@ -13,27 +13,27 @@
  **********************************************************************************************************************/
 
 import assert = require('assert');
-import { APIError, GTTError, HTTPError, ResponseLike } from '../../src/lib/errors';
+import { APIError, CBPTTError, HTTPError, ResponseLike } from '../../src/lib/errors';
 import { ErrorMessage } from '../../src/core/Messages';
 
 describe('Errors', () => {
-    describe('GTTError', () => {
+    describe('CBPTTError', () => {
         it('accepts an error as metadata', () => {
             const cause = new Error('a bug');
-            const err = new GTTError('GTT Error Test 1', cause);
+            const err = new CBPTTError('CBPTT Error Test 1', cause);
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
-            assert.equal(msg.message, 'GTT Error Test 1');
+            assert.equal(msg.message, 'CBPTT Error Test 1');
             assert.deepEqual(msg.cause, cause);
         });
 
         it('behaves like a standard error', () => {
-            const err = new GTTError('GTT Error Test 2');
+            const err = new CBPTTError('CBPTT Error Test 2');
             const msg: ErrorMessage = err.asMessage();
             assert.equal(msg.type, 'error');
             assert.ok(msg.time);
-            assert.equal(msg.message, 'GTT Error Test 2');
+            assert.equal(msg.message, 'CBPTT Error Test 2');
             assert.equal(msg.cause, undefined);
         });
     });

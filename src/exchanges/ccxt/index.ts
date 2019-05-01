@@ -23,7 +23,7 @@ import { BookBuilder } from '../../lib/BookBuilder';
 import { PlaceOrderMessage, TradeMessage } from '../../core/Messages';
 import { Level3Order, LiveOrder } from '../../lib/Orderbook';
 import { Logger } from '../../utils/Logger';
-import { GTTError, HTTPError } from '../../lib/errors';
+import { CBPTTError, HTTPError } from '../../lib/errors';
 
 type ExchangeDefinition = [string, new (opts: any) => ccxt.Exchange];
 // Supported exchanges, minus those with native support
@@ -91,7 +91,6 @@ const exchanges: { [index: string]: ExchangeDefinition } = {
     fybsg: ['FYB-SG', ccxt.fybsg],
     gatecoin: ['Gatecoin', ccxt.gatecoin],
     gateio: ['Gate.io', ccxt.gateio],
-    // gdax: ['GDAX', ccxt.gdax],
     gemini: ['Gemini', ccxt.gemini],
     getbtc: ['GetBTC', ccxt.getbtc],
     hadax: ['HADAX', ccxt.hadax],
@@ -167,7 +166,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return result;
     }
 
-    static getGDAXSymbol(m: ccxt.Market): string {
+    static getCoinbaseProSymbol(m: ccxt.Market): string {
         return `${m.base}-${m.quote}`;
     }
 
@@ -190,8 +189,8 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         this.logger.log(level, msg, meta);
     }
 
-    getSourceSymbol(gdaxProduct: string): Promise<string> {
-        const [base, quote] = gdaxProduct.split('-');
+    getSourceSymbol(coinbaseProProduct: string): Promise<string> {
+        const [base, quote] = coinbaseProProduct.split('-');
         return this.instance.loadMarkets(false).then((markets) => {
             for (const id in markets) {
                 const m = markets[id];
@@ -200,7 +199,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 }
             }
             return null;
-        }).catch((err: Error) => rejectWithError(`Error loading symbols for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
+        }).catch((err: Error) => rejectWithError(`Error loading symbols for ${coinbaseProProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     loadProducts(): Promise<Product[]> {
@@ -212,7 +211,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             for (const id in markets) {
                 const m = markets[id];
                 const product: Product = {
-                    id: CCXTExchangeWrapper.getGDAXSymbol(m),
+                    id: CCXTExchangeWrapper.getCoinbaseProSymbol(m),
                     sourceId: m.id,
                     baseCurrency: m.base,
                     quoteCurrency: m.quote,
@@ -227,17 +226,17 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         }).catch((err: Error) => rejectWithError(`Error loading products on ${this.instance.name} (CCXT)`, err));
     }
 
-    loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
-        return this.loadTicker(gdaxProduct).then((t: Ticker) => {
+    loadMidMarketPrice(coinbaseProProduct: string): Promise<BigJS> {
+        return this.loadTicker(coinbaseProProduct).then((t: Ticker) => {
             if (!(t && t.ask && t.bid)) {
-                return Promise.reject(new HTTPError(`Error loading ticker for ${gdaxProduct} from ${this.instance.name} (CCXT)`, {status: 200, body: t}));
+                return Promise.reject(new HTTPError(`Error loading ticker for ${coinbaseProProduct} from ${this.instance.name} (CCXT)`, {status: 200, body: t}));
             }
             return Promise.resolve(t.bid.plus(t.ask).div(2));
         });
     }
 
-    loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
-        return this.getSourceSymbol(gdaxProduct).then((id: string) => {
+    loadOrderbook(coinbaseProProduct: string): Promise<BookBuilder> {
+        return this.getSourceSymbol(coinbaseProProduct).then((id: string) => {
             return this.instance.fetchOrderBook(id);
         }).then((ccxtBook: ccxt.OrderBook) => {
             const book: BookBuilder = new BookBuilder(this.logger);
@@ -258,18 +257,18 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
             addSide('buy', ccxtBook.bids);
             addSide('sell', ccxtBook.asks);
             return book;
-        }).catch((err: Error) => rejectWithError(`Error loading order book for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
+        }).catch((err: Error) => rejectWithError(`Error loading order book for ${coinbaseProProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
-    loadTicker(gdaxProduct: string): Promise<Ticker> {
-        return this.getSourceSymbol(gdaxProduct).then((id: string) => {
+    loadTicker(coinbaseProProduct: string): Promise<Ticker> {
+        return this.getSourceSymbol(coinbaseProProduct).then((id: string) => {
             return this.instance.fetchTicker(id);
         }).then((ticker: any) => {
             if (!ticker) {
                 return null;
             }
             const t: Ticker = {
-                productId: gdaxProduct,
+                productId: coinbaseProProduct,
                 price: ZERO,
                 time: new Date(ticker.timestamp),
                 ask: Big(ticker.bid),
@@ -277,11 +276,11 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
                 volume: Big(ticker.baseVolume)
             };
             return t;
-        }).catch((err: Error) => rejectWithError(`Error loading ticker for ${gdaxProduct} on ${this.instance.name} (CCXT)`, err));
+        }).catch((err: Error) => rejectWithError(`Error loading ticker for ${coinbaseProProduct} on ${this.instance.name} (CCXT)`, err));
     }
 
     loadCandles(options: CandleRequestOptions): Promise<Candle[]> {
-        const product = options.gdaxProduct;
+        const product = options.coinbaseProProduct;
         if (!product) {
             return Promise.reject(new Error('No product ID provided to loadCandles'));
         }
@@ -332,7 +331,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    cancelAllOrders(_gdaxProduct?: string): Promise<string[]> {
+    cancelAllOrders(_coinbaseProProduct?: string): Promise<string[]> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
@@ -340,7 +339,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
         return Promise.reject(new Error('Not implemented yet'));
     }
 
-    loadAllOrders(_gdaxProduct?: string): Promise<LiveOrder[]> {
+    loadAllOrders(_coinbaseProProduct?: string): Promise<LiveOrder[]> {
         return Promise.reject(new Error('Not implemented yet'));
     }
 
@@ -407,7 +406,7 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 
     async fetchOHLCV(symbol: string, timeframe?: string, since?: number, limit?: number, params?: any): Promise<ccxt.OHLCV[] | null> {
         if (!this.instance.hasFetchOHLCV) {
-            return Promise.reject(new GTTError(`${this.instance.name} does not support candles`));
+            return Promise.reject(new CBPTTError(`${this.instance.name} does not support candles`));
         }
         const sourceSymbol = await this.getSourceSymbol(symbol);
         try {
@@ -419,6 +418,6 @@ export default class CCXTExchangeWrapper implements PublicExchangeAPI, Authentic
 }
 
 function rejectWithError(msg: string, error: any): Promise<never> {
-    const err = new GTTError(`${error.constructor.name}: ${msg}`, error);
+    const err = new CBPTTError(`${error.constructor.name}: ${msg}`, error);
     return Promise.reject(err);
 }
