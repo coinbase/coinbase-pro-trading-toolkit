@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/coinbase/coinbase-pro-trading-toolkit.svg?style=svg)](https://circleci.com/gh/coinbase/coinbase-pro-trading-toolkit)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (VERSIONBADGE) -->
-[![npm](https://img.shields.io/badge/npm-v0.3.1-green.svg)](https://www.npmjs.com/package/coinbase-pro-trading-toolkit)
+[![npm](https://img.shields.io/badge/npm-v0.4.0-green.svg)](https://www.npmjs.com/package/coinbase-pro-trading-toolkit)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 **Note**: The `gdax-trading-toolkit` package is deprecated and might have to be removed from NPM. Please migrate to the `coinbase-pro-trading-toolkit` package to ensure future compatibility.
