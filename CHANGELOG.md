@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.0
+
+**Note**: The `gdax-trading-toolkit` package is deprecated and might have to be removed from NPM. Please migrate to the `coinbase-pro-trading-toolkit` package to ensure future compatibility.
+
+* Rename the module to `coinbase-pro-trading-toolkit`.
+  - Unfortunately, this includes a lot of changed method names and signatures.
+
 ## 0.3.1
 * Candles support via `loadCandles` method on Public API interface.
 * Support for Typescript 2.7
