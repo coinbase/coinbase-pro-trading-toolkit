@@ -18,7 +18,6 @@ const markdownMagic = require('markdown-magic');
 const config = {
     transforms: {
         VERSIONBADGE: require('markdown-magic-version-badge'),
-        CONTRIBUTORS: require('markdown-magic-github-contributors')
     }
 };
 

@@ -29,11 +29,11 @@ export { ConsoleLoggerFactory } from '../utils/Logger';
 export { SimpleFXServiceFactory, FXProviderFactory } from './fxServiceFactories';
 
 /**
- * GDAX factories
+ * Coinbase Pro factories
  */
 
-import * as GDAX from './gdaxFactories';
-export  { GDAX };
+import * as CoinbasePro from './coinbaseProFactories';
+export  { CoinbasePro };
 
 /**
  * Bitfinex factories

@@ -13,13 +13,13 @@
  ***************************************************************************************************************************/
 
 /**
- * This script demonstrates how to access Bitfinex's and GDAX trading APIs using the same set of standardized calls,
+ * This script demonstrates how to access Bitfinex's and Coinbase Pro trading APIs using the same set of standardized calls,
  * returning data in a consistent format
  */
 import { BitfinexConfig,
          BitfinexExchangeAPI } from '../exchanges/bitfinex/BitfinexExchangeAPI';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
-import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { CoinbaseProExchangeAPI } from '../exchanges/coinbasePro/CoinbaseProExchangeAPI';
 import { PublicExchangeAPI, Ticker } from '../exchanges/PublicExchangeAPI';
 import { BookBuilder } from '../lib/BookBuilder';
 import { printOrderbook, printTicker } from '../utils/printers';
@@ -27,7 +27,7 @@ import { AuthenticatedExchangeAPI,
          Balances } from '../exchanges/AuthenticatedExchangeAPI';
 import { LiveOrder } from '../lib/Orderbook';
 import { DefaultAPI } from '../factories/bittrexFactories';
-import { GDAXConfig } from '../exchanges/gdax/GDAXInterfaces';
+import { CoinbaseProConfig } from '../exchanges/coinbasePro/CoinbaseProInterfaces';
 
 const logger: Logger = ConsoleLoggerFactory({ level: 'info' });
 
@@ -39,21 +39,21 @@ const bitfinexConfig: BitfinexConfig = {
     }
 };
 
-const gdaxConfig: GDAXConfig = {
+const coinbaseProConfig: CoinbaseProConfig = {
     logger: logger,
-    apiUrl: process.env.GDAX_API_URL || 'https://api.gdax.com',
+    apiUrl: process.env.COINBASE_PRO_API_URL || 'https://api.pro.coinbase.com',
     auth: {
-        key: process.env.GDAX_KEY,
-        secret: process.env.GDAX_SECRET,
-        passphrase: process.env.GDAX_PASSPHRASE
+        key: process.env.COINBASE_PRO_KEY,
+        secret: process.env.COINBASE_PRO_SECRET,
+        passphrase: process.env.COINBASE_PRO_PASSPHRASE
     }
 };
 
 const bitfinex = new BitfinexExchangeAPI(bitfinexConfig);
-const gdax = new GDAXExchangeAPI(gdaxConfig);
+const coinbasePro = new CoinbaseProExchangeAPI(coinbaseProConfig);
 const bittrex = DefaultAPI(logger);
 
-const publicExchanges: PublicExchangeAPI[] = [bitfinex, gdax, bittrex];
+const publicExchanges: PublicExchangeAPI[] = [bitfinex, coinbasePro, bittrex];
 const product = 'ETH-BTC';
 const [baseCurrency, quoteCurrency] = product.split('-');
 
@@ -78,10 +78,10 @@ publicExchanges.forEach((exchange: PublicExchangeAPI) => {
 });
 
 // If you have the requisite API keys set, then the following will illustrate some authenticated endpoints
-const runAuth: boolean = !!bitfinexConfig.auth.key && !!gdaxConfig.auth.key;
+const runAuth: boolean = !!bitfinexConfig.auth.key && !!coinbaseProConfig.auth.key;
 
 if (runAuth) {
-    const authExchanges: AuthenticatedExchangeAPI[] = [gdax, bitfinex];
+    const authExchanges: AuthenticatedExchangeAPI[] = [coinbasePro, bitfinex];
     authExchanges.forEach((exchange: AuthenticatedExchangeAPI) => {
         exchange.loadBalances().then((balances: Balances) => {
             logger.log('info', `\n${exchange.owner} wallet balances:`);

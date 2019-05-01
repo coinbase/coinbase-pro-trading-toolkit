@@ -21,8 +21,8 @@ import { ExchangeAuthConfig } from '../exchanges/AuthConfig';
 let publicAPIInstance: BittrexAPI;
 
 /**
- * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
- * key details are found in the GDAX_KEY etc. envars, they will be used
+ * A convenience function that returns a CoinbaseProExchangeAPI instance for accessing REST methods conveniently. If API
+ * key details are found in the COINBASE_PRO_KEY etc. envars, they will be used
  */
 export function DefaultAPI(logger: Logger): BittrexAPI {
     if (!publicAPIInstance) {

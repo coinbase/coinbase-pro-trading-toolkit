@@ -192,7 +192,7 @@ export class HFTFilter extends Duplex {
                 return callback(null);
             }
         } catch (e) {
-            err = new Error('Invalid GDAX websocket message');
+            err = new Error('Invalid Coinbase Pro websocket message');
             (err as any).data = data;
             return callback(err);
         }

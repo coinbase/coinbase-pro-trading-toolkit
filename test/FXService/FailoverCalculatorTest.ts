@@ -14,7 +14,7 @@
 
 import { CryptoProvider } from '../../src/FXService/providers/CryptoProvider';
 import { NullLogger } from '../../src/utils/Logger';
-import { DefaultAPI as GDAX } from '../../src/factories/gdaxFactories';
+import { DefaultAPI as CoinbasePro } from '../../src/factories/coinbaseProFactories';
 import { DefaultAPI as Bitfinex } from '../../src/factories/bitfinexFactories';
 import { FXObject } from '../../src/FXService/FXProvider';
 import FailoverCalculator from '../../src/FXService/calculators/FailoverCalculator';
@@ -28,7 +28,7 @@ describe('FailoverCalculator', () => {
     let calc1: SimpleRateCalculator;
     let calc2: SimpleRateCalculator;
     before(() => {
-        const provider1 = new CryptoProvider({ logger: NullLogger, exchange: GDAX(NullLogger) });
+        const provider1 = new CryptoProvider({ logger: NullLogger, exchange: CoinbasePro(NullLogger) });
         const provider2 = new CryptoProvider({ logger: NullLogger, exchange: Bitfinex(NullLogger) });
         calc1 = new SimpleRateCalculator(provider1, NullLogger);
         calc2 = new SimpleRateCalculator(provider2, NullLogger);
@@ -39,7 +39,7 @@ describe('FailoverCalculator', () => {
     });
 
     it('returns spot rate from first calculator is supported', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products')
             .reply(200, [{
                 id: 'BTC-USD',
@@ -88,7 +88,7 @@ describe('FailoverCalculator', () => {
     });
 
     it('returns null for unsupported currencies', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-XYZ/ticker')
             .reply(404, { message: 'NotFound' });
         return calculator.calculateRatesFor([{ from: 'BTC', to: 'XYZ' }]).then((results: FXObject[]) => {
@@ -97,7 +97,7 @@ describe('FailoverCalculator', () => {
     });
 
     it('returns spot rate from both calculators', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 trade_id: 10000,
@@ -129,7 +129,7 @@ describe('FailoverCalculator', () => {
     });
 
     it('returns results from the second provider if the first errors out', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(500);
         nock('https://api.bitfinex.com:443')
@@ -148,7 +148,7 @@ describe('FailoverCalculator', () => {
     });
 
     it('returns null if all providers fail', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(500);
         nock('https://api.bitfinex.com:443')

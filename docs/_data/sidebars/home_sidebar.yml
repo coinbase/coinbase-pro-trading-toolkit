@@ -8,9 +8,9 @@ entries:
   - title: Products
     output: web
     folderitems:
-    - title: GTT Users' Guide
-      url: /gtt_about.html
+    - title: CBPTT Users' Guide
+      url: /cbptt_about.html
       output: web
-    - title: GTT API reference
+    - title: CBPTT API reference
       url: /apiref
       output: web

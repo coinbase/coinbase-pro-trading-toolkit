@@ -12,9 +12,9 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import { getSubscribedFeeds } from '../factories/gdaxFactories';
+import { getSubscribedFeeds } from '../factories/coinbaseProFactories';
 import { ConsoleLoggerFactory } from '../utils/Logger';
-import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
+import { CoinbaseProFeed } from '../exchanges/coinbasePro/CoinbaseProFeed';
 import { Trader, TraderConfig } from '../core/Trader';
 import Limiter from '../core/RateLimiter';
 import {
@@ -29,9 +29,9 @@ import { StaticCommandSet } from '../lib/StaticCommandSet';
 import { LiveOrder } from '../lib/Orderbook';
 
 const auth = {
-    key: process.env.GDAX_KEY,
-    secret: process.env.GDAX_SECRET,
-    passphrase: process.env.GDAX_PASSPHRASE
+    key: process.env.COINBASE_PRO_KEY,
+    secret: process.env.COINBASE_PRO_SECRET,
+    passphrase: process.env.COINBASE_PRO_PASSPHRASE
 };
 const logger = ConsoleLoggerFactory();
 const product = 'LTC-USD';
@@ -96,7 +96,7 @@ const messages: StreamMessage[] = [
 ];
 
 // We could also use FeedFactory here and avoid all the config above.
-getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: GDAXFeed) => {
+getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: CoinbaseProFeed) => {
     // Configure the trader, and use the API provided by the feed
     const traderConfig: TraderConfig = {
         logger: logger,
@@ -110,7 +110,7 @@ getSubscribedFeeds({ auth: auth, logger: logger }, [product]).then((feed: GDAXFe
     const limiter = new Limiter(1, 500);
     // We'll play the orders through the limiter, so connect them up
     orders.pipe(limiter);
-    // We can only pipe one stream into the trader, so we can't pipe both the GDAX feed as well as our trading commands.
+    // We can only pipe one stream into the trader, so we can't pipe both the Coinbase Pro feed as well as our trading commands.
     // We can pipe one, and then use the event mechanism to handle the other. In this demo we'll pipe the message feed
     // to trader,
     feed.pipe(trader);

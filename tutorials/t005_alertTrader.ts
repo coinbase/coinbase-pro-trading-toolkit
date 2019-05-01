@@ -12,51 +12,51 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import * as GTT from "gdax-trading-toolkit";
-import { Big } from "gdax-trading-toolkit/build/src/lib/types";
-import { GDAX_WS_FEED, GDAXFeed, GDAXFeedConfig } from "gdax-trading-toolkit/build/src/exchanges";
-import { GDAX_API_URL } from "gdax-trading-toolkit/build/src/exchanges/gdax/GDAXExchangeAPI";
-import { PlaceOrderMessage, TickerMessage } from "gdax-trading-toolkit/build/src/core";
-import { LiveOrder } from "gdax-trading-toolkit/build/src/lib";
+import * as CBPTT from "coinbase-pro-trading-toolkit";
+import { Big } from "coinbase-pro-trading-toolkit/build/src/lib/types";
+import { COINBASE_PRO_WS_FEED, CoinbaseProFeed, CoinbaseProFeedConfig } from "coinbase-pro-trading-toolkit/build/src/exchanges";
+import { COINBASE_PRO_API_URL } from "coinbase-pro-trading-toolkit/build/src/exchanges/coinbasePro/CoinbaseProExchangeAPI";
+import { PlaceOrderMessage, TickerMessage } from "coinbase-pro-trading-toolkit/build/src/core";
+import { LiveOrder } from "coinbase-pro-trading-toolkit/build/src/lib";
 
-const logger = GTT.utils.ConsoleLoggerFactory();
-const pusher = new GTT.utils.PushBullet(process.env.PUSHBULLET_KEY);
+const logger = CBPTT.utils.ConsoleLoggerFactory();
+const pusher = new CBPTT.utils.PushBullet(process.env.PUSHBULLET_KEY);
 const deviceID = process.env.PUSHBULLET_DEVICE_ID;
 const product = 'ETH-USD';
 /**
- * Remember to set GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars to allow trading
+ * Remember to set COINBASE_PRO_KEY, COINBASE_PRO_SECRET and COINBASE_PRO_PASSPHRASE envars to allow trading
  */
 
-const gdaxAPI = GTT.Factories.GDAX.DefaultAPI(logger);
+const coinbaseProAPI = CBPTT.Factories.CoinbasePro.DefaultAPI(logger);
 const [base, quote] = product.split('-');
 const spread = Big('0.15');
 
-const options: GDAXFeedConfig = {
+const options: CoinbaseProFeedConfig = {
     logger: logger,
     auth: undefined, // use public feed
     channels: ['ticker'],
-    wsUrl: GDAX_WS_FEED,
-    apiUrl: GDAX_API_URL
+    wsUrl: COINBASE_PRO_WS_FEED,
+    apiUrl: COINBASE_PRO_API_URL
 };
 
-GTT.Factories.GDAX.getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
-    GTT.Core.createTickerTrigger(feed, product)
+CBPTT.Factories.CoinbasePro.getSubscribedFeeds(options, [product]).then((feed: CoinbaseProFeed) => {
+    CBPTT.Core.createTickerTrigger(feed, product)
         .setAction((ticker: TickerMessage) => {
             const currentPrice = ticker.price;
-            GTT.Core.createPriceTrigger(feed, product, currentPrice.minus(spread))
+            CBPTT.Core.createPriceTrigger(feed, product, currentPrice.minus(spread))
                 .setAction((event: TickerMessage) => {
-                    pushMessage('Price Trigger', `${base} price has fallen and is now ${event.price} ${quote} on ${product} on GDAX`);
+                    pushMessage('Price Trigger', `${base} price has fallen and is now ${event.price} ${quote} on ${product} on Coinbase Pro`);
                     submitTrade('buy', '0.01');
                 });
-            GTT.Core.createPriceTrigger(feed, product, currentPrice.plus(spread))
+            CBPTT.Core.createPriceTrigger(feed, product, currentPrice.plus(spread))
                 .setAction((event: TickerMessage) => {
-                    pushMessage('Price Trigger', `${base} price has risen and is now ${event.price} ${quote} on ${product} on GDAX`);
+                    pushMessage('Price Trigger', `${base} price has risen and is now ${event.price} ${quote} on ${product} on Coinbase Pro`);
                     submitTrade('sell', '0.01');
                 });
         });
-    GTT.Core.createTickerTrigger(feed, product, false)
+    CBPTT.Core.createTickerTrigger(feed, product, false)
         .setAction((ticker: TickerMessage) => {
-            console.log(GTT.utils.printTicker(ticker, 3));
+            console.log(CBPTT.utils.printTicker(ticker, 3));
         });
 });
 
@@ -69,7 +69,7 @@ function submitTrade(side: string, amount: string) {
         side: side,
         size: amount
     };
-    gdaxAPI.placeOrder(order).then((result: LiveOrder) => {
+    coinbaseProAPI.placeOrder(order).then((result: LiveOrder) => {
         pushMessage('Order executed', `Order to ${order.side} 0.1 ${base} placed. Result: ${result.status}`);
     });
 }
