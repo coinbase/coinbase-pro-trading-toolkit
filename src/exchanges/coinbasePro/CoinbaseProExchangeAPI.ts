@@ -379,7 +379,9 @@ export class CoinbaseProExchangeAPI implements PublicExchangeAPI, AuthenticatedE
     checkAuth(): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!this.auth) {
-                return reject(new CBPTTError('You cannot make authenticated requests if a CoinbaseProAuthConfig object was not provided to the CoinbaseProExchangeAPI constructor'));
+                return reject(
+                    new CBPTTError('You cannot make authenticated requests if a CoinbaseProAuthConfig object was not provided to the CoinbaseProExchangeAPI constructor')
+                );
             }
             if (!(this.auth.key && this.auth.secret && this.auth.passphrase)) {
                 return reject(new CBPTTError('You cannot make authenticated requests without providing all API credentials'));

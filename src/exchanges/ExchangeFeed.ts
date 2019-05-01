@@ -212,9 +212,7 @@ export abstract class ExchangeFeed extends Readable {
 
 const feedSources: { [index: string]: ExchangeFeed } = {};
 
-export interface ExchangeFeedConstructor<T extends ExchangeFeed, U extends ExchangeFeedConfig> {
-    new (config: U): T;
-}
+export type ExchangeFeedConstructor<T extends ExchangeFeed, U extends ExchangeFeedConfig> = new (config: U) => T;
 
 /**
  * Get or create a Websocket feed to a Coinbase Pro product. A single connection is maintained per URL + auth combination.
