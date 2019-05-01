@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "name": "GDAX Trading Toolkit API Reference",
+  "name": "Coinbase Pro Trading Toolkit API Reference",
   "module": "commonjs",
   "target": "ES6",
   "exclude": "**/+(samples|tutorials)/*",

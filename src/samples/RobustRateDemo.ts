@@ -14,7 +14,7 @@
 import { CurrencyPair, FXProvider } from '../FXService/FXProvider';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import CCXTWrapper from '../exchanges/ccxt';
-import { GDAXExchangeAPI } from '../exchanges/gdax/GDAXExchangeAPI';
+import { CoinbaseProExchangeAPI } from '../exchanges/coinbasePro/CoinbaseProExchangeAPI';
 import { RobustCalculator } from '../FXService/calculators/RobustCalculator';
 import { CryptoProvider } from '../FXService/providers/CryptoProvider';
 import { FXRates, FXService } from '../FXService/FXService';
@@ -29,7 +29,7 @@ const providers: FXProvider[] = [
     new CryptoProvider({ exchange: CCXTWrapper.createExchange('bitmex', noAuth, logger), logger: logger }),
     new CryptoProvider({ exchange: CCXTWrapper.createExchange('kraken', noAuth, logger), logger: logger }),
     new CryptoProvider({ exchange: new BitfinexExchangeAPI({logger: logger, auth: noAuth }), logger: logger }),
-    new CryptoProvider({ exchange: new GDAXExchangeAPI({ auth: null, logger: logger }), logger: logger })
+    new CryptoProvider({ exchange: new CoinbaseProExchangeAPI({ auth: null, logger: logger }), logger: logger })
 ];
 
 const robustCalculator = new RobustCalculator({

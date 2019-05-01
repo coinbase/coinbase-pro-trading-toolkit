@@ -18,7 +18,6 @@ import { getProductInfo } from './PoloniexCommon';
 import { LevelMessage, SnapshotMessage, TickerMessage, TradeMessage, UnknownMessage } from '../../core/Messages';
 import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
-import Timer = NodeJS.Timer;
 import { OrderPool } from '../../lib/BookBuilder';
 import { Level3Order, PriceLevelWithOrders } from '../../lib/Orderbook';
 import { Product } from '../PublicExchangeAPI';
@@ -35,7 +34,7 @@ export interface PoloniexFeedConfig extends ExchangeFeedConfig {
 
 export class PoloniexFeed extends ExchangeFeed {
     private tickerChannel: boolean;
-    private pinger: Timer = null;
+    private pinger: NodeJS.Timer = null;
     private subscriptions: { [id: number]: ChannelSubscription } = {};
 
     constructor(config: PoloniexFeedConfig) {

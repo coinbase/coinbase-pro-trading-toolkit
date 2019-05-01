@@ -1,10 +1,10 @@
 destination: _site/
 url: "http://127.0.0.1:4011"
-baseurl: "/gtt-apiref-pdf"
+baseurl: "/cbptt-apiref-pdf"
 port: 4011
 output: pdf
-product: gtt-apiref
-print_title: GDAX Trading Toolkit API reference
+product: cbptt-apiref
+print_title: Coinbase Pro Trading Toolkit API reference
 print_subtitle: version 0.1
 output: pdf
 defaults:

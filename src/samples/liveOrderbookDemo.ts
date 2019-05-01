@@ -14,8 +14,8 @@
 
 import { ConsoleLoggerFactory } from '../utils/Logger';
 import { printTicker } from '../utils/printers';
-import { GDAXFeed } from '../exchanges/gdax/GDAXFeed';
-import { DefaultAPI, getSubscribedFeeds } from '../factories/gdaxFactories';
+import { CoinbaseProFeed } from '../exchanges/coinbasePro/CoinbaseProFeed';
+import { DefaultAPI, getSubscribedFeeds } from '../factories/coinbaseProFactories';
 import { LiveBookConfig,
          LiveOrderbook,
          SkippedMessageEvent } from '../core/LiveOrderbook';
@@ -35,11 +35,11 @@ const logger = ConsoleLoggerFactory({ level: 'debug' });
  */
 
 const options = {
-    wsUrl: process.env.WS_URL || 'wss://ws-feed.gdax.com',
+    wsUrl: process.env.WS_URL || 'wss://ws-feed.pro.coinbase.com',
     logger: logger
 };
 
-getSubscribedFeeds(options, [product]).then((feed: GDAXFeed) => {
+getSubscribedFeeds(options, [product]).then((feed: CoinbaseProFeed) => {
 // Configure the live book object
     const config: LiveBookConfig = {
         product: product,

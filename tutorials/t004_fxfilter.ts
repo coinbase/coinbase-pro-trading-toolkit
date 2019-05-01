@@ -12,12 +12,12 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import * as GTT from 'gdax-trading-toolkit';
-import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
-import { ExchangeRateFilterConfig, StreamMessage, TradeMessage } from "gdax-trading-toolkit/build/src/core";
+import * as CBPTT from 'coinbase-pro-trading-toolkit';
+import { CoinbaseProFeed } from "coinbase-pro-trading-toolkit/build/src/exchanges";
+import { ExchangeRateFilterConfig, StreamMessage, TradeMessage } from "coinbase-pro-trading-toolkit/build/src/core";
 
 /**
- * This Demonstration program illustrates how one can pipe the GDAX message streams through filters to transform the
+ * This Demonstration program illustrates how one can pipe the Coinbase Pro message streams through filters to transform the
  * data feed in a straightforward way.
  *
  * In this example, we make use of a FXService class (which provides Exchange rate data) and the ExchangeRateFilter
@@ -27,15 +27,15 @@ import { ExchangeRateFilterConfig, StreamMessage, TradeMessage } from "gdax-trad
 const products = ['BTC-USD', 'BTC-EUR', 'BTC-GBP'];
 
 // Create a single logger instance to pass around
-const logger = GTT.utils.ConsoleLoggerFactory();
-const padfloat = GTT.utils.padfloat;
+const logger = CBPTT.utils.ConsoleLoggerFactory();
+const padfloat = CBPTT.utils.padfloat;
 
-GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
+CBPTT.Factories.CoinbasePro.FeedFactory(logger, products).then((feed: CoinbaseProFeed) => {
     // Configure all message streams to use the same websocket feed
     // Create the source message streams by creating a MessageStream for each product, using the same WS feed for each
-    const streams = products.map((product) => new GTT.Core.ProductFilter({ logger: logger, productId: product }));
+    const streams = products.map((product) => new CBPTT.Core.ProductFilter({ logger: logger, productId: product }));
     // Let's grab a simple FXService object that uses Yahoo Finance as its source
-    const fxService = GTT.Factories.SimpleFXServiceFactory('yahoo', logger);
+    const fxService = CBPTT.Factories.SimpleFXServiceFactory('yahoo', logger);
     // We add the EUR and GBP exchange rates and reset the refresh interval to 1 minute
     fxService
         .addCurrencyPair({ from: 'GBP', to: 'USD' })
@@ -49,8 +49,8 @@ GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
         precision: 2
     };
     // Use the spread operator to overwrite the config properties that differ. Neat!
-    const fxGBP = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
-    const fxEUR = new GTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
+    const fxGBP = new CBPTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'GBP', to: 'USD' } });
+    const fxEUR = new CBPTT.Core.ExchangeRateFilter({ ...commonFilterConfig, pair: { from: 'EUR', to: 'USD' } });
     const outStream = new Array(3);
     outStream[0] = feed.pipe(streams[0]);
     // The EUR and GBP stream get passed through an exchange rate filter to convert prices to USD equivalent

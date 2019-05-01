@@ -1,6 +1,6 @@
 # Overview
 
-FX Service a fully-fledged and extendible Exchange Rate service for use in GTT components and streams.
+FX Service a fully-fledged and extendible Exchange Rate service for use in CBPTT components and streams.
 
 The Service comprises two sub-components:
 

@@ -27,7 +27,7 @@ export function GeminiAPI(logger: Logger): CCXTExchangeWrapper {
 }
 
 /**
- * A map of supported GDAX products to the equivalent Gemini product
+ * A map of supported Coinbase Pro products to the equivalent Gemini product
  */
 export const PRODUCT_MAP: { [index: string]: string } = {
     'BTC-USD': 'btcusd',

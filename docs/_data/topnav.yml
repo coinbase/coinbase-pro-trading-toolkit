@@ -4,7 +4,7 @@ topnav:
 - title: Topnav
   items:
     - title: Getting Started
-      url: /gtt_about.html
+      url: /cbptt_about.html
 
 #Topnav dropdowns
 topnav_dropdowns:
@@ -12,19 +12,19 @@ topnav_dropdowns:
   folders:
     - title: Documentation
       folderitems:
-        - title: GTT Users' Guide
-          url: /gtt_about.html
-        - title: GTT API Reference documentation
+        - title: CBPTT Users' Guide
+          url: /cbptt_about.html
+        - title: CBPTT API Reference documentation
           url: /apiref
-        - title: GTT-UI Users Guide
-          url: /gtt-ui.html
-        - title: GTT-UI Users Guide
-          url: /gttui-apiref/index.html
-    - title: GDAX Resources
+        - title: CBPTT-UI Users Guide
+          url: /cbptt-ui.html
+        - title: CBPTT-UI Users Guide
+          url: /cbpttui-apiref/index.html
+    - title: Coinbase Pro Resources
       folderitems:
-        - title: GDAX Website
-          external_url: https://gdax.com
-        - title: GDAX API Documentation
-          external_url: https://docs.gdax.com/
-        - title: GTT Github repository
-          external_url: https://github.com/coinbase/gdax-tt
+        - title: Coinbase Pro Website
+          external_url: https://pro.coinbase.com
+        - title: Coinbase Pro API Documentation
+          external_url: https://docs.pro.coinbase.com/
+        - title: CBPTT Github repository
+          external_url: https://github.com/coinbase/coinbase-pro-trading-toolkit

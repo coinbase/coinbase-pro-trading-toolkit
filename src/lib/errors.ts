@@ -43,9 +43,9 @@ export class BaseError extends Error implements StreamError {
 }
 
 /**
- * Errors raised as a result of an internal exception raised by GTT code.
+ * Errors raised as a result of an internal exception raised by CBPTT code.
  */
-export class GTTError extends BaseError {
+export class CBPTTError extends BaseError {
     constructor(msg: string, cause?: Error) {
         super(msg, cause);
     }

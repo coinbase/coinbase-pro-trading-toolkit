@@ -14,7 +14,6 @@
 
 import request = require('superagent');
 import Response = request.Response;
-import Timer = NodeJS.Timer;
 import { CurrencyPair, EFXRateUnavailable, FXObject, FXProvider, FXProviderConfig } from '../FXProvider';
 import { Big } from '../../lib/types';
 
@@ -31,7 +30,7 @@ export default class OpenExchangeProvider extends FXProvider {
     private readonly apiKey: string;
     private pending: Promise<Response> = null;
     private readonly cacheDuration: number;
-    private cacheTimer: Timer = null;
+    private cacheTimer: NodeJS.Timer = null;
     private base: string = null;
 
     constructor(config: OpenExchangeConfig) {
