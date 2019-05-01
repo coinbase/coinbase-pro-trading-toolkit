@@ -17,7 +17,6 @@ import { Logger } from '../utils/Logger';
 import { ExchangeAuthConfig } from './AuthConfig';
 import { createHmac } from 'crypto';
 import WebSocket = require('ws');
-import Timer = NodeJS.Timer;
 import { sanitizeMessage } from '../core/Messages';
 
 export class ExchangeFeedConfig {
@@ -38,7 +37,7 @@ export abstract class ExchangeFeed extends Readable {
     // keys in this list will be sanitised in log messages
     protected readonly sensitiveKeys: string[];
     private lastHeartBeat: number = -1;
-    private connectionChecker: Timer = null;
+    private connectionChecker: NodeJS.Timer = null;
     private socket: WebSocket;
     private readonly _logger: Logger;
 
@@ -205,7 +204,7 @@ export abstract class ExchangeFeed extends Readable {
             this.socket.send(msgString, cb);
         } catch (err) {
             // If there's an error just log and carry on
-            this.log('error', 'Could not send message to GDAX WS server because the message was invalid',
+            this.log('error', 'Could not send message to Coinbase Pro WS server because the message was invalid',
                 { error: err, message: msg });
         }
     }
@@ -213,13 +212,11 @@ export abstract class ExchangeFeed extends Readable {
 
 const feedSources: { [index: string]: ExchangeFeed } = {};
 
-export interface ExchangeFeedConstructor<T extends ExchangeFeed, U extends ExchangeFeedConfig> {
-    new (config: U): T;
-}
+export type ExchangeFeedConstructor<T extends ExchangeFeed, U extends ExchangeFeedConfig> = new (config: U) => T;
 
 /**
- * Get or create a Websocket feed to a GDAX product. A single connection is maintained per URL + auth combination.
- * Usually you'll connect to the  main GDAX feed by passing in `GDAX_WS_FEED` as the first parameter, but you can create
+ * Get or create a Websocket feed to a Coinbase Pro product. A single connection is maintained per URL + auth combination.
+ * Usually you'll connect to the  main Coinbase Pro feed by passing in `COINBASE_PRO_WS_FEED` as the first parameter, but you can create
  * additional feeds to the public sandbox, for example by providing the relevant URL; or creating an authenticated and
  * public feed (although the authenticated feed also carries public messages)
  */
@@ -233,7 +230,7 @@ export function getFeed<T extends ExchangeFeed, U extends ExchangeFeedConfig>(ty
         feed = new type(config);
         feedSources[key] = feed;
     } else {
-        logger.log('info', `Using existing GDAX Websocket connection to ${config.wsUrl} ${auth ? '(authenticated)' : ''}`);
+        logger.log('info', `Using existing Coinbase Pro Websocket connection to ${config.wsUrl} ${auth ? '(authenticated)' : ''}`);
     }
     return feed;
 }

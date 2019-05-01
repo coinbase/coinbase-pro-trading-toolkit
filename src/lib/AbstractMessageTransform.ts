@@ -22,7 +22,7 @@ export interface MessageTransformConfig {
 
 /**
  * A base class for providing message transform streams and filters. All this class does is implement some common logic,
- * making sure that the streamed messages are GDAXMessages before calling the `transformMessage` method that subclasses
+ * making sure that the streamed messages are CoinbaseProMessages before calling the `transformMessage` method that subclasses
  * will implement.
  */
 export abstract class AbstractMessageTransform extends stream.Transform {

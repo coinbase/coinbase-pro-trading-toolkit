@@ -15,7 +15,7 @@
 import { CryptoProvider } from '../../src/FXService/providers/CryptoProvider';
 import { NullLogger } from '../../src/utils/Logger';
 import { FailoverProvider } from '../../src/FXService/providers/FailoverProvider';
-import { DefaultAPI as GDAX } from '../../src/factories/gdaxFactories';
+import { DefaultAPI as CoinbasePro } from '../../src/factories/coinbaseProFactories';
 import { DefaultAPI as Bitfinex } from '../../src/factories/bitfinexFactories';
 import { EFXRateUnavailable, FXObject } from '../../src/FXService/FXProvider';
 
@@ -29,14 +29,14 @@ describe('FailoverProvider', () => {
         provider = new FailoverProvider({
             logger: NullLogger,
             providers: [
-                new CryptoProvider({ logger: NullLogger, exchange: GDAX(NullLogger) }),
+                new CryptoProvider({ logger: NullLogger, exchange: CoinbasePro(NullLogger) }),
                 new CryptoProvider({ logger: NullLogger, exchange: Bitfinex(NullLogger) })
             ]
         });
     });
 
     it('supports currencies from first provider first', () => {
-        nock('https://api.gdax.com')
+        nock('https://api.pro.coinbase.com')
             .get('/products')
             .reply(200, [{
                 id: 'BTC-USD',
@@ -76,7 +76,7 @@ describe('FailoverProvider', () => {
     });
 
     it('returns spot rate from first provider if it is supported', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 trade_id: 10000,
@@ -93,7 +93,7 @@ describe('FailoverProvider', () => {
     });
 
     it('returns inverse spot rate from first provider if supported', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 trade_id: 10000,
@@ -142,7 +142,7 @@ describe('FailoverProvider', () => {
     });
 
     it('rejects for unsupported currencies', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-XYZ/ticker')
             .reply(404, { message: 'NotFound' });
         return provider.fetchCurrentRate({ from: 'BTC', to: 'XYZ' }).then((_result: FXObject) => {
@@ -153,7 +153,7 @@ describe('FailoverProvider', () => {
     });
 
     it('returns spot rate from 2nd provider is first is returning errors', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(500);
         nock('https://api.bitfinex.com:443')
@@ -171,7 +171,7 @@ describe('FailoverProvider', () => {
     });
 
     it('rejects promise if all providers are erroring', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(500);
         nock('https://api.bitfinex.com:443')

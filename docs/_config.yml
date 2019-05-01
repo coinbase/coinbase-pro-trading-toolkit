@@ -1,12 +1,12 @@
-repository: coinbase/gdax-tt
+repository: coinbase/coinbase-pro-trading-toolkit
 
 output: web
 # this property is useful for conditional filtering of content that is separate from the PDF.
 
-topnav_title: GDAX Trading Toolkit
+topnav_title: Coinbase Pro Trading Toolkit
 # this appears on the top navigation bar next to the home button
 
-site_title: GDAX Trading Toolkit Documentation
+site_title: Coinbase Pro Trading Toolkit Documentation
 # this appears in the html browser tab for the site title (seen mostly by search engines, not users)
 
 company_name: Coinbase Inc.
@@ -80,7 +80,7 @@ defaults:
 # these are defaults used for the frontmatter for these file types
 
 sidebars:
-- gtt_sidebar
+- cbptt_sidebar
 - home_sidebar
 - other
 
@@ -88,4 +88,4 @@ description: "A trader's toolbox for creating trading bots on cryptocurrency exc
 # the description is used in the feed.xml file
 
 # needed for sitemap.xml file only
-url: https://www.gdax.com
+url: https://pro.coinbase.com

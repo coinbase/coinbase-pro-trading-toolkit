@@ -1,6 +1,6 @@
 # Core
 
-This directory contains the main building-block classes for the GDAX trading toolkit. As a user of the GTT, you will almost exclusively build your trading engines from classes in this and the `factories` folder.
+This directory contains the main building-block classes for the Coinbase Pro trading toolkit. As a user of the CBPTT, you will almost exclusively build your trading engines from classes in this and the `factories` folder.
 
 * LiveOrderbook - A real-time representation of an exchange's order book for a single product. It is automatically kept up to date by piping a Feed stream into it.
 * Messages - A unified abstraction for exchange product trade and user messages.

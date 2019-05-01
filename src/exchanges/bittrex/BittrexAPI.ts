@@ -18,8 +18,8 @@ import { bittrex } from 'ccxt';
 import { Logger } from '../../utils/Logger';
 
 export class BittrexAPI extends CCXTExchangeWrapper {
-    static normalizeProduct(gdaxProduct: string): string {
-        const [base, quote] = gdaxProduct.split('-');
+    static normalizeProduct(coinbaseProProduct: string): string {
+        const [base, quote] = coinbaseProProduct.split('-');
         return `${quote}-${base}`;
     }
 

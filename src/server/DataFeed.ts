@@ -20,7 +20,7 @@ import * as Commands from './WSCommands';
 import { Command, newError, ResponseMessage, wrapMessage } from './WSCommands';
 import { ConsoleLoggerFactory, Logger } from '../utils/Logger';
 import { ExchangeFeed } from '../exchanges/ExchangeFeed';
-import { FeedFactory as gdaxFeedFactory } from '../factories/gdaxFactories';
+import { FeedFactory as coinbaseProFeedFactory } from '../factories/coinbaseProFactories';
 import { FeedFactory as bitfinexFeedFactory } from '../factories/bitfinexFactories';
 import { FeedFactory as poloniexFeedFactory } from '../factories/poloniexFactories';
 import { SnapshotMessage, TickerMessage } from '../core/Messages';
@@ -139,8 +139,8 @@ export class DataFeed {
         const products = msg.products;
         const lcExchange = msg.exchange.toLowerCase();
         switch (lcExchange) {
-            case 'gdax':
-                factoryFn = gdaxFeedFactory.bind(null, logger, products);
+            case 'coinbase-pro':
+                factoryFn = coinbaseProFeedFactory.bind(null, logger, products);
                 break;
             case 'bitfinex':
                 factoryFn = bitfinexFeedFactory.bind(null, logger, products);

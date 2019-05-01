@@ -1,10 +1,10 @@
 destination: _site/
 url: "http://127.0.0.1:4010"
-baseurl: "/gtt-pdf"
+baseurl: "/cbptt-pdf"
 port: 4010
 output: pdf
-product: gtt
-print_title: GDAX Trading Toolkit - Users' Guide
+product: cbptt
+print_title: Coinbase Pro Trading Toolkit - Users' Guide
 print_subtitle: version 0.1
 output: pdf
 defaults:
