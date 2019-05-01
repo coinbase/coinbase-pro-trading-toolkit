@@ -55,7 +55,7 @@ The other key component of the arbitrage ticker is the `ExchangeRateFilter`.
 `ExchangeRateFilter` works by applying an exchange rate (which it receives from an `FXService`) for a specified
 currency pair to each price field that comes in from the feed stream. This includes bids and ask arrays in snapshot messages.
 
-The filter is easy to configure. It accepts a [ExchangeRateFilterConfig](apiref/interfaces/_src_core_exchangeratefilter_.exchangeratefilterconfig.html) object which provides the `FXService` and indicates which currency pair to use as the exchange rate.
+The filter is easy to configure. It accepts a [ExchangeRateFilterConfig](apiref/interfaces/_core_exchangeratefilter_.exchangeratefilterconfig.html) object which provides the `FXService` and indicates which currency pair to use as the exchange rate.
 
         const config: ExchangeRateFilterConfig = {
             fxService: fxService,

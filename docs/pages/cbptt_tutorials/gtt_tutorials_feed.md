@@ -117,7 +117,7 @@ This is pretty straightforward. After setting up the tally variables, we
  and EventEmitter) and process the messages as they arrive.
 
  Node streams emit objects of type `any`, but we know these are CBPTT messages, so we will typecast
- messages as an [`OrderbookMessage`](apiref/interfaces/_src_core_messages_.orderbookmessage.html)
+ messages as an [`OrderbookMessage`](apiref/interfaces/_core_messages_.orderbookmessage.html)
  which carries a `productId` field. Most messages will be, but we check for the presence of that field
  first and log it as an 'other' message if not.
 
@@ -196,12 +196,12 @@ Bitfinex names if they are different).
 1. Dig a bit deeper and see what other data is provided in the messages.
 1. Explore the underlying `getFeed` and `getSubscribedFeeds` functions that offer greater flexibility in how
 the feed streams are configured.
-1. Provide your authentication details in a [CoinbaseProAuthConfig](apiref/interfaces/_src_exchanges_coinbase_pro_gdaxexchangeapi_.gdaxauthconfig.html) object and check for additional messages in the authenticated feed if you place orders or
+1. Provide your authentication details in a [CoinbaseProAuthConfig](apiref/interfaces/_exchanges_coinbase_pro_coinbaseproexchangeapi_.gdaxauthconfig.html) object and check for additional messages in the authenticated feed if you place orders or
   rtades on the exchange.
 
 # See also
 
-* [Coinbase Pro Exchange API](apiref/classes/_src_exchanges_coinbase_pro_gdaxexchangeapi_.gdaxexchangeapi.html)
-* [Coinbase Pro Feed](apiref/modules/_src_exchanges_coinbase_pro_gdaxfeed_.html)
+* [Coinbase Pro Exchange API](apiref/classes/_src_exchanges_coinbase_pro_coinbaseproexchangeapi_.gdaxexchangeapi.html)
+* [Coinbase Pro Feed](apiref/modules/_src_exchanges_coinbase_pro_coinbaseprofeed_.html)
 * [Coinbase Pro Feed factories](apiref/modules/_src_factories_gdaxfactories_.html)
 * [Bitfinex Feed factories](apiref/modules/_src_factories_bitfinexfactories_.html)

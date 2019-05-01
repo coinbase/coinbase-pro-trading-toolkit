@@ -55,7 +55,7 @@ To set up the exchange objects, we need to provide a config object for each exch
 from exchange to exchange, but typically, you need to give authorization credentials and a product ID. Note that the CBPTT
 always accepts a Coinbase Pro-standard product name (e.g. BTC-USD) and will map to the target exchange name behind the scenes).
 
-Since we're configuring the Bitfinex and Coinbase Pro API interfaces, we'll supply a [BitfinexConfig](apiref/interfaces/_src_exchanges_bitfinex_bitfinexexchangeapi_.bitfinexconfig.html) and [CoinbaseProConfig](apiref/interfaces/_src_exchanges_coinbase_pro_gdaxexchangeapi_.gdaxconfig.html) object to the corresponding public API interface implementation.
+Since we're configuring the Bitfinex and Coinbase Pro API interfaces, we'll supply a [BitfinexConfig](apiref/interfaces/_exchanges_bitfinex_bitfinexexchangeapi_.bitfinexconfig.html) and [CoinbaseProConfig](apiref/interfaces/_exchanges_coinbase_pro_coinbaseproexchangeapi_.gdaxconfig.html) object to the corresponding public API interface implementation.
 
     const bitfinexConfig: BitfinexConfig = {
         coinbaseProProduct: 'BTC-USD',

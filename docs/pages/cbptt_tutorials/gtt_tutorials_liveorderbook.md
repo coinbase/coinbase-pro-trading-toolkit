@@ -54,11 +54,11 @@ A standard template for creating and configuring a LiveOrderbook looks like this
 
 | Event tag | Emitted when | Data provided |
 |-----------|--------------|---------------|
-| LiveOrderbook.update | The orderbook changes due to a new order, a cancelled order, or a trade | A descendant of [OrderbookMessage](apiref/interfaces/_src_core_messages_.orderbookmessage.html) causing the change |
-| LiveOrderbook.trade | a trade occurs | A [TradeMessage](apiref/interfaces/_src_core_messages_.trademessage.html) describing the trade |
-| LiveOrderbook.ticker | Whenever the ticker is updated | A [TickerMessage](apiref/interfaces/_src_core_messages_.tickermessage.html) instance |
-| LiveOrderbook.snapshot | When an orderbook snapshot is received, usually immediately after subscribing to the message feed. | The [SnapshotMessage](apiref/interfaces/_src_core_messages_.snapshotmessage.html) |
-| LiveOrderbook.skippedMessage | if a sequencing error in the message feed is detected. | A [SkippedMessageEvent](apiref/interfaces/_src_core_liveorderbook_.skippedmessageevent.html)|
+| LiveOrderbook.update | The orderbook changes due to a new order, a cancelled order, or a trade | A descendant of [OrderbookMessage](apiref/interfaces/_core_messages_.orderbookmessage.html) causing the change |
+| LiveOrderbook.trade | a trade occurs | A [TradeMessage](apiref/interfaces/_core_messages_.trademessage.html) describing the trade |
+| LiveOrderbook.ticker | Whenever the ticker is updated | A [TickerMessage](apiref/interfaces/_core_messages_.tickermessage.html) instance |
+| LiveOrderbook.snapshot | When an orderbook snapshot is received, usually immediately after subscribing to the message feed. | The [SnapshotMessage](apiref/interfaces/_core_messages_.snapshotmessage.html) |
+| LiveOrderbook.skippedMessage | if a sequencing error in the message feed is detected. | A [SkippedMessageEvent](apiref/interfaces/_core_liveorderbook_.skippedmessageevent.html)|
 | error | An unrecoverable error occurs | The `Error` object |
 
 
