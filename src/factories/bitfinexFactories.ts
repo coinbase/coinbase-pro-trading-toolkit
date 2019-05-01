@@ -59,8 +59,8 @@ export function getSubscribedFeeds(wsUrl: string, products: string[], auth?: Exc
         };
         const feed = getFeed<BitfinexFeed, BitfinexFeedConfig>(BitfinexFeed, config);
         feed.once('websocket-open', () => {
-            products.forEach((gdaxProduct: string) => {
-                const product = PRODUCT_MAP[gdaxProduct] || gdaxProduct;
+            products.forEach((coinbaseProProduct: string) => {
+                const product = PRODUCT_MAP[coinbaseProProduct] || coinbaseProProduct;
                 feed.subscribe('ticker', product);
                 feed.subscribe('trades', product);
                 feed.subscribe('book', product);

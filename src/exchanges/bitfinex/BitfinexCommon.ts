@@ -22,7 +22,7 @@ export const WEBSOCKET_API_VERSION = 1.1;
 export const BITFINEX_WS_FEED = 'wss://api2.bitfinex.com:3000/ws';
 
 /**
- * A map of supported GDAX books to the equivalent Bitfinex book
+ * A map of supported Coinbase Pro books to the equivalent Bitfinex book
  */
 export const PRODUCT_MAP: { [index: string]: string } = {
     'BTC-USD': 'btcusd',

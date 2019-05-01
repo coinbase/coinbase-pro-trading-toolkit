@@ -12,11 +12,11 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import * as GTT from 'gdax-trading-toolkit';
-import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
-import { OrderbookMessage } from "gdax-trading-toolkit/build/src/core";
+import * as CBPTT from 'coinbase-pro-trading-toolkit';
+import { CoinbaseProFeed } from "coinbase-pro-trading-toolkit/build/src/exchanges";
+import { OrderbookMessage } from "coinbase-pro-trading-toolkit/build/src/core";
 
-const logger = GTT.utils.ConsoleLoggerFactory();
+const logger = CBPTT.utils.ConsoleLoggerFactory();
 const products: string[] = ['BTC-USD', 'ETH-USD', 'LTC-USD'];
 const tallies: any = {};
 products.forEach((product: string) => {
@@ -25,7 +25,7 @@ products.forEach((product: string) => {
 
 let count = 0;
 
-GTT.Factories.GDAX.FeedFactory(logger, products).then((feed: GDAXFeed) => {
+CBPTT.Factories.CoinbasePro.FeedFactory(logger, products).then((feed: CoinbaseProFeed) => {
     feed.on('data', (msg: OrderbookMessage) => {
         count++;
         if (!(msg as any).productId) {

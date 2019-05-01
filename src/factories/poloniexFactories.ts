@@ -15,7 +15,7 @@
 import { Logger } from '../utils/Logger';
 import { PoloniexFeed,
          PoloniexFeedConfig } from '../exchanges/poloniex/PoloniexFeed';
-import { gdaxToPolo,
+import { coinbaseProToPolo,
          getAllProductInfo,
          POLONIEX_WS_FEED,
          PoloniexProducts } from '../exchanges/poloniex/PoloniexCommon';
@@ -26,8 +26,8 @@ import CCXTExchangeWrapper from '../exchanges/ccxt';
 let publicAPIInstance: CCXTExchangeWrapper;
 
 /**
- * A convenience function that returns a GDAXExchangeAPI instance for accessing REST methods conveniently. If API
- * key details are found in the GDAX_KEY etc. envars, they will be used
+ * A convenience function that returns a CoinbaseProExchangeAPI instance for accessing REST methods conveniently. If API
+ * key details are found in the COINBASE_PRO_KEY etc. envars, they will be used
  */
 export function DefaultAPI(logger: Logger): CCXTExchangeWrapper {
     if (!publicAPIInstance) {
@@ -38,7 +38,7 @@ export function DefaultAPI(logger: Logger): CCXTExchangeWrapper {
 
 /**
  * Convenience function to connect to and subscribe to the given channels
- * @param options {object} Any options from GDAXConfig will be accepted
+ * @param options {object} Any options from CoinbaseProConfig will be accepted
  * @param products {string[]} An array of products to subscribe to
  */
 export function getSubscribedFeeds(options: any, products: string[]): Promise<PoloniexFeed> {
@@ -78,7 +78,7 @@ function getChannelId(product: string, info: PoloniexProducts): number {
     let result: number;
     for (const id in info) {
         const symbol = info[id].id;
-        const found = (symbol === product) || (symbol === gdaxToPolo(product));
+        const found = (symbol === product) || (symbol === coinbaseProToPolo(product));
         result = found ? info[id].sourceData.id : -1;
         if (found) {
             break;
@@ -91,7 +91,7 @@ function getChannelId(product: string, info: PoloniexProducts): number {
  * This is a straightforward wrapper around getSubscribedFeeds using the Factory pattern with the most commonly used
  * defaults. For customised feeds, use getSubscribedFeeds instead.
  *
- * It is assumed that your API keys are stored in the GDAX_KEY, GDAX_SECRET and GDAX_PASSPHRASE envars
+ * It is assumed that your API keys are stored in the COINBASE_PRO_KEY, COINBASE_PRO_SECRET and COINBASE_PRO_PASSPHRASE envars
  */
 export function FeedFactory(logger: Logger, products: string[], auth?: ExchangeAuthConfig): Promise<PoloniexFeed> {
     // auth = auth || {

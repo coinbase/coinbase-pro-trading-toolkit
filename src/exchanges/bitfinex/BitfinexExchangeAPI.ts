@@ -34,7 +34,7 @@ import { Side } from '../../lib/sides';
 import { Big, BigJS } from '../../lib/types';
 import { PlaceOrderMessage } from '../../core/Messages';
 import { LiveOrder } from '../../lib/Orderbook';
-import { extractResponse, GTTError, HTTPError } from '../../lib/errors';
+import { extractResponse, CBPTTError, HTTPError } from '../../lib/errors';
 import request = require('superagent');
 import Response = request.Response;
 
@@ -77,13 +77,13 @@ export interface BitfinexProduct {
  */
 export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExchangeAPI, ExchangeTransferAPI {
     /**
-     * Returns the Bitfinex product that's equivalent to the given GDAX product. If it doesn't exist,
+     * Returns the Bitfinex product that's equivalent to the given Coinbase Pro product. If it doesn't exist,
      * return the given product
-     * @param gdaxProduct
+     * @param coinbaseProProduct
      * @returns {string} Bitfinex product code
      */
-    static product(gdaxProduct: string) {
-        return PRODUCT_MAP[gdaxProduct] || gdaxProduct;
+    static product(coinbaseProProduct: string) {
+        return PRODUCT_MAP[coinbaseProProduct] || coinbaseProProduct;
     }
 
     static convertBSOPToOrder(bfOrder: BitfinexSuccessfulOrderExecution): LiveOrder {
@@ -138,18 +138,18 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                 });
                 return Promise.resolve(products);
             }).catch((err: Error) => {
-                return Promise.reject(new GTTError('Error loading products from Bitfinex', err));
+                return Promise.reject(new CBPTTError('Error loading products from Bitfinex', err));
             });
     }
 
-    loadMidMarketPrice(gdaxProduct: string): Promise<BigJS> {
-        return this.loadTicker(gdaxProduct).then((ticker: Ticker) => {
+    loadMidMarketPrice(coinbaseProProduct: string): Promise<BigJS> {
+        return this.loadTicker(coinbaseProProduct).then((ticker: Ticker) => {
             return ticker.bid.plus(ticker.ask).times(0.5);
         });
     }
 
-    loadOrderbook(gdaxProduct: string): Promise<BookBuilder> {
-        const product = BitfinexExchangeAPI.product(gdaxProduct);
+    loadOrderbook(coinbaseProProduct: string): Promise<BookBuilder> {
+        const product = BitfinexExchangeAPI.product(coinbaseProProduct);
         return request.get(`${API_V1}/book/${product}`)
             .query({grouped: 1})
             .accept('application/json')
@@ -157,14 +157,14 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                 if (res.status !== 200) {
                     return Promise.reject(new HTTPError('Error loading order book from Bitfinex', extractResponse(res)));
                 }
-                return Promise.resolve(this.convertBitfinexBookToGdaxBook(res.body as BitfinexOrderbook));
+                return Promise.resolve(this.convertBitfinexBookToCoinbaseProBook(res.body as BitfinexOrderbook));
             }).catch((err: Error) => {
-                return Promise.reject(new GTTError(`Error loading ${gdaxProduct} order book from Bitfinex`, err));
+                return Promise.reject(new CBPTTError(`Error loading ${coinbaseProProduct} order book from Bitfinex`, err));
             });
     }
 
-    loadTicker(gdaxProduct: string): Promise<Ticker> {
-        const product = BitfinexExchangeAPI.product(gdaxProduct);
+    loadTicker(coinbaseProProduct: string): Promise<Ticker> {
+        const product = BitfinexExchangeAPI.product(coinbaseProProduct);
         return request.get(`${API_V1}/pubticker/${product}`)
             .accept('application/json')
             .then((res: Response) => {
@@ -173,7 +173,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                 }
                 const ticker: any = res.body;
                 return Promise.resolve({
-                    productId: gdaxProduct,
+                    productId: coinbaseProProduct,
                     ask: ticker.ask ? Big(ticker.ask) : null,
                     bid: ticker.bid ? Big(ticker.bid) : null,
                     price: Big(ticker.last_price || 0),
@@ -181,14 +181,14 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
                     time: new Date(+ticker.timestamp * 1000)
                 });
             }).catch((err: Error) => {
-                return Promise.reject(new GTTError(`Error loading ${gdaxProduct} ticker from Bitfinex`, err));
+                return Promise.reject(new CBPTTError(`Error loading ${coinbaseProProduct} ticker from Bitfinex`, err));
             });
     }
 
     checkAuth(): Promise<ExchangeAuthConfig> {
         return new Promise((resolve, reject) => {
             if (this.auth === null) {
-                return reject(new GTTError('You cannot make authenticated requests if a ExchangeAuthConfig object was not provided to the BitfinexExchangeAPI constructor'));
+                return reject(new CBPTTError('You cannot make authenticated requests if a ExchangeAuthConfig object was not provided to the BitfinexExchangeAPI constructor'));
             }
             return resolve(this.auth);
         });
@@ -224,7 +224,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    cancelAllOrders(_gdaxProduct?: string): Promise<string[]> {
+    cancelAllOrders(_coinbaseProProduct?: string): Promise<string[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.cancelAllOrders(auth).then((result: BitfinexResult) => {
                 if (this.logger) {
@@ -246,7 +246,7 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
         });
     }
 
-    loadAllOrders(_gdaxProduct?: string): Promise<LiveOrder[]> {
+    loadAllOrders(_coinbaseProProduct?: string): Promise<LiveOrder[]> {
         return this.checkAuth().then((auth: ExchangeAuthConfig) => {
             return BitfinexAuth.activeOrders(auth).then((results: BitfinexSuccessfulOrderExecution[]) => {
                 if (this.logger) {
@@ -280,13 +280,13 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     }
 
     loadCandles(_options: CandleRequestOptions): Promise<Candle[]> {
-        return Promise.reject(new GTTError('Not implemented'));
+        return Promise.reject(new CBPTTError('Not implemented'));
     }
 
     // -------------------------- Transfer methods -------------------------------------------------
 
     requestCryptoAddress(_cur: string): Promise<CryptoAddress> {
-        return Promise.reject(new GTTError('Not implemented'));
+        return Promise.reject(new CBPTTError('Not implemented'));
     }
 
     requestTransfer(req: TransferRequest): Promise<TransferResult> {
@@ -319,16 +319,16 @@ export class BitfinexExchangeAPI implements PublicExchangeAPI, AuthenticatedExch
     }
 
     requestWithdrawal(_req: WithdrawalRequest): Promise<TransferResult> {
-        return Promise.reject(new GTTError('Not implemented'));
+        return Promise.reject(new CBPTTError('Not implemented'));
     }
 
     transfer(_cur: string, _amount: BigJS, _from: string, _to: string, _options: any): Promise<TransferResult> {
-        return Promise.reject(new GTTError('Not implemented'));
+        return Promise.reject(new CBPTTError('Not implemented'));
     }
 
     // -------------------------- Helper methods -------------------------------------------------
 
-    convertBitfinexBookToGdaxBook(bfBook: BitfinexOrderbook): BookBuilder {
+    convertBitfinexBookToCoinbaseProBook(bfBook: BitfinexOrderbook): BookBuilder {
         const book = new BookBuilder(this.logger);
         bfBook.asks.forEach((order: BitfinexRESTOrder) => {
             addToLevel('sell', order);

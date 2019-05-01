@@ -50,7 +50,7 @@ export interface MessageQueueConfig {
  * ii) Queues messages, sorts them and emits them in a strictly increasing order.
  *
  * The source feed can contain multiple product streams. This class will filter out any products that don't match the configured
- * product feed. This means you can create a single websocket feed that subscribes to all of, say GDAX's products and then
+ * product feed. This means you can create a single websocket feed that subscribes to all of, say Coinbase Pro's products and then
  * create multiple `MessageStreams` without much overhead.
  *
  * There are three different ways of using the stream:

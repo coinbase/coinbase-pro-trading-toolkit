@@ -12,23 +12,23 @@
  * License for the specific language governing permissions and limitations under the License.                              *
  ***************************************************************************************************************************/
 
-import * as GTT from 'gdax-trading-toolkit';
-import { GDAXFeed } from "gdax-trading-toolkit/build/src/exchanges";
-import { LiveBookConfig, LiveOrderbook, SkippedMessageEvent, TradeMessage } from "gdax-trading-toolkit/build/src/core";
-import { Ticker } from "gdax-trading-toolkit/build/src/exchanges/PublicExchangeAPI";
-import { CumulativePriceLevel } from "gdax-trading-toolkit/build/src/lib";
+import * as CBPTT from 'coinbase-pro-trading-toolkit';
+import { CoinbaseProFeed } from "coinbase-pro-trading-toolkit/build/src/exchanges";
+import { LiveBookConfig, LiveOrderbook, SkippedMessageEvent, TradeMessage } from "coinbase-pro-trading-toolkit/build/src/core";
+import { Ticker } from "coinbase-pro-trading-toolkit/build/src/exchanges/PublicExchangeAPI";
+import { CumulativePriceLevel } from "coinbase-pro-trading-toolkit/build/src/lib";
 
 const product = 'LTC-USD';
-const logger = GTT.utils.ConsoleLoggerFactory({ level: 'debug' });
-const printOrderbook = GTT.utils.printOrderbook;
-const printTicker = GTT.utils.printTicker;
+const logger = CBPTT.utils.ConsoleLoggerFactory({ level: 'debug' });
+const printOrderbook = CBPTT.utils.printOrderbook;
+const printTicker = CBPTT.utils.printTicker;
 /*
  Simple demo that sets up a live order book and then periodically prints some stats to the console.
  */
 
 let tradeVolume: number = 0;
 
-GTT.Factories.GDAX.FeedFactory(logger, [product]).then((feed: GDAXFeed) => {
+CBPTT.Factories.CoinbasePro.FeedFactory(logger, [product]).then((feed: CoinbaseProFeed) => {
 // Configure the live book object
     const config: LiveBookConfig = {
         product: product,
@@ -50,7 +50,7 @@ GTT.Factories.GDAX.FeedFactory(logger, [product]).then((feed: GDAXFeed) => {
         tradeVolume += +(trade.size);
     });
     book.on('LiveOrderbook.skippedMessage', (details: SkippedMessageEvent) => {
-        // On GDAX, this event should never be emitted, but we put it here for completeness
+        // On Coinbase Pro, this event should never be emitted, but we put it here for completeness
         console.log('SKIPPED MESSAGE', details);
         console.log('Reconnecting to feed');
         feed.reconnect(0);

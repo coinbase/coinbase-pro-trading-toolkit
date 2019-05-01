@@ -21,7 +21,7 @@ export const POLONIEX_WS_FEED = 'wss://api2.poloniex.com';
 export const POLONIEX_API_URL = 'https://poloniex.com';
 
 /**
- * A map of supported GDAX books to the equivalent Poloniex book
+ * A map of supported Coinbase Pro books to the equivalent Poloniex book
  */
 export const PRODUCT_MAP: { [index: string]: string } = {
     'ETH-BTC': 'BTC_ETH',
@@ -32,13 +32,13 @@ export const REVERSE_PRODUCT_MAP: { [index: string]: string } = {
     BTC_LTC: 'LTC-BTC'
 };
 
-// GDAX Code => Poloniex Code
+// Coinbase Pro Code => Poloniex Code
 export const CURRENCY_MAP: { [index: string]: string } = {
     BTC: 'BTC',
     ETH: 'ETH',
     LTC: 'LTC'
 };
-// Poloniex Code => GDAX Code
+// Poloniex Code => Coinbase Pro Code
 export const REVERSE_CURRENCY_MAP: { [index: string]: string } = {
     BTC: 'BTC',
     ETH: 'ETH',
@@ -46,10 +46,10 @@ export const REVERSE_CURRENCY_MAP: { [index: string]: string } = {
 };
 
 /**
- * Takes a Poloniex product name an 'GDAXifies' it, but replacing '_' with '-' and swapping the quote and base symbols
+ * Takes a Poloniex product name an 'CoinbaseProifies' it, but replacing '_' with '-' and swapping the quote and base symbols
  * @param poloProduct
  */
-export function gdaxifyProduct(poloProduct: string): Product {
+export function coinbaseProifyProduct(poloProduct: string): Product {
     let [quote, base] = poloProduct.split('_');
     quote = REVERSE_CURRENCY_MAP[quote] || quote;
     base = REVERSE_CURRENCY_MAP[base] || base;
@@ -88,7 +88,7 @@ export function getAllProductInfo(refresh: boolean, logger?: Logger): Promise<Po
     });
 }
 
-export function gdaxToPolo(product: string) {
+export function coinbaseProToPolo(product: string) {
     const [base, quote] = product.split('-');
     return `${quote}_${base}`;
 }

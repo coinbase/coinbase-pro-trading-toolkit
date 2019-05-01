@@ -13,7 +13,7 @@
  **********************************************************************************************************************/
 import { PublicExchangeAPI } from '../../src/exchanges/PublicExchangeAPI';
 import { CryptoProvider } from '../../src/FXService/providers/CryptoProvider';
-import { DefaultAPI } from '../../src/factories/gdaxFactories';
+import { DefaultAPI } from '../../src/factories/coinbaseProFactories';
 import { NullLogger } from '../../src/utils/Logger';
 import { EFXRateUnavailable, FXObject } from '../../src/FXService/FXProvider';
 
@@ -33,7 +33,7 @@ describe('CryptoProvider', () => {
     });
 
     it('returns true for supported currencies', () => {
-        nock('https://api.gdax.com')
+        nock('https://api.pro.coinbase.com')
             .get('/products')
             .reply(200, [{
                 id: 'BTC-USD',
@@ -64,7 +64,7 @@ describe('CryptoProvider', () => {
     });
 
     it('returns spot rate for supported currencies', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 trade_id: 10000,
@@ -81,7 +81,7 @@ describe('CryptoProvider', () => {
     });
 
     it('returns inverse spot rate for supported currencies', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-USD/ticker')
             .reply(200, {
                 trade_id: 10000,
@@ -98,7 +98,7 @@ describe('CryptoProvider', () => {
     });
 
     it('rejects for unsupported currencies', () => {
-        nock('https://api.gdax.com:443')
+        nock('https://api.pro.coinbase.com:443')
             .get('/products/BTC-XYZ/ticker')
             .reply(404, { message: 'NotFound' });
         return provider.fetchCurrentRate({ from: 'BTC', to: 'XYZ' }).then((_result: FXObject) => {

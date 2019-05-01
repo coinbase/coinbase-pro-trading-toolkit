@@ -25,26 +25,20 @@ STASH_NAME="pre-commit-$(date +%Y-%m-%d-%H-%M-%S)"
 git stash push --quiet --keep-index --message "${STASH_NAME}"
 
 # Test prospective commit
-GDAX_KEY="\b[a-f0-9]{32}\b"
-GDAX_SECRET="\b[a-zA-Z0-9=\/+]{88}\b"
+COINBASE_PRO_KEY="\b[a-f0-9]{32}\b"
+COINBASE_PRO_SECRET="\b[a-zA-Z0-9=\/+]{88}\b"
 POLONIEX_KEY="\b(([A-Z0-9]{8}\-){3})([A-Z0-9]{8})\b"
 POLONIEX_SECRET="\b[a-f0-9]{128}\b"
 BITTREX_KEY="\b[a-f0-9]{32}\b"
 BITTREX_SECRET="\b[a-f0-9]{32}\b"
 
 # De-dup regexs.
-FORBIDDEN_EXP=($GDAX_KEY $GDAX_SECRET $POLONIEX_KEY $POLONIEX_SECRET $BITTREX_KEY $BITTREX_SECRET)
+FORBIDDEN_EXP=($COINBASE_PRO_KEY $COINBASE_PRO_SECRET $POLONIEX_KEY $POLONIEX_SECRET $BITTREX_KEY $BITTREX_SECRET)
 FORBIDDEN_EXP=($(echo "${FORBIDDEN_EXP[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 
 FAIL_MESSAGE=$'
 COMMIT REJECTED Found possible secret keys. Please remove them before
-committing or use --no-verify to ignore and commit anyway.
-
-If this has helped you, consider donating Bitcoin to:
-
-  183J9CYci5Xbe3YXct1BHyRjyxH89QiUCc
-
-I had BTC stolen :( just trying to earn it back ;)'
+committing or use --no-verify to ignore and commit anyway.'
 
 exitcode=0
 for expression in "${FORBIDDEN_EXP[@]}"; do
