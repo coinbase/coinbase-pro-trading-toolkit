@@ -19,7 +19,7 @@ export const ORDERBOOK_PRECISION: { [index: string]: string } = {
 };
 
 export const WEBSOCKET_API_VERSION = 1.1;
-export const BITFINEX_WS_FEED = 'wss://api2.bitfinex.com:3000/ws';
+export const BITFINEX_WS_FEED = 'wss://api.bitfinex.com/ws';
 
 /**
  * A map of supported Coinbase Pro books to the equivalent Bitfinex book
