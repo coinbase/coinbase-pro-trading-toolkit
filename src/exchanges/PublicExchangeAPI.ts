@@ -76,8 +76,8 @@ IntervalInMS['10m'] = 10 * IntervalInMS['1m'];
 IntervalInMS['30m'] = 30 * IntervalInMS['1m'];
 IntervalInMS['1h'] = 60 * IntervalInMS['1m'];
 IntervalInMS['4h'] = 4 * IntervalInMS['1h'];
-IntervalInMS['12h'] = 12 * IntervalInMS['12h'];
-IntervalInMS['1d'] = 24 * IntervalInMS['24h'];
+IntervalInMS['12h'] = 12 * IntervalInMS['1h'];
+IntervalInMS['1d'] = 24 * IntervalInMS['1h'];
 IntervalInMS['3d'] = 3 * IntervalInMS['1d'];
 IntervalInMS['7d'] = 7 * IntervalInMS['1d'];
 
