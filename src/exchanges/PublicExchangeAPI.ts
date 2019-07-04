@@ -68,14 +68,16 @@ export interface CandleRequestOptions {
     extra: any;
 }
 
-export type CandleInterval = '1m' | '3m' | '5m' | '10m' | '30m' | '1h' | '4h' | '12h' | '1d' | '3d' | '7d';
+export type CandleInterval = '1m' | '3m' | '5m' | '10m' | '15m' | '30m' | '1h' | '4h' | '6h' | '12h' | '1d' | '3d' | '7d';
 export const IntervalInMS: { [interval: string]: number } = {'1m': 60 * 1000};
 IntervalInMS['3m'] = 3 * IntervalInMS['1m'];
 IntervalInMS['5m'] = 5 * IntervalInMS['1m'];
 IntervalInMS['10m'] = 10 * IntervalInMS['1m'];
+IntervalInMS['15m'] = 15 * IntervalInMS['1m'];
 IntervalInMS['30m'] = 30 * IntervalInMS['1m'];
 IntervalInMS['1h'] = 60 * IntervalInMS['1m'];
 IntervalInMS['4h'] = 4 * IntervalInMS['1h'];
+IntervalInMS['6h'] = 6 * IntervalInMS['1h'];
 IntervalInMS['12h'] = 12 * IntervalInMS['1h'];
 IntervalInMS['1d'] = 24 * IntervalInMS['1h'];
 IntervalInMS['3d'] = 3 * IntervalInMS['1d'];
