@@ -57,7 +57,7 @@
     "querystring": "0.2.0",
     "simple-mock": "0.8.0",
     "simple-statistics": "5.1.0",
-    "superagent": "3.0.0",
+    "superagent": "5.0.2",
     "winston": "2.3.0",
     "ws": "3.3.1"
   },
